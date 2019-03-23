@@ -1,4 +1,4 @@
-package hello;
+package com.pik.ride2work;
 
 public class Greeting {
 
