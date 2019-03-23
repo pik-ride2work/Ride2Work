@@ -53,4 +53,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://35.204.187.67:8081/repository/Ride2Work-SNAP/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
 </project>
