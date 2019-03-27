@@ -9,6 +9,7 @@ pipeline {
     stage('Sonar') {
       steps {
         waitForQualityGate true
+        withSonarQubeEnv 'test'
       }
     }
   }
