@@ -16,5 +16,10 @@ pipeline {
         sh 'java -jar target/ride2work-0.0.1-SNAPSHOT.jar &'
       }
     }
+    stage('Sonar') {
+      steps {
+        waitForQualityGate true
+      }
+    }
   }
 }
