@@ -1,7 +1,7 @@
 package com.pik.ride2work;
 
 public class Greeting {
-    private final long i
+    private final long id;
     private final String content;
 
     public Greeting(long id, String content) {
