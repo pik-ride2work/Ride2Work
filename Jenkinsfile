@@ -11,5 +11,10 @@ pipeline {
         sh 'mvn deploy'
       }
     }
+    stage('Start') {
+      steps {
+        sh 'java -jar target/ride2work-0.0.1-SNAPSHOT.jar &'
+      }
+    }
   }
 }
