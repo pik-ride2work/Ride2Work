@@ -53,12 +53,12 @@
 		<snapshotRepository>
 			<id>nexus-snaps</id>
 			<name>Internal Snapshot Releases</name>
-			<url>http://35.204.154.52:8081/repository/Ride2Work-SNAP/</url>
+			<url>http://35.204.163.100:8081/repository/Ride2Work-SNAP/</url>
 		</snapshotRepository>
 		<repository>
       			<id>nexus-release</id>
 			<name>Internal Releases</name>
-      			<url>http://35.204.154.52:8081/repository/Ride2Work-RELEASE/</url>
+      			<url>http://35.204.163.100:8081/repository/Ride2Work-RELEASE/</url>
     		</repository>
 	</distributionManagement>
 
