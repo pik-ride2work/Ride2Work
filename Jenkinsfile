@@ -2,8 +2,17 @@ pipeline {
   agent any
   stages {
     stage('Build') {
-      steps {
-        sh 'mvn clean install'
+      parallel {
+        stage('Build') {
+          steps {
+            sh 'mvn clean install'
+          }
+        }
+        stage('') {
+          steps {
+            sh 'echo "hello world"'
+          }
+        }
       }
     }
     stage('Deploy') {
