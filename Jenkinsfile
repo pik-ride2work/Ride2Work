@@ -1,4 +1,8 @@
 pipeline {
+  environment {
+      registry = "ride2work/ride2work"
+      registryCredential = 'dockerhub'
+  }
   agent any
   stages {
     stage('Build') {
@@ -8,9 +12,11 @@ pipeline {
             sh 'mvn clean install'
           }
         }
-        stage('') {
-          steps {
-            sh 'echo "hello world"'
+        stages{
+          stage('Building image'){
+            steps{
+              docker.build registry + "$BUILD_NUMBER"
+            }
           }
         }
       }
