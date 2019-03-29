@@ -53,12 +53,12 @@
 		<snapshotRepository>
 			<id>nexus-snaps</id>
 			<name>Internal Snapshot Releases</name>
-			<url>http://35.204.163.100:8081/repository/Ride2Work-SNAP/</url>
+			<url>https://8081-dot-6904143-dot-devshell.appspot.com/repository/Ride2Work-SNAPSHOTS/</url>
 		</snapshotRepository>
 		<repository>
-      			<id>nexus-release</id>
+      			<id>nexus-releases</id>
 			<name>Internal Releases</name>
-      			<url>http://35.204.163.100:8081/repository/Ride2Work-RELEASE/</url>
+      			<url>https://8081-dot-6904143-dot-devshell.appspot.com/repository/Ride2Work-RELEASES/</url>
     		</repository>
 	</distributionManagement>
 
