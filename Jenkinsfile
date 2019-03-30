@@ -54,7 +54,10 @@ pipeline {
                 sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
-        stage('K8s connection test') {
+        stage('Promotion'){
+          input 'Deploy on K8s?'
+        }
+        stage('Deploy on K8s') {
             steps {
                 withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
                     sh 'kubectl get pods'
