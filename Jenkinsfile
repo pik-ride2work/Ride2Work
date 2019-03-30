@@ -11,7 +11,7 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('Building Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
@@ -32,19 +32,17 @@ pipeline {
             }
         }
         stage('Push to repositories') {
-            steps {
-                parallel {
-                    stage('Push JAR to Nexus repository') {
-                        steps {
-                            sh 'mvn deploy'
-                        }
+            parallel {
+                stage('Push JAR to Nexus repository') {
+                    steps {
+                        sh 'mvn deploy'
                     }
-                    stage('Push Image To DockerHub') {
-                        steps {
-                            script {
-                                docker.withRegistry('', registryCredential) {
-                                    dockerImage.push()
-                                }
+                }
+                stage('Push Image To DockerHub') {
+                    steps {
+                        script {
+                            docker.withRegistry('', registryCredential) {
+                                dockerImage.push()
                             }
                         }
                     }
