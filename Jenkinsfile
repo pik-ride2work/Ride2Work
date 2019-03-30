@@ -55,7 +55,9 @@ pipeline {
             }
         }
         stage('Promotion'){
-          input 'Deploy on K8s?'
+          steps{
+            input 'Deploy on K8s?'
+          }
         }
         stage('Deploy on K8s') {
             steps {
