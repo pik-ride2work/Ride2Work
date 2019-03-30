@@ -12,11 +12,6 @@ pipeline {
                         sh 'mvn clean install'
                     }
                 }
-                stage('') {
-                    steps {
-                        sh 'echo "hello world"'
-                    }
-                }
             }
         }
         stage('Building image') {
