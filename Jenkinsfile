@@ -51,8 +51,10 @@ pipeline {
             }
         }
         stage('K8s connection test') {
-            withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
-                sh 'kubectl apply --help'
+            steps{
+              withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
+                  sh 'kubectl apply --help'
+              }
             }
         }
     }
