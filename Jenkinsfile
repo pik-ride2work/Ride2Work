@@ -26,9 +26,18 @@ pipeline {
                 sh 'mvn deploy'
             }
         }
-        stage('Start') {
+        stage('Deploy Image') {
             steps {
-                sh 'java -jar target/ride2work-0.0.1-SNAPSHOT.jar &'
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Remove Unused docker image') {
+            steps {
+                sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
     }
