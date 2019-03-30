@@ -50,12 +50,11 @@ pipeline {
                 sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
-        node {
-            stage('K8s connection test') {
-                withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
-                    sh 'kubectl apply --help'
-                }
+        stage('K8s connection test') {
+            withCredentials([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
+                sh 'kubectl apply --help'
             }
         }
     }
 }
+
