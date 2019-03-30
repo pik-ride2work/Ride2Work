@@ -6,28 +6,24 @@ pipeline {
         dockerImage = ''
     }
     stages {
-        stage('Build') {
-            parallel {
-                stage('Build') {
-                    steps {
-                        sh 'mvn clean install'
-                    }
-                }
+        stage('Build JAR') {
+            steps {
+                sh 'mvn clean install'
             }
         }
-        stage('Building image') {
+        stage('Building Docker Image') {
             steps {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
-        stage('Deploy') {
+        stage('Push JAR to Nexus repository') {
             steps {
                 sh 'mvn deploy'
             }
         }
-        stage('Sonarqube') {
+        stage('Static code analysis') {
             environment {
                 scannerHome = tool 'sonar_scanner'
             }
@@ -40,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy Image') {
+        stage('Push Image To DockerHub') {
             steps {
                 script {
                     docker.withRegistry('', registryCredential) {
@@ -49,9 +45,16 @@ pipeline {
                 }
             }
         }
-        stage('Remove Unused docker image') {
+        stage('Remove Unused Docker Image') {
             steps {
                 sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+        }
+        node {
+            stage('K8s connection test') {
+                withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
+                    sh 'kubectl apply --help'
+                }
             }
         }
     }
