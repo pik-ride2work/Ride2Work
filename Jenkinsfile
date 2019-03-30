@@ -15,6 +15,18 @@ pipeline {
                 }
             }
         }
+        stage('Building image') {
+            steps {
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'mvn deploy'
+            }
+        }
         stage('Sonarqube') {
             environment {
                 scannerHome = tool 'sonar_scanner'
@@ -26,18 +38,6 @@ pipeline {
                 timeout(time: 10, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
-            }
-        }
-        stage('Building image') {
-            steps {
-                script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'mvn deploy'
             }
         }
         stage('Deploy Image') {
