@@ -18,11 +18,6 @@ pipeline {
                 }
             }
         }
-        stage('Push JAR to Nexus repository') {
-            steps {
-                sh 'mvn deploy'
-            }
-        }
         stage('Static code analysis') {
             environment {
                 scannerHome = tool 'sonar_scanner'
@@ -36,11 +31,22 @@ pipeline {
                 }
             }
         }
-        stage('Push Image To DockerHub') {
+        stage('Push to repositories') {
             steps {
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
+                parallel {
+                    stage('Push JAR to Nexus repository') {
+                        steps {
+                            sh 'mvn deploy'
+                        }
+                    }
+                    stage('Push Image To DockerHub') {
+                        steps {
+                            script {
+                                docker.withRegistry('', registryCredential) {
+                                    dockerImage.push()
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -51,10 +57,10 @@ pipeline {
             }
         }
         stage('K8s connection test') {
-            steps{
-              withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
-                  sh 'kubectl apply --help'
-              }
+            steps {
+                withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
+                    sh 'kubectl get pods'
+                }
             }
         }
     }
