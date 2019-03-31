@@ -16,7 +16,7 @@ pipeline {
     }
     stage('Static code analysis') {
       environment {
-        scannerHome = 'sonarscanner'
+        scannerHome = '/opt/sonarscanner'
       }
       steps {
         withSonarQubeEnv('sonarqube') {
