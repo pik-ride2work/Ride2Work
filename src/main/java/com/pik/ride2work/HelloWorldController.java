@@ -10,12 +10,19 @@ import java.util.concurrent.atomic.AtomicLong;
 @Controller
 public class HelloWorldController {
 
-    private static final String TEMPLATE = "Hello, %s!";
+    private static final String HELLO_TEMPLATE = "Hello, %s!";
+    private static final String BYE_TEMPLATE = "Bye, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @GetMapping("/hello-world")
+    @GetMapping("/hello")
     @ResponseBody
     public Greeting sayHello(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(TEMPLATE, name));
+        return new Greeting(counter.incrementAndGet(), String.format(HELLO_TEMPLATE, name));
+    }
+
+    @GetMapping("/bye")
+    @ResponseBody
+    public Greeting sayGoodBye(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
+        return new Greeting(counter.incrementAndGet(), String.format(BYE_TEMPLATE, name));
     }
 }
