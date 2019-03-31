@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER " + registry + ":latest"
                 }
             }
         }
@@ -54,7 +54,7 @@ pipeline {
                 sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
-        stage('Promotion'){
+        stage('Confirm deployment'){
           steps{
             input 'Deploy on K8s?'
           }
@@ -62,7 +62,7 @@ pipeline {
         stage('Deploy on K8s') {
             steps {
                 withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
-                    sh 'kubectl get pods'
+                    sh 'pwd'
                 }
             }
         }
