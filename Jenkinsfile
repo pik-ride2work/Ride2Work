@@ -14,21 +14,6 @@ pipeline {
 
       }
     }
-    stage('Static code analysis') {
-      environment {
-        scannerHome = 'sonar_scanner'
-      }
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "${scannerHome}/bin/sonarqube"
-        }
-
-        timeout(time: 10, unit: 'MINUTES') {
-          waitForQualityGate true
-        }
-
-      }
-    }
     stage('Push to repositories') {
       parallel {
         stage('Push JAR to Nexus') {
