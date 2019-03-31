@@ -33,7 +33,7 @@ pipeline {
         }
         stage('Push to repositories') {
             parallel {
-                stage('Push JAR to Nexus repository') {
+                stage('Push JAR to Nexus') {
                     steps {
                         sh 'mvn deploy'
                     }
@@ -63,8 +63,8 @@ pipeline {
         stage('Deploy on K8s') {
             steps {
                 withKubeConfig([credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137']) {
-                    sh 'kubectl set image pod/ride2work ride2work=ride2work/ride2work'
-                    sh 'kubectl set image pod/ride2work ride2work=ride2work/ride2work:latest'
+                    sh 'kubectl set image deployment/ride2work ride2work=ride2work/ride2work'
+                    sh 'kubectl set image deployment/ride2work ride2work=ride2work/ride2work:latest'
                 }
             }
         }
