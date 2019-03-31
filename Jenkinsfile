@@ -55,7 +55,7 @@ pipeline {
                 sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
-        stage('Confirm deployment'){
+        stage('Approve deployment'){
           steps{
             input 'Deploy on K8s?'
           }
