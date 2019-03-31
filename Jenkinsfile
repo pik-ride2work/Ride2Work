@@ -20,7 +20,7 @@ pipeline {
       }
       steps {
         withSonarQubeEnv('SonarQube Scanner 2.8') {
-          sh "${scannerHome}/bin/sonar-scanner"
+          sh "${scannerHome}/bin/"
         }
 
         timeout(time: 10, unit: 'MINUTES') {
