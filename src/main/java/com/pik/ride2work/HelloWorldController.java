@@ -14,13 +14,13 @@ public class HelloWorldController {
     private static final String BYE_TEMPLATE = "Bye, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @GetMapping("/hello")
+    @GetMapping("/hello-world")
     @ResponseBody
     public Greeting sayHello(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(HELLO_TEMPLATE, name));
     }
 
-    @GetMapping("/bye")
+    @GetMapping("/bye-world")
     @ResponseBody
     public Greeting sayGoodBye(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(BYE_TEMPLATE, name));
