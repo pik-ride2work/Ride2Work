@@ -16,11 +16,11 @@ pipeline {
     }
     stage('Static code analysis') {
       environment {
-        scannerHome = '/opt/sonarscanner'
+        scannerHome = 'sonarscanner'
       }
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh "/usr/local/bin/sonar-scanner"
+          sh "${scannerHome}/bin/sonar-scanner"
         }
 
         timeout(time: 10, unit: 'MINUTES') {
