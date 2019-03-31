@@ -19,9 +19,10 @@ pipeline {
         scannerHome = 'sonar_scanner'
       }
       steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "${scannerHome}/bin/sonarqube"
+        withSonarQubeEnv('sonarscanner') {
+          sh "${scannerHome}/bin/sonar-scanner"
         }
+
         timeout(time: 10, unit: 'MINUTES') {
           waitForQualityGate true
         }
