@@ -6,14 +6,6 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-    stage('Build Docker Image') {
-      steps {
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-
-      }
-    }
     stage('Static code analysis') {
       environment {
         scannerHome = '/opt/sonar_scanner'
@@ -25,6 +17,14 @@ pipeline {
 
         timeout(time: 10, unit: 'MINUTES') {
           waitForQualityGate true
+        }
+
+      }
+    }
+    stage('Build Docker Image') {
+      steps {
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
 
       }
