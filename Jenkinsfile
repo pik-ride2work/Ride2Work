@@ -30,6 +30,8 @@ pipeline {
       }
     }
     stage('Push to repositories') {
+      when{ branch 'master'}
+      
       parallel {
         stage('Push JAR to Nexus') {
           steps {
@@ -50,16 +52,22 @@ pipeline {
       }
     }
     stage('Remove Unused Docker Image') {
+      when{ branch 'master'}
+      
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
     stage('Approve deployment') {
+      when{ branch 'master'}
+      
       steps {
         input 'Deploy on K8s?'
       }
     }
     stage('Deploy on K8s') {
+      when{ branch 'master'}
+      
       steps {
         withKubeConfig(credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137') {
           sh 'kubectl set image deployment/ride2work ride2work=ride2work/ride2work:$BUILD_NUMBER'
