@@ -6,7 +6,7 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-    stage('Static code analysis') {
+/*    stage('Static code analysis') {
       environment {
         scannerHome = '/opt/sonar_scanner'
       }
@@ -20,7 +20,7 @@ pipeline {
         }
 
       }
-    }
+    } */
     stage('Build Docker Image') {
       steps {
         script {
