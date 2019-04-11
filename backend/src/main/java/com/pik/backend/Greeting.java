@@ -1,4 +1,4 @@
-package com.pik.ride2work;
+package com.pik.backend;
 
 public class Greeting {
     private final long id;
