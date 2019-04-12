@@ -29,7 +29,7 @@ pipeline {
 
       }
     }
-    stage('Push to repositories') {
+/*    stage('Push to repositories') {
       when{ branch 'master'}
       
       parallel {
@@ -49,6 +49,17 @@ pipeline {
 
           }
         }
+      }
+    } */
+    stage('Push Image To DockerHub') {
+      steps {
+        script {
+          docker.withRegistry('', registryCredential) {
+            dockerImage.push()
+            dockerImage.push('latest')
+          }
+        }
+
       }
     }
     stage('Remove Unused Docker Image') {
