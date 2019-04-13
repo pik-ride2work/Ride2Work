@@ -1,6 +1,7 @@
 FROM openjdk:8-jdk-alpine
 MAINTAINER jferec
 EXPOSE 8080
+WORKDIR /
 COPY wrapper_runner.sh ./
 COPY backend/target/backend-1.0-SNAPSHOT.jar ./
 FROM node:8.11.2-alpine
