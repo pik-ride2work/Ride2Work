@@ -1,4 +1,4 @@
-package com.pik.ride2work;
+package com.pik.backend;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
