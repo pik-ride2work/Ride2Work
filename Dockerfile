@@ -5,7 +5,7 @@ ARG JAR_FILE=backend/target/backend-1.0-SNAPSHOT.jar
 ADD ${JAR_FILE} ride2work.jar
 CMD java -jar /ride2work.jar
 
-FROM node:8.11.2-alpine as node
+FROM node:8.11.2-alpine
 WORKDIR /usr/src/app
 COPY frontend/src/main/web/package*.json ./
 RUN npm install
