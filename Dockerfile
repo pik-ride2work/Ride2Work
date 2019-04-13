@@ -13,6 +13,6 @@ RUN npm config set unsafe-perm true
 RUN npm install -g @angular/cli@1.7.1
 COPY . .
 WORKDIR frontend/src/main/web
-CMD ["ng","serve","--host", "0.0.0.0"]
+CMD npm start
 
 
