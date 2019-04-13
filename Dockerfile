@@ -9,7 +9,7 @@ COPY frontend/src/main/web/package*.json ./
 RUN npm install
 RUN npm config set unsafe-perm true
 RUN npm install -g @angular/cli@1.7.1
-COPY . .
-CMD ./my_wrapper_script.sh
+COPY . .x
+CMD ./wrapper_runner.sh
 
 
