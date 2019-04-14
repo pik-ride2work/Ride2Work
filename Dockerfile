@@ -14,4 +14,6 @@ RUN npm rebuild node-sass
 
 RUN npm run build
 
+CMD npm start
+
 
