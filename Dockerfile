@@ -22,7 +22,7 @@ EXPOSE 4200
 
 ENV PORT 4200
 
-RUN sudo apt install default-jdk
+RUN apt install default-jdk
 
 COPY runner.sh ./
 
