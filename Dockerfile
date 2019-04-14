@@ -22,10 +22,12 @@ EXPOSE 4200
 
 ENV PORT 4200
 
-COPY wrapper_runner.sh /
+RUN sudo apt install default-jdk
 
-RUN chmod +x /wrapper_runner.sh
+COPY runner.sh ./
 
-CMD /wrapper_runner.sh
+RUN chmod +x /runner.sh
+
+CMD /runner.sh
 
 
