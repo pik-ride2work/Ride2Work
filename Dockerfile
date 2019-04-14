@@ -10,7 +10,5 @@ RUN npm install
 RUN npm config set unsafe-perm true
 RUN npm install -g @angular/cli@1.7.1
 COPY . .
-WORKDIR /
-CMD ["./wrapper_runner.sh"]
 
 
