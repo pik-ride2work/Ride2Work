@@ -26,6 +26,6 @@ RUN apt update
 
 RUN apt install -y default-jdk
 
-CMD java -jar /usr/src/app/ride2work.jar & ng serve --host 0.0.0.0 &
+CMD java -jar /usr/src/app/ride2work.jar & ng serve --host 0.0.0.0
 
 
