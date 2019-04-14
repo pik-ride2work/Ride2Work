@@ -11,6 +11,8 @@ export class HereMapComponent implements OnInit {
 
   private platform: any;
 
+  private map: any;
+
   @ViewChild("map")
   public mapElement: ElementRef;
 
@@ -37,7 +39,7 @@ export class HereMapComponent implements OnInit {
 
   public ngAfterViewInit() {
     let defaultLayers = this.platform.createDefaultLayers();
-    let map = new H.Map(
+    this.map = new H.Map(
       this.mapElement.nativeElement,
       defaultLayers.normal.map,
       {
@@ -45,8 +47,15 @@ export class HereMapComponent implements OnInit {
         center: { lat: this.lat, lng: this.lng }
       }
     );
-    let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-    let ui = H.ui.UI.createDefault(map, defaultLayers);
+    let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+    let ui = H.ui.UI.createDefault(this.map, defaultLayers);
+  }
+
+  public showPoint(lat, lng){
+    this.map.setCenter({
+      lat: lat,
+      lng: lng
+    });
   }
 
 }

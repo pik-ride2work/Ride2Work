@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatTableDataSource, MatSort} from "@angular/material";
 
 export interface RideHistory {
   id: number;
@@ -21,7 +21,9 @@ function getData() {
       max_speed: Math.floor(Math.random() * 40),
       avg_speed: Math.floor(Math.random() * 20),
       start_time: new Date(+(new Date()) - Math.floor(Math.random() * 10000000000)).toISOString().substring(0, 19).replace("T", " "),
-      finish_time: new Date(+(new Date()) - Math.floor(Math.random() * 10000000000)).toISOString().substring(0, 19).replace("T", " ")
+      finish_time: new Date(+(new Date()) - Math.floor(Math.random() * 10000000000)).toISOString().substring(0, 19).replace("T", " "),
+      lat: Math.random() * 0.5 + 52,
+      lng: Math.random() * 0.5 + 20.75
     };
 
     data.push(obj);
@@ -37,14 +39,20 @@ const ELEMENT_DATA: RideHistory[] = getData();
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
+  company = "Goldman Sachs";
+  userName = "Reginald";
+  userSurname = "Tempman";
+
   fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
   displayedColumns: string[] = ['id', 'distance', 'time', 'max_speed', 'avg_speed', 'start_time', 'finish_time'];
   dataSource = new MatTableDataSource<RideHistory>(ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }

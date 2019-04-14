@@ -14,6 +14,7 @@ import {
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule,
+  MatSortModule
 } from '@angular/material';
 import {HereMapComponent} from './here-map/here-map.component';
 
@@ -39,7 +40,8 @@ import {HereMapComponent} from './here-map/here-map.component';
     MatTableModule,
     MatPaginatorModule,
     MatListModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]
