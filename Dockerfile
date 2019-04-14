@@ -10,6 +10,8 @@ WORKDIR /usr/src/app/frontend/src/main/web
 
 RUN npm install
 
+RUN npm rebuild node-sass
+
 RUN npm run build
 
 
