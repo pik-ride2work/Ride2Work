@@ -2,9 +2,7 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-ARG JAR_FILE=backend/target/backend-1.0-SNAPSHOT.jar
-
-ADD ${JAR_FILE} ride2work.jar
+COPY backend/target/backend-1.0-SNAPSHOT.jar ./ride2work.jar
 
 COPY frontend/src/main/web/package*.json ./
 
