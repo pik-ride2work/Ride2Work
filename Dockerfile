@@ -1,5 +1,21 @@
-FROM tomcat:8.0.20-jre8
+FROM node:latest
 
-EXPOSE 8080
+WORKDIR /usr/src/app
 
-COPY backend/target/backend-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ride2work/ride2work.war
+COPY frontend/src/main/web/package*.json ./
+
+COPY . .
+
+WORKDIR /usr/src/app/frontend/src/main/web
+
+RUN npm cache clean --force && npm install
+
+RUN npm rebuild node-sass
+
+EXPOSE 4200
+
+ENV PORT 4200
+
+CMD ["ng","serve","--host","0.0.0.0"]
+
+
