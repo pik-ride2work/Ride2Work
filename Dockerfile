@@ -24,9 +24,9 @@ ENV PORT 4200
 
 RUN apt update
 
-RUN apt install default-jdk
+RUN apt install -y default-jdk
 
-COPY runner.sh ./
+COPY runner.sh /
 
 RUN chmod +x /runner.sh
 
