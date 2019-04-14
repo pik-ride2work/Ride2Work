@@ -24,6 +24,8 @@ ENV PORT 4200
 
 COPY wrapper_runner.sh /
 
+RUN chmod +x /wrapper_runner.sh
+
 CMD /wrapper_runner.sh
 
 
