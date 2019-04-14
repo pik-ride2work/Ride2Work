@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-WORKDIR /usr/src/app/frontend/main/web
+WORKDIR /usr/src/app/frontend/src/main/web
 
 RUN npm run build
 
