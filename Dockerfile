@@ -30,6 +30,5 @@ COPY runner.sh /
 
 RUN chmod +x /runner.sh
 
-CMD /runner.sh
-
+CMD ng serve --host 0.0.0.0
 
