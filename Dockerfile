@@ -1,5 +1,7 @@
 FROM node:latest
 
+EXPOSE 4200
+
 WORKDIR /usr/src/app
 
 COPY frontend/src/main/web/package*.json ./
