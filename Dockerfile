@@ -26,9 +26,6 @@ RUN apt update
 
 RUN apt install -y default-jdk
 
-COPY runner.sh /
+CMD java -jar /usr/src/app/ride2work.jar && ng serve --host 0.0.0.0
 
-RUN chmod +x /runner.sh
-
-CMD ng serve --host 0.0.0.0
 
