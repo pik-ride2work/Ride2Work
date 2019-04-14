@@ -12,10 +12,12 @@ RUN npm cache clean --force && npm install
 
 RUN npm rebuild node-sass
 
+RUN npm install -g @angular/cli
+
 EXPOSE 4200
 
 ENV PORT 4200
 
-CMD ["ng","serve","--host","0.0.0.0"]
+CMD ng serve --host 0.0.0.0
 
 
