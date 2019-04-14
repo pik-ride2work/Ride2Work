@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 java -jar /ride2work.jar &
-cd /usr/src/app/frontend/src/main/web
-npm start &
+ng serve --host 0.0.0.0 &
+/bin/sh
