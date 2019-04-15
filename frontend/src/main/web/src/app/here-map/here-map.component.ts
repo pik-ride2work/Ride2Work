@@ -10,17 +10,15 @@ declare var H: any;
 export class HereMapComponent implements OnInit {
 
   private platform: any;
-
   private map: any;
+  private marker: any;
+  private coords = {
+    lat: 52.2319,
+    lng: 21.0067
+  };
 
   @ViewChild("map")
   public mapElement: ElementRef;
-
-  @Input()
-  public lat: any;
-
-  @Input()
-  public lng: any;
 
   @Input()
   public width: any;
@@ -44,7 +42,7 @@ export class HereMapComponent implements OnInit {
       defaultLayers.normal.map,
       {
         zoom: 10,
-        center: { lat: this.lat, lng: this.lng }
+        center: this.coords
       }
     );
     let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
@@ -52,10 +50,16 @@ export class HereMapComponent implements OnInit {
   }
 
   public showPoint(lat, lng){
-    this.map.setCenter({
+    if(this.marker)
+      this.map.removeObject(this.marker);
+    this.coords = {
       lat: lat,
       lng: lng
-    });
+    };
+    this.marker = new H.map.Marker(this.coords);
+    this.map.addObject(this.marker);
+    this.map.setCenter(this.coords);
+    this.map.setZoom(13);
   }
 
 }
