@@ -1,26 +1,36 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
-import {AppRoutingModule} from './app-routing.module';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {AgmCoreModule} from '@agm/core';
-import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatGridListModule,
+  MatIconModule,
+  MatListModule,
+  MatPaginatorModule,
+  MatSidenavModule,
+  MatTableModule,
+  MatToolbarModule,
+  MatSortModule,
+  MatCardModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
+
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
 import {HereMapComponent} from './here-map/here-map.component';
 import {RidesHistoryComponent} from './rides-history/rides-history.component';
 import {HomeComponent} from "./home/home.component";
 import {LoginComponent} from "./login/login.component";
-
-import {
-  MatButtonModule, MatInputModule,
-  MatGridListModule,
-  MatIconModule, MatListModule, MatPaginatorModule,
-  MatSidenavModule,
-  MatTableModule,
-  MatToolbarModule,
-  MatSortModule, MatCardModule
-} from '@angular/material';
+import {AlertComponent} from './alert/alert.component';
+import {AuthGuard} from "./_guards";
+import {AuthService} from "./_services";
+import {ErrorInterceptor} from "./_interceptors/error.interceptor";
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -28,30 +38,35 @@ import {
     HereMapComponent,
     RidesHistoryComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    AlertComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    HttpClientModule,
     CommonModule,
     FormsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'YOUR_KEY'
-    }),
     BrowserAnimationsModule,
+    AppRoutingModule,
     MatButtonModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatGridListModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatListModule,
     MatInputModule,
+    MatGridListModule,
+    MatIconModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatToolbarModule,
     MatSortModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [
+    AuthGuard,
+    AuthService,
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
