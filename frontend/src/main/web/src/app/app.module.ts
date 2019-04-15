@@ -14,16 +14,20 @@ import {
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule,
-  MatSortModule
+  MatSortModule, MatCardModule
 } from '@angular/material';
 import {HereMapComponent} from './here-map/here-map.component';
 import { RidesHistoryComponent } from './rides-history/rides-history.component';
+import {HomeComponent} from "./home/home.component";
+import {LoginComponent} from "./login/login.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HereMapComponent,
-    RidesHistoryComponent
+    RidesHistoryComponent,
+    HomeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +47,8 @@ import { RidesHistoryComponent } from './rides-history/rides-history.component';
     MatPaginatorModule,
     MatListModule,
     MatInputModule,
-    MatSortModule
+    MatSortModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
