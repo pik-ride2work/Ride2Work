@@ -3,24 +3,10 @@ pipeline {
   stages {
     stage('Build JAR') {
       steps {
-        sh 'mvn clean install'
+        sh '''mvn clean install
+echo \'hello\''''
       }
     }
-/*    stage('Static code analysis') {
-      environment {
-        scannerHome = '/opt/sonar_scanner'
-      }
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "${scannerHome}/bin/sonar-scanner"
-        }
-
-        timeout(time: 10, unit: 'MINUTES') {
-          waitForQualityGate true
-        }
-
-      }
-    } */
     stage('Build Docker Image') {
       steps {
         script {
@@ -29,28 +15,6 @@ pipeline {
 
       }
     }
-/*    stage('Push to repositories') {
-      when{ branch 'master'}
-      
-      parallel {
-        stage('Push JAR to Nexus') {
-          steps {
-            sh 'mvn deploy'
-          }
-        }
-        stage('Push Image To DockerHub') {
-          steps {
-            script {
-              docker.withRegistry('', registryCredential) {
-                dockerImage.push()
-                dockerImage.push('latest')
-              }
-            }
-
-          }
-        }
-      }
-    } */
     stage('Push Image To DockerHub') {
       steps {
         script {
@@ -63,26 +27,30 @@ pipeline {
       }
     }
     stage('Remove Unused Docker Image') {
-      when{ branch 'master'}
-      
+      when {
+        branch 'master'
+      }
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
     stage('Approve deployment') {
-      when{ branch 'master'}
-      
+      when {
+        branch 'master'
+      }
       steps {
         input 'Deploy on K8s?'
       }
     }
     stage('Deploy on K8s') {
-      when{ branch 'master'}
-      
+      when {
+        branch 'master'
+      }
       steps {
         withKubeConfig(credentialsId: 'k8scli', serverUrl: 'https://35.204.194.137') {
           sh 'kubectl set image deployment/ride2work ride2work=ride2work/ride2work:$BUILD_NUMBER'
         }
+
       }
     }
   }
