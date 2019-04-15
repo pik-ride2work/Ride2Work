@@ -1,0 +1,21 @@
+<div class="login-page">
+  <mat-card class="login-box">
+    <mat-card-content class="login-content">
+      <div class="login-logo">
+        <i class="material-icons">directions_bike</i>
+      </div>
+      <h2 class="login-header">Ride2Work</h2>
+      <form>
+        <mat-form-field class="login-field">
+          <input matInput placeholder="Login" [(ngModel)]="username" name="username">
+        </mat-form-field>
+
+        <mat-form-field class="login-field">
+          <input matInput placeholder="Password" [(ngModel)]="password"type="password" name="password">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="login-button" (click)="login()">LOGIN</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

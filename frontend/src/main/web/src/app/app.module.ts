@@ -7,6 +7,11 @@ import {FormsModule} from '@angular/forms';
 import {AgmCoreModule} from '@agm/core';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HereMapComponent} from './here-map/here-map.component';
+import {RidesHistoryComponent} from './rides-history/rides-history.component';
+import {HomeComponent} from "./home/home.component";
+import {LoginComponent} from "./login/login.component";
+
 import {
   MatButtonModule, MatInputModule,
   MatGridListModule,
@@ -14,13 +19,16 @@ import {
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule,
+  MatSortModule, MatCardModule
 } from '@angular/material';
-import {HereMapComponent} from './here-map/here-map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HereMapComponent
+    HereMapComponent,
+    RidesHistoryComponent,
+    HomeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +47,9 @@ import {HereMapComponent} from './here-map/here-map.component';
     MatTableModule,
     MatPaginatorModule,
     MatListModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
