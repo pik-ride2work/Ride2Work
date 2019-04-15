@@ -17,11 +17,13 @@ import {
   MatSortModule
 } from '@angular/material';
 import {HereMapComponent} from './here-map/here-map.component';
+import { RidesHistoryComponent } from './rides-history/rides-history.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HereMapComponent
+    HereMapComponent,
+    RidesHistoryComponent
   ],
   imports: [
     BrowserModule,
