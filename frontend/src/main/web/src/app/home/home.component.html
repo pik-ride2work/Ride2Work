@@ -18,7 +18,7 @@
           <input matInput placeholder="Surname" readonly value="{{userSurname}}">
         </mat-form-field>
         <a mat-list-item>Upload ride</a>
-        <a mat-list-item>Log out</a>
+        <a mat-list-item (click)="logout()">Log out</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="content">

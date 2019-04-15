@@ -61,5 +61,4 @@ export class HereMapComponent implements OnInit {
     this.map.setCenter(this.coords);
     this.map.setZoom(13);
   }
-
 }
