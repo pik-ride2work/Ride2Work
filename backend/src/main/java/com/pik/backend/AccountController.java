@@ -1,29 +1,27 @@
 package com.pik.backend;
 
-import static com.pik.ride2work.Tables.USER;
-
-import com.pik.ride2work.Tables;
-import com.pik.ride2work.tables.daos.UserDao;
+import com.pik.backend.service_impl.DefaultUserService;
 import com.pik.ride2work.tables.pojos.User;
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
+import com.pik.ride2work.tables.records.UserRecord;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class AccountController {
-   //do skonfigurowania - autowired
+    private final DefaultUserService userService;
 
-   AccountController(){
+    AccountController(DefaultUserService userService) {
+        this.userService = userService;
+    }
 
-   }
-
-   @GetMapping("/users/{username}")
-   public User getUserByUsername(@PathVariable String username){
-    return null;
-   }
+    @GetMapping("/users/{username}")
+    @ResponseBody
+    public User getUserByUsername(@PathVariable String username) {
+        return userService.getByUsername(username);
+    }
 }

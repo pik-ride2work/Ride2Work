@@ -25,4 +25,5 @@ public class HelloWorldController {
     public Greeting sayGoodBye(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(BYE_TEMPLATE, name));
     }
+
 }
