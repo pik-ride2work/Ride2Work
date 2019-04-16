@@ -155,7 +155,7 @@
                     <!-- JDBC connection parameters -->
                     <jdbc>
                         <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://35.204.26.36:30192/ride2work</url>
+                        <url>jdbc:postgresql://35.204.26.36:31671/ride2work</url>
                         <user>postgres</user>
                         <password></password>
                     </jdbc>
@@ -175,6 +175,10 @@
                             <packageName>com.pik.ride2work</packageName>
                             <directory>target/generated-sources/jooq</directory>
                         </target>
+                        <generate>
+                            <daos>true</daos>
+                            <pojos>true</pojos>
+                        </generate>
                     </generator>
                 </configuration>
             </plugin>
