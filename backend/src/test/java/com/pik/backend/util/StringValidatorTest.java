@@ -1,6 +1,5 @@
 package com.pik.backend.util;
 
-import com.pik.backend.util.StringValidator;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,7 +12,7 @@ public class StringValidatorTest {
     private static String ELEVEN_LETTER_STRING = "abcdefghijk";
     private static String MIXED_FOUR_LETTER_STRING = "2A3c";
     private static String MIXED_ELEVEN_LETTER_STRING = "ab3Def9h1jk";
-    private static String SPECIAL_CHARS = "a!#[]";
+    private static String SPECIAL_CHARS_FIVE = "a!#[]";
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionOnWrongParamsLettersOnly_1() {
@@ -64,7 +63,7 @@ public class StringValidatorTest {
         assertFalse(validator.lettersOnly(12, Integer.MAX_VALUE, ELEVEN_LETTER_STRING));
         assertFalse(validator.lettersOnly(2, Integer.MAX_VALUE, "a"));
         assertFalse(validator.lettersOnly(2, 10, MIXED_ELEVEN_LETTER_STRING));
-        assertFalse(validator.lettersOnly(2, 10, SPECIAL_CHARS));
+        assertFalse(validator.lettersOnly(2, 10, SPECIAL_CHARS_FIVE));
     }
 
     @Test
@@ -83,15 +82,29 @@ public class StringValidatorTest {
         assertFalse(validator.lettersAndDigits(10, 10, ELEVEN_LETTER_STRING));
         assertFalse(validator.lettersAndDigits(10, 10, MIXED_ELEVEN_LETTER_STRING));
         assertFalse(validator.lettersAndDigits(5, Integer.MAX_VALUE, MIXED_FOUR_LETTER_STRING));
-        assertFalse(validator.lettersAndDigits(0, Integer.MAX_VALUE, SPECIAL_CHARS));
+        assertFalse(validator.lettersAndDigits(0, Integer.MAX_VALUE, SPECIAL_CHARS_FIVE));
     }
 
     @Test
-    public void shouldReturnTrueForValidInputLettersDigits(){
+    public void shouldReturnTrueForValidInputLettersDigits() {
         assertTrue(validator.lettersAndDigits(1, 4, FOUR_LETTER_STRING));
         assertTrue(validator.lettersAndDigits(1, 4, MIXED_FOUR_LETTER_STRING));
         assertTrue(validator.lettersAndDigits(4, 8, MIXED_FOUR_LETTER_STRING));
         assertTrue(validator.lettersAndDigits(11, 11, MIXED_ELEVEN_LETTER_STRING));
         assertTrue(validator.lettersAndDigits(9, 11, ELEVEN_LETTER_STRING));
+    }
+
+    @Test
+    public void shouldReturnTrueForInputWithAValidLength() {
+        assertTrue(validator.anyChars(2, 11, FOUR_LETTER_STRING));
+        assertTrue(validator.anyChars(2, 4, ANY_STRING));
+        assertTrue(validator.anyChars(11, 11, MIXED_ELEVEN_LETTER_STRING));
+        assertTrue(validator.anyChars(2, 5, SPECIAL_CHARS_FIVE));
+    }
+
+    @Test
+    public void shouldReturnFalseForInputWithAWrongLength() {
+        assertFalse(validator.anyChars(2, 3, FOUR_LETTER_STRING));
+        assertFalse(validator.anyChars(12, 13, ELEVEN_LETTER_STRING));
     }
 }

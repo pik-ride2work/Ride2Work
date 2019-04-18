@@ -4,10 +4,19 @@ import com.google.common.base.Strings;
 import com.pik.ride2work.tables.pojos.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import static java.lang.String.*;
+
 public class UserInputValidator implements RestInputValidator<User> {
 
     private static EmailValidator emailValidator = EmailValidator.getInstance();
     private static StringValidator stringValidator = StringValidator.getInstance();
+    private static String USERNAME_FORMAT_TEMPLATE = "Invalid username format (Should be %s-%s characters long, no special chars)";
+    private static String PASSWORD_FORMAT_TEMPLATE = "Invalid password format (Should be %s-%s characters long)";
+    private static String NAME_FORMAT_TEMPLATE = "Invalid %s format (Should be %s-%s characters long, English letters only)";
+    private static int CRED_MIN_LEN = 6;
+    private static int CRED_MAX_LEN = 32;
+    private static int NAME_MIN_LEN = 2;
+    private static int NAME_MAX_LEN = 32;
 
     @Override
     public Validated validCreateInput(User input) {
@@ -17,17 +26,17 @@ public class UserInputValidator implements RestInputValidator<User> {
         if (!emailValidator.isValid(input.getEmail())) {
             return Validated.invalid("Invalid email format.");
         }
-        if (!stringValidator.lettersOnly(6, 32, input.getUsername())) {
-            return Validated.invalid("Invalid username format (Should be 6-32 characters long)");
+        if (!stringValidator.lettersAndDigits(CRED_MIN_LEN, CRED_MAX_LEN, input.getUsername())) {
+            return Validated.invalid(format(USERNAME_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (!stringValidator.lettersOnly(8, 32, input.getPassword())) {
-            return Validated.invalid("Invalid password format.(Should be 8-32 characters long)");
+        if (!stringValidator.anyChars(CRED_MIN_LEN, CRED_MAX_LEN, input.getPassword())) {
+            return Validated.invalid(format(PASSWORD_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (!stringValidator.lettersOnly(2, 32, input.getFirstName())) {
-            return Validated.invalid("Invalid firstname format.");
+        if (!stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getFirstName())) {
+            return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "first name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
-        if (!stringValidator.lettersOnly(2, 32, input.getLastName())) {
-            return Validated.invalid("Invalid firstname format.");
+        if (!stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getLastName())) {
+            return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "last name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
         return Validated.valid();
     }
@@ -40,17 +49,17 @@ public class UserInputValidator implements RestInputValidator<User> {
         if (input.getEmail() != null && !emailValidator.isValid(input.getEmail())) {
             return Validated.invalid("Invalid email format.");
         }
-        if (Strings.isNullOrEmpty(input.getUsername()) && !stringValidator.lettersOnly(6, 32, input.getUsername())) {
-            return Validated.invalid("Invalid username format (Should be 6-32 characters long)");
+        if (Strings.isNullOrEmpty(input.getUsername()) && !stringValidator.lettersAndDigits(CRED_MIN_LEN, CRED_MAX_LEN, input.getUsername())) {
+            return Validated.invalid(format(USERNAME_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getPassword()) && !stringValidator.lettersOnly(8, 32, input.getPassword())) {
-            return Validated.invalid("Invalid password format.(Should be 8-32 characters long)");
+        if (Strings.isNullOrEmpty(input.getPassword()) && !stringValidator.anyChars(CRED_MIN_LEN, CRED_MAX_LEN, input.getPassword())) {
+            return Validated.invalid(format(PASSWORD_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getFirstName()) && !stringValidator.lettersOnly(2, 32, input.getFirstName())) {
-            return Validated.invalid("Invalid firstname format.");
+        if (Strings.isNullOrEmpty(input.getFirstName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getFirstName())) {
+            return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "first name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getLastName()) && !stringValidator.lettersOnly(2, 32, input.getLastName())) {
-            return Validated.invalid("Invalid firstname format.");
+        if (Strings.isNullOrEmpty(input.getLastName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getLastName())) {
+            return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "last name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
         return Validated.valid();
     }

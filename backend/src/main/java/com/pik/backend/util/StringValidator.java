@@ -11,6 +11,10 @@ public class StringValidator {
         return new StringValidator();
     }
 
+    boolean anyChars(int min, int max, String input) {
+        return entryCheck(min, max, input);
+    }
+
     boolean lettersOnly(int min, int max, String input) {
         if (!entryCheck(min, max, input)) {
             return false;
