@@ -1,5 +1,6 @@
-package com.pik.backend;
+package com.pik.backend.util;
 
+import com.pik.backend.util.StringValidator;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

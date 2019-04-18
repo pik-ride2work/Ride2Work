@@ -1,4 +1,4 @@
-package com.pik.backend;
+package com.pik.backend.controllers;
 
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;

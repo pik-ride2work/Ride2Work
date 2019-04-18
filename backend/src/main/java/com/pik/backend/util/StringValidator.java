@@ -1,4 +1,4 @@
-package com.pik.backend;
+package com.pik.backend.util;
 
 import com.google.common.base.Strings;
 

@@ -1,6 +1,6 @@
-package com.pik.backend;
+package com.pik.backend.controllers;
 
-import com.pik.backend.service_impl.DefaultUserService;
+import com.pik.backend.services.DefaultUserService;
 import com.pik.ride2work.tables.pojos.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
+@CrossOrigin(origins = "localhost:4200")
 public class UserController {
     private final DefaultUserService userService;
 

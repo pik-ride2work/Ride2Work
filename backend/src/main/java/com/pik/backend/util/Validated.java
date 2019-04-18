@@ -1,4 +1,4 @@
-package com.pik.backend;
+package com.pik.backend.util;
 
 public class Validated {
     private final boolean isValid;
