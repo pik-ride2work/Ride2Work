@@ -1,4 +1,4 @@
-package com.pik.backend;
+package com.pik.backend.services;
 
 import com.pik.ride2work.tables.pojos.User;
 import org.springframework.transaction.annotation.Transactional;

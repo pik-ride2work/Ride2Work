@@ -1,8 +1,7 @@
-package com.pik.backend.service_impl;
+package com.pik.backend.services;
 
-import com.pik.backend.UserInputValidator;
-import com.pik.backend.UserService;
-import com.pik.backend.Validated;
+import com.pik.backend.util.UserInputValidator;
+import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.UserRecord;
 import org.jooq.DSLContext;
