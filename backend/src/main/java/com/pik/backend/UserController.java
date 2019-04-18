@@ -51,15 +51,20 @@ public class UserController {
                 .body(newUser);
     }
 
-    @PutMapping(value = "/users/{id}", consumes = "application/json")
-    public ResponseEntity updateUser(@RequestBody User user, @RequestParam Integer id) {
+    @PutMapping(value = "/users", consumes = "application/json")
+    public ResponseEntity updateUser(@RequestBody User user) {
         User updatedUser = null;
         try {
-            updatedUser = userService.update(user, id);
+            updatedUser = userService.update(user);
         } catch (DataAccessException e) {
             return ResponseEntity
                     .badRequest()
                     .body(e.getMessage());
+        }
+        if (updatedUser == null) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
         }
         return ResponseEntity
                 .ok()

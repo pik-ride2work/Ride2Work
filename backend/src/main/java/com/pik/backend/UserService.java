@@ -8,7 +8,7 @@ public interface UserService {
     User create(User user);
 
     @Transactional
-    User update(User user, Integer id);
+    User update(User user);
 
     User getByUsername(String username);
 }
