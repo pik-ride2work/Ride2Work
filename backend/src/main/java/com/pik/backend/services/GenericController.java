@@ -5,7 +5,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public class GenericController<T, R extends Record> {
     private final GenericService<T, R> service;
 
@@ -48,7 +47,11 @@ public class GenericController<T, R extends Record> {
 
     public ResponseEntity delete(Integer id) {
         try {
-            service.delete(id);
+            if (service.delete(id) == 0) {
+                return ResponseEntity
+                        .notFound()
+                        .build();
+            }
         } catch (DataAccessException e) {
             return ResponseEntity
                     .badRequest()

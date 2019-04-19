@@ -3,9 +3,7 @@ package com.pik.backend.services;
 import com.pik.backend.util.RestInputValidator;
 import com.pik.backend.util.Validated;
 import org.jooq.*;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class GenericService<T, R extends Record> {
     private final Table<R> table;
     private final Class<T> clazz;
@@ -46,8 +44,9 @@ public class GenericService<T, R extends Record> {
         return (updatedRecord == null) ? null : updatedRecord.into(clazz);
     }
 
-    void delete(Integer id) {
-        dsl.delete(table)
-                .where(idField.eq(id));
+    int delete(Integer id) {
+        return dsl.delete(table)
+                .where(idField.eq(id))
+                .execute();
     }
 }

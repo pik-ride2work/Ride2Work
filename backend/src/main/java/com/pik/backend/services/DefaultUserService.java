@@ -12,25 +12,13 @@ import static com.pik.ride2work.Tables.*;
 
 @Repository
 public class DefaultUserService implements UserService {
-    private final GenericService<User, UserRecord> genericService;
     private final UserInputValidator validator;
     private final DSLContext dsl;
 
     @Autowired
-    public DefaultUserService(GenericService<User, UserRecord> genericService, UserInputValidator validator, DSLContext dsl) {
-        this.genericService = genericService;
+    public DefaultUserService(UserInputValidator validator, DSLContext dsl) {
         this.validator = validator;
         this.dsl = dsl;
-    }
-
-    @Override
-    public User create(User user) {
-        return genericService.create(user);
-    }
-
-    @Override
-    public User update(User user, Integer id) {
-        return genericService.update(user, id);
     }
 
     @Override
