@@ -1,13 +1,15 @@
 package com.pik.backend.services;
 
-import com.pik.ride2work.Tables;
+import org.jooq.Record;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 
-public class GenericController<T> {
-    private final GenericService<T> service;
+@Repository
+public class GenericController<T, R extends Record> {
+    private final GenericService<T, R> service;
 
-    public GenericController(GenericService<T> service) {
+    public GenericController(GenericService<T, R> service) {
         this.service = service;
     }
 
@@ -25,10 +27,10 @@ public class GenericController<T> {
                 .body(newObject);
     }
 
-    public ResponseEntity update(T input) {
+    public ResponseEntity update(T input, Integer id) {
         T updatedObject = null;
         try {
-            updatedObject = service.update(input);
+            updatedObject = service.update(input, id);
         } catch (DataAccessException e) {
             return ResponseEntity
                     .badRequest()

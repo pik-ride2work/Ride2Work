@@ -22,40 +22,6 @@ public class DefaultTeamService implements TeamService {
     }
 
     @Override
-    public Team create(Team team) {
-        Validated validation = validator.validCreateInput(team);
-        if (!validation.isValid()) {
-            throw new IllegalArgumentException(validation.getCause());
-        }
-        return dsl.insertInto(TEAM)
-                .set(dsl.newRecord(TEAM, team))
-                .returning(TEAM.fields())
-                .fetchOne()
-                .into(Team.class);
-    }
-
-    @Override
-    public Team update(Team team) {
-        Validated validation = validator.validUpdateInput(team);
-        if (validation.isValid()) {
-            throw new IllegalArgumentException(validation.getCause());
-        }
-        TeamRecord updatedRecord = dsl.update(TEAM)
-                .set(dsl.newRecord(TEAM, team))
-                .where(TEAM.ID.eq(team.getId()))
-                .returning(TEAM.fields())
-                .fetchOne();
-        return (updatedRecord == null) ? null : updatedRecord.into(Team.class);
-    }
-
-
-    @Override
-    public void delete(Integer id) {
-        dsl.delete(TEAM)
-                .where(TEAM.ID.eq(id));
-    }
-
-    @Override
     public List<Team> list() {
         return dsl.selectFrom(TEAM)
                 .fetch()

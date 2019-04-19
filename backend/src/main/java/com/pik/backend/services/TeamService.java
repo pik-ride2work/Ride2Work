@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
-public interface TeamService extends GenericService<Team>{
+public interface TeamService{
 
     public List<Team> list();
 

@@ -12,41 +12,25 @@ import static com.pik.ride2work.Tables.*;
 
 @Repository
 public class DefaultUserService implements UserService {
-    private final GenericService<T> genericService
+    private final GenericService<User, UserRecord> genericService;
     private final UserInputValidator validator;
     private final DSLContext dsl;
 
     @Autowired
-    public DefaultUserService(UserInputValidator validator, DSLContext dsl) {
+    public DefaultUserService(GenericService<User, UserRecord> genericService, UserInputValidator validator, DSLContext dsl) {
+        this.genericService = genericService;
         this.validator = validator;
         this.dsl = dsl;
     }
 
     @Override
     public User create(User user) {
-        Validated validation = validator.validCreateInput(user);
-        if (!validation.isValid()) {
-            throw new IllegalArgumentException(validation.getCause());
-        }
-        return dsl.insertInto(USER)
-                .set(dsl.newRecord(USER, user))
-                .returning(USER.fields())
-                .fetchOne()
-                .into(User.class);
+        return genericService.create(user);
     }
 
     @Override
-    public User update(User user) {
-        Validated validation = validator.validUpdateInput(user);
-        if (!validation.isValid()) {
-            throw new IllegalArgumentException(validation.getCause());
-        }
-        UserRecord updatedRecord = dsl.update(USER)
-                .set(dsl.newRecord(USER, user))
-                .where(USER.ID.eq(user.getId()))
-                .returning(USER.fields())
-                .fetchOne();
-        return (updatedRecord == null) ? null : updatedRecord.into(User.class);
+    public User update(User user, Integer id) {
+        return genericService.update(user, id);
     }
 
     @Override

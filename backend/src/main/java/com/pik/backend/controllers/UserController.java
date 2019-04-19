@@ -2,8 +2,9 @@ package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultUserService;
 import com.pik.backend.services.GenericController;
-import com.pik.backend.services.GenericService;
+import com.pik.backend.services.UserService;
 import com.pik.ride2work.tables.pojos.User;
+import com.pik.ride2work.tables.records.UserRecord;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @CrossOrigin(origins = "localhost:4200")
 public class UserController {
-    private final DefaultUserService userService;
-    private final GenericController<User> userController;
-    UserController(DefaultUserService userService) {
+    private final GenericController<User, UserRecord> userController;
+    private final UserService userService;
+
+    UserController(GenericController<User, UserRecord> userController, UserService userService) {
+        this.userController = userController;
         this.userService = userService;
-        this.userController = new GenericController<>(userService);
     }
 
     @GetMapping("/users/{username}")
@@ -47,6 +49,6 @@ public class UserController {
 
     @PutMapping(value = "/users", consumes = "application/json")
     public ResponseEntity updateUser(@RequestBody User user) {
-        return userController.update(user);
+        return userController.update(user, user.getId());
     }
 }
