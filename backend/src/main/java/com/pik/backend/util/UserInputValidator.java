@@ -3,11 +3,9 @@ package com.pik.backend.util;
 import com.google.common.base.Strings;
 import com.pik.ride2work.tables.pojos.User;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.stereotype.Component;
 
 import static java.lang.String.*;
 
-@Component
 public class UserInputValidator implements RestInputValidator<User> {
 
     private static EmailValidator emailValidator = EmailValidator.getInstance();
