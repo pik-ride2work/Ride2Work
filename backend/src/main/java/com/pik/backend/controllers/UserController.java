@@ -1,6 +1,8 @@
 package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultUserService;
+import com.pik.backend.services.GenericController;
+import com.pik.backend.services.GenericService;
 import com.pik.ride2work.tables.pojos.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "localhost:4200")
 public class UserController {
     private final DefaultUserService userService;
-
+    private final GenericController<User> userController;
     UserController(DefaultUserService userService) {
         this.userService = userService;
+        this.userController = new GenericController<>(userService);
     }
 
     @GetMapping("/users/{username}")
@@ -39,36 +42,11 @@ public class UserController {
 
     @PostMapping(value = "/users", consumes = "application/json")
     public ResponseEntity createUser(@RequestBody User user) {
-        User newUser = null;
-        try {
-            newUser = userService.create(user);
-        } catch (DataAccessException | IllegalArgumentException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-        return ResponseEntity
-                .ok()
-                .body(newUser);
+        return userController.create(user);
     }
 
     @PutMapping(value = "/users", consumes = "application/json")
     public ResponseEntity updateUser(@RequestBody User user) {
-        User updatedUser = null;
-        try {
-            updatedUser = userService.update(user);
-        } catch (DataAccessException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-        if (updatedUser == null) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-        return ResponseEntity
-                .ok()
-                .body(updatedUser);
+        return userController.update(user);
     }
 }
