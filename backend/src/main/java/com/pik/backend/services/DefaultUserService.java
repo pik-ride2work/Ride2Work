@@ -12,6 +12,7 @@ import static com.pik.ride2work.Tables.*;
 
 @Repository
 public class DefaultUserService implements UserService {
+    private final GenericService<T> genericService
     private final UserInputValidator validator;
     private final DSLContext dsl;
 
