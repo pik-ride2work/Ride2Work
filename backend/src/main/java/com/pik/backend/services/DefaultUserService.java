@@ -12,39 +12,13 @@ import static com.pik.ride2work.Tables.*;
 
 @Repository
 public class DefaultUserService implements UserService {
-    private final UserInputValidator validator = new UserInputValidator();
+    private final UserInputValidator validator;
     private final DSLContext dsl;
 
     @Autowired
-    public DefaultUserService(DSLContext dsl) {
+    public DefaultUserService(UserInputValidator validator, DSLContext dsl) {
+        this.validator = validator;
         this.dsl = dsl;
-    }
-
-    @Override
-    public User create(User user) {
-        Validated validator = this.validator.validCreateInput(user);
-        if (!validator.isValid()) {
-            throw new IllegalArgumentException(validator.getCause());
-        }
-        return dsl.insertInto(USER)
-                .set(dsl.newRecord(USER, user))
-                .returning(USER.fields())
-                .fetchOne()
-                .into(User.class);
-    }
-
-    @Override
-    public User update(User user) {
-        Validated validator = this.validator.validUpdateInput(user);
-        if (!validator.isValid()) {
-            throw new IllegalArgumentException(validator.getCause());
-        }
-        UserRecord updatedRecord= dsl.update(USER)
-                .set(dsl.newRecord(USER, user))
-                .where(USER.ID.eq(user.getId()))
-                .returning(USER.fields())
-                .fetchOne();
-        return (updatedRecord == null) ? null : updatedRecord.into(User.class);
     }
 
     @Override
