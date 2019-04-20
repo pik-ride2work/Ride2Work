@@ -49,16 +49,16 @@ public class UserInputValidator implements RestInputValidator<User> {
         if (input.getEmail() != null && !emailValidator.isValid(input.getEmail())) {
             return Validated.invalid("Invalid email format.");
         }
-        if (Strings.isNullOrEmpty(input.getUsername()) && !stringValidator.lettersAndDigits(CRED_MIN_LEN, CRED_MAX_LEN, input.getUsername())) {
+        if (!Strings.isNullOrEmpty(input.getUsername()) && !stringValidator.lettersAndDigits(CRED_MIN_LEN, CRED_MAX_LEN, input.getUsername())) {
             return Validated.invalid(format(USERNAME_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getPassword()) && !stringValidator.anyChars(CRED_MIN_LEN, CRED_MAX_LEN, input.getPassword())) {
+        if (!Strings.isNullOrEmpty(input.getPassword()) && !stringValidator.anyChars(CRED_MIN_LEN, CRED_MAX_LEN, input.getPassword())) {
             return Validated.invalid(format(PASSWORD_FORMAT_TEMPLATE, CRED_MIN_LEN, CRED_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getFirstName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getFirstName())) {
+        if (!Strings.isNullOrEmpty(input.getFirstName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getFirstName())) {
             return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "first name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
-        if (Strings.isNullOrEmpty(input.getLastName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getLastName())) {
+        if (!Strings.isNullOrEmpty(input.getLastName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getLastName())) {
             return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "last name", NAME_MIN_LEN, NAME_MAX_LEN));
         }
         return Validated.valid();

@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 
 public interface TeamService {
-    public void delete(Integer id);
 
-    public Future<Team> create(Team team, Integer ownerId);
+  public Future<Void> delete(Integer teamId);
 
-    public Team update(Team team);
+  public Future<Team> create(Team team, Integer ownerId);
 
-    public List<Team> list();
+  public Future<Team> update(Team team);
 
-    public Team getByName(String name);
+  public Future<List<Team>> list();
+
+  public Future<Team> getByName(String name);
 }

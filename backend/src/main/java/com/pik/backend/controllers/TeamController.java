@@ -1,18 +1,18 @@
 package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultTeamService;
-import com.pik.backend.util.NotFoundException;
+import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Team;
-import com.pik.ride2work.tables.pojos.User;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
@@ -39,5 +39,57 @@ public class TeamController {
     }
   }
 
+  @PutMapping("/teams")
+  public ResponseEntity update(@RequestBody Team team) {
+    try {
+      Team updatedTeam = teamService.update(team).get();
+      return ResponseEntity
+          .ok(updatedTeam);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
+    }
+  }
+
+  @GetMapping("/teams/all")
+  public ResponseEntity list() {
+    try {
+      List<Team> list = teamService.list().get();
+      return ResponseEntity
+          .ok(list);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
+    }
+  }
+
+  @GetMapping("/teams/{name}")
+  public ResponseEntity getByName(@PathVariable String name) {
+    try {
+      Team team = teamService.getByName(name).get();
+      return ResponseEntity
+          .ok(team);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
+    }
+  }
+
+  @DeleteMapping("/teams/{id}")
+  public ResponseEntity delete(@PathVariable Integer id) {
+    try {
+      teamService.delete(id).get();
+      return ResponseEntity
+          .ok()
+          .build();
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
+    }
+  }
 
 }

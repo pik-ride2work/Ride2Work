@@ -1,6 +1,7 @@
 package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultUserService;
+import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.User;
 import java.util.concurrent.ExecutionException;
 import org.springframework.dao.DataAccessException;

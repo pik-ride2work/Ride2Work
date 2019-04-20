@@ -1,6 +1,6 @@
 package com.pik.backend.services;
 
-import com.pik.backend.util.NotFoundException;
+import com.pik.backend.util.DSLWrapper;
 import com.pik.backend.util.UserInputValidator;
 import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.pojos.User;
@@ -32,7 +32,7 @@ public class DefaultUserService implements UserService {
       future.completeExceptionally(validator.getCause());
       return future;
     }
-    dsl.transaction(cfg -> {
+    DSLWrapper.transaction(dsl, future, cfg -> {
       User created = dsl.insertInto(USER)
           .set(dsl.newRecord(USER, user))
           .returning(USER.fields())
@@ -51,17 +51,16 @@ public class DefaultUserService implements UserService {
       future.completeExceptionally(validator.getCause());
       return future;
     }
-    dsl.transaction(cfg -> {
+    DSLWrapper.transaction(dsl, future, cfg -> {
       UserRecord updatedRecord = dsl.update(USER)
           .set(dsl.newRecord(USER, user))
           .where(USER.ID.eq(user.getId()))
           .returning(USER.fields())
           .fetchOne();
       if (updatedRecord == null) {
-        future.completeExceptionally(new RuntimeException("User not found."));
-      } else {
-        future.complete(updatedRecord.into(User.class));
+        throw new NotFoundException("User not found.");
       }
+      future.complete(updatedRecord.into(User.class));
     });
     return future;
   }
@@ -69,15 +68,14 @@ public class DefaultUserService implements UserService {
   @Override
   public Future<User> getByUsername(String username) {
     CompletableFuture<User> future = new CompletableFuture<>();
-    dsl.transaction(cfg -> {
+    DSLWrapper.transaction(dsl, future, cfg -> {
       UserRecord userRecord = dsl.selectFrom(USER)
           .where(USER.USERNAME.eq(username))
           .fetchOne();
       if (userRecord == null) {
-        future.completeExceptionally(new RuntimeException("User not Found"));
-      } else {
-        future.complete(userRecord.into(User.class));
+        throw new NotFoundException("User not Found");
       }
+      future.complete(userRecord.into(User.class));
     });
     return future;
   }
