@@ -2,6 +2,7 @@ package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultUserService;
 import com.pik.ride2work.tables.pojos.User;
+import java.util.concurrent.ExecutionException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,64 +12,52 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @CrossOrigin(origins = "localhost:4200")
 public class UserController {
-    private final DefaultUserService userService;
 
-    UserController(DefaultUserService userService) {
-        this.userService = userService;
-    }
+  private final DefaultUserService userService;
 
-    @GetMapping("/users/{username}")
-    public ResponseEntity getUserByUsername(@PathVariable String username) {
-        User user = null;
-        try {
-            user = userService.getByUsername(username);
-        } catch (DataAccessException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-        if (user == null) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-        return ResponseEntity.
-                ok()
-                .body(user);
-    }
+  UserController(DefaultUserService userService) {
+    this.userService = userService;
+  }
 
-    @PostMapping(value = "/users", consumes = "application/json")
-    public ResponseEntity createUser(@RequestBody User user) {
-        User newUser = null;
-        try {
-            newUser = userService.create(user);
-        } catch (DataAccessException | IllegalArgumentException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-        return ResponseEntity
-                .ok()
-                .body(newUser);
+  @GetMapping("/users/{username}")
+  public ResponseEntity getUserByUsername(@PathVariable String username) {
+    try {
+      User user = userService.getByUsername(username).get();
+      return ResponseEntity.
+          ok()
+          .body(user);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
     }
+  }
 
-    @PutMapping(value = "/users", consumes = "application/json")
-    public ResponseEntity updateUser(@RequestBody User user) {
-        User updatedUser = null;
-        try {
-            updatedUser = userService.update(user);
-        } catch (DataAccessException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(e.getMessage());
-        }
-        if (updatedUser == null) {
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-        return ResponseEntity
-                .ok()
-                .body(updatedUser);
+  @PostMapping(value = "/users", consumes = "application/json")
+  public ResponseEntity createUser(@RequestBody User user) {
+    try {
+      User newUser = userService.create(user).get();
+      return ResponseEntity
+          .ok()
+          .body(newUser);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
     }
+  }
+
+  @PutMapping(value = "/users", consumes = "application/json")
+  public ResponseEntity updateUser(@RequestBody User user) {
+    try {
+      User updatedUser = userService.update(user).get();
+      return ResponseEntity
+          .ok()
+          .body(updatedUser);
+    } catch (Exception e) {
+      return ResponseEntity
+          .badRequest()
+          .body(ErrorResponse.error(e));
+    }
+  }
 }

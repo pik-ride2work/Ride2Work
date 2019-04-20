@@ -19,7 +19,7 @@ public class UserInputValidator implements RestInputValidator<User> {
     private static int NAME_MAX_LEN = 32;
 
     @Override
-    public Validated validCreateInput(User input) {
+    public Validated validateCreateInput(User input) {
         if (input.getId() != null) {
             return Validated.invalid("Created user should not have ID!");
         }
@@ -42,7 +42,7 @@ public class UserInputValidator implements RestInputValidator<User> {
     }
 
     @Override
-    public Validated validUpdateInput(User input) {
+    public Validated validateUpdateInput(User input) {
         if (input.getId() == null) {
             return Validated.invalid("Updated must have ID!");
         }
