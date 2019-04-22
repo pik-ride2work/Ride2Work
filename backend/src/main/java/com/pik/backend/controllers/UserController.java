@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@CrossOrigin(origins = "localhost:4200")
 public class UserController {
 
   private final DefaultUserService userService;
@@ -21,6 +20,7 @@ public class UserController {
   }
 
   @GetMapping("/users/{username}")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity getUserByUsername(@PathVariable String username) {
     try {
       User user = userService.getByUsername(username).get();
@@ -35,6 +35,7 @@ public class UserController {
   }
 
   @PostMapping(value = "/users", consumes = "application/json")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity createUser(@RequestBody User user) {
     try {
       User newUser = userService.create(user).get();
@@ -49,6 +50,7 @@ public class UserController {
   }
 
   @PutMapping(value = "/users", consumes = "application/json")
+  @CrossOrigin(origins = "http://localhost:4200")
   public ResponseEntity updateUser(@RequestBody User user) {
     try {
       User updatedUser = userService.update(user).get();
