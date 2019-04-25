@@ -28,6 +28,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    this.loading = true;
     let user = new User(this.username, this.password, this.firstName, this.lastName, this.email);
 
     this.userService.register(user).subscribe(
@@ -35,7 +36,8 @@ export class RegisterComponent implements OnInit {
         this.router.navigate([""]);
       },
       error => {
-        this.alertService.error(error);
+        this.loading = false;
+        this.alertService.serverSideError();
       }
     )
   }
