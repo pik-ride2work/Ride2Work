@@ -1,0 +1,39 @@
+<app-menu>
+  <div class="container-fluid">
+    <div class="col align-items-center">
+      <div class="row justify-content-center">
+        <div class="bg-white form-card mat-elevation-z8">
+          <div class="p-5">
+            <h2 class="text-center mb-5">Edit profile</h2>
+            <form [formGroup]="options" (ngSubmit)="save()">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Login" formControlName="username">
+                <mat-error *ngIf="options.get('username')?.invalid">Min length: 8 characters</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Password" type="password" formControlName="password">
+                <mat-error *ngIf="options.get('username')?.invalid">Min length: 8 characters</mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input matInput placeholder="First name" formControlName="firstName">
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Last name" formControlName="lastName">
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input matInput placeholder="E-mail" formControlName="email">
+                <mat-error *ngIf="options.get('username')?.invalid">Invalid e-mail address</mat-error>
+              </mat-form-field>
+
+              <app-spinner-button text="SAVE CHANGES" [loading]="loading"></app-spinner-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-menu>

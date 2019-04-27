@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../_services/auth.service";
-import {AppRoutingModule} from "../app-routing.module";
 import {Router} from "@angular/router";
+import {AuthService} from "../_services";
 import {User} from "../_models/user";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.sass']
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.sass']
 })
-export class HomeComponent implements OnInit {
-  company = "Goldman Sachs";
-  userName = "Reginald";
-  userSurname = "Tempman";
+export class MenuComponent implements OnInit {
+  private userName: string;
+  private userSurname: string;
 
   constructor(private router : Router, private authService: AuthService) { }
 
@@ -26,5 +24,13 @@ export class HomeComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(["login"]);
+  }
+
+  rideHistory() {
+    this.router.navigate([""]);
+  }
+
+  editUser() {
+    this.router.navigate(["edit-user"]);
   }
 }

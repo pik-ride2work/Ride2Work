@@ -34,6 +34,11 @@ export class AlertService {
     this.subject.next({ type: 'error', text: message });
   }
 
+  serverSideError() {
+    let message = 'System has encountered a problem';
+    this.subject.next({ type: 'error', text: message });
+  }
+
   getMessage(): Observable<any> {
     return this.subject.asObservable();
   }

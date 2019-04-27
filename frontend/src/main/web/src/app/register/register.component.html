@@ -1,37 +1,37 @@
 <div class="container-fluid">
   <div class="col align-items-center">
     <div class="row justify-content-center">
-      <mat-card class="form-card">
-        <mat-card-content class="form-card-content">
-          <h2 class="form-card-header">Register</h2>
-          <form>
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="Login" [(ngModel)]="username" name="username">
+      <div class="mt-5 bg-white form-card mat-elevation-z8">
+        <div class="p-5">
+          <h2 class="text-center mb-5">Register</h2>
+          <form [formGroup]="options" (ngSubmit)="register()">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Login" formControlName="username">
+              <mat-error *ngIf="options.get('username')?.invalid">Min length: 8 characters</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="Password" [(ngModel)]="password"type="password" name="password">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Password" type="password" formControlName="password">
+              <mat-error *ngIf="options.get('username')?.invalid">Min length: 8 characters</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="First name" [(ngModel)]="firstName" name="firstName">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="First name" formControlName="firstName">
             </mat-form-field>
 
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="Last name" [(ngModel)]="lastName" name="lastName">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Last name" formControlName="lastName">
             </mat-form-field>
 
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="E-mail" [(ngModel)]="email" name="email">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="E-mail" formControlName="email">
+              <mat-error *ngIf="options.get('username')?.invalid">Invalid e-mail address</mat-error>
             </mat-form-field>
 
-            <button mat-raised-button color="primary" class="form-card-button" (click)="register()">
-              REGISTER
-              <mat-progress-spinner *ngIf="loading" class="spinner" mode="indeterminate" diameter="25" color="accent"></mat-progress-spinner>
-            </button>
+            <app-spinner-button [loading]="loading" text="REGISTER" fontSize="1em"></app-spinner-button>
           </form>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
     </div>
   </div>
 </div>

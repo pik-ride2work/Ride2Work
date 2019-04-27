@@ -1,28 +1,25 @@
 <div class="container-fluid">
   <div class="col align-items-center">
     <div class="row justify-content-center">
-      <mat-card class="form-card">
-        <mat-card-content class="form-card-content">
+      <div class="mt-5 bg-white form-card mat-elevation-z8">
+        <div class="p-5">
           <div class="login-logo">
             <i class="material-icons">directions_bike</i>
           </div>
-          <h2 class="form-card-header">Ride2Work</h2>
-          <form>
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="Login" [(ngModel)]="username" name="username">
+          <h2 class="text-center mb-5">Ride2Work</h2>
+          <form [formGroup]="options" (ngSubmit)="login()">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Login" formControlName="username">
             </mat-form-field>
 
-            <mat-form-field class="form-card-field">
-              <input matInput placeholder="Password" [(ngModel)]="password"type="password" name="password">
+            <mat-form-field class="w-100">
+              <input matInput placeholder="Password" type="password" formControlName="password">
             </mat-form-field>
 
-            <button mat-raised-button color="primary" class="form-card-button" (click)="login()">
-              LOGIN
-              <mat-progress-spinner *ngIf="loading" class="spinner" mode="indeterminate" diameter="25" color="accent"></mat-progress-spinner>
-            </button>
+            <app-spinner-button text="LOGIN" fontSize="1em" [loading]="loading"></app-spinner-button>
           </form>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
     </div>
     <div class="row justify-content-center">
       <button mat-button class="mt-3" (click)="register()">Register</button>
