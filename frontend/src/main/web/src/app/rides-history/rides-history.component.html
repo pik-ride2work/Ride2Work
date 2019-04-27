@@ -2,48 +2,50 @@
   <div class="mat-elevation-z8" style="width: 100%; height: 50%">
     <here-map #hereMap width="100%" height="100%"></here-map>
   </div>
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+  <div class="mat-elevation-z8 mt-2">
+    <div class="mw-100 overflow-auto">
+      <table mat-table class="w-100" [dataSource]="dataSource" matSort>
 
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> No.</th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-      </ng-container>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> No.</th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="distance">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance</th>
-        <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
-      </ng-container>
+        <ng-container matColumnDef="distance">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance</th>
+          <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Time</th>
-        <td mat-cell *matCellDef="let element"> {{element.time}} </td>
-      </ng-container>
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Time</th>
+          <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="max_speed">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Max speed</th>
-        <td mat-cell *matCellDef="let element"> {{element.max_speed}} </td>
-      </ng-container>
+        <ng-container matColumnDef="max_speed">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Max speed</th>
+          <td mat-cell *matCellDef="let element"> {{element.max_speed}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="avg_speed">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Average speed</th>
-        <td mat-cell *matCellDef="let element"> {{element.avg_speed}} </td>
-      </ng-container>
+        <ng-container matColumnDef="avg_speed">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Average speed</th>
+          <td mat-cell *matCellDef="let element"> {{element.avg_speed}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="start_time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Start time</th>
-        <td mat-cell *matCellDef="let element"> {{element.start_time}} </td>
-      </ng-container>
+        <ng-container matColumnDef="start_time">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Start time</th>
+          <td mat-cell *matCellDef="let element"> {{element.start_time}} </td>
+        </ng-container>
 
-      <ng-container matColumnDef="finish_time">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Finish time</th>
-        <td mat-cell *matCellDef="let element"> {{element.finish_time}} </td>
-      </ng-container>
+        <ng-container matColumnDef="finish_time">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Finish time</th>
+          <td mat-cell *matCellDef="let element"> {{element.finish_time}} </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;"
-          (click)="hereMap.showPoint(row.lat, row.lng)"></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;"
+            (click)="hereMap.showPoint(row.lat, row.lng)"></tr>
+      </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </app-menu>
