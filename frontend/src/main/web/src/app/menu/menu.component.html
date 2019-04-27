@@ -9,20 +9,19 @@
     <mat-sidenav #drawer class="sidenav" mode="side">
       <mat-nav-list class="sidenav-list">
         <mat-form-field>
-          <input matInput placeholder="Company" readonly value="{{company}}">
-        </mat-form-field>
-        <mat-form-field>
           <input matInput placeholder="Name" readonly value="{{userName}}">
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Surname" readonly value="{{userSurname}}">
         </mat-form-field>
         <a mat-list-item>Upload ride</a>
+        <a mat-list-item (click)="rideHistory()">View rides history</a>
+        <a mat-list-item (click)="editUser()">Edit profile</a>
         <a mat-list-item (click)="logout()">Log out</a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="content">
-      <app-rides-history></app-rides-history>
+      <ng-content></ng-content>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

@@ -1,0 +1,6 @@
+<button [style.font-size]="fontSize" mat-raised-button color="primary" class="spinner-button">
+  {{text}}
+  <div class="spinner-container">
+    <mat-progress-spinner *ngIf="loading" class="spinner" mode="indeterminate" diameter="25" color="accent"></mat-progress-spinner>
+  </div>
+</button>
