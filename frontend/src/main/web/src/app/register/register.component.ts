@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
       this.getControl('email')
     );
 
-    this.userService.register(user).subscribe(
+    this.userService.create(user).subscribe(
       user => {
         this.router.navigate([""]);
       },
