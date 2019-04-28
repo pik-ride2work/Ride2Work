@@ -9,4 +9,5 @@ public interface MembershipService {
 
   Future<Void> leaveTeam(Integer userId);
 
+    Future<Membership> getByUserId(Integer userId);
 }
