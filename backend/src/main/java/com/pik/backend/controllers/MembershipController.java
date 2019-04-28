@@ -1,48 +1,73 @@
 package com.pik.backend.controllers;
 
 import com.pik.backend.services.MembershipService;
+import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Membership;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
+
+import static org.checkerframework.checker.units.UnitsTools.m;
 
 @Controller
 public class MembershipController {
 
-  private final MembershipService membershipService;
+    private final MembershipService membershipService;
 
-  public MembershipController(MembershipService membershipService) {
-    this.membershipService = membershipService;
-  }
-
-  @PostMapping("/membership")
-  public ResponseEntity joinTeam(@RequestParam(name = "userId", required = true) Integer userId,
-      @RequestParam(name = "teamId", required = true) Integer teamId) {
-    try {
-      Membership createdMembership = membershipService.joinTeam(userId, teamId).get();
-      return ResponseEntity
-          .ok()
-          .body(createdMembership);
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    public MembershipController(MembershipService membershipService) {
+        this.membershipService = membershipService;
     }
-  }
 
-  @DeleteMapping("/membership")
-  public ResponseEntity leaveTeam(@RequestParam(name = "userId", required = true) Integer userId) {
-    try {
-      membershipService.leaveTeam(userId).get();
-      return ResponseEntity
-          .ok()
-          .build();
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    @PostMapping("/membership")
+    public ResponseEntity joinTeam(@RequestParam(name = "userId", required = true) Integer userId,
+                                   @RequestParam(name = "teamId", required = true) Integer teamId) {
+        try {
+            Membership createdMembership = membershipService.joinTeam(userId, teamId).get();
+            return ResponseEntity
+                    .ok()
+                    .body(createdMembership);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IllegalStateException) {
+                return Responses.badRequest(cause.getMessage());
+            }
+            return Responses.internalError();
+        }
     }
-  }
+
+    @DeleteMapping("/membership")
+    public ResponseEntity leaveTeam(@RequestParam(name = "userId", required = true) Integer userId) {
+        try {
+            membershipService.leaveTeam(userId).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IllegalStateException) {
+                return Responses.badRequest(cause.getMessage());
+            }
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @GetMapping("/membership/{userId}")
+    public ResponseEntity getByUserId(@PathVariable Integer userId) {
+        try {
+            Membership membership = membershipService.getByUserId(userId).get();
+            return ResponseEntity
+                    .ok(membership);
+        } catch (InterruptedException | ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
 }

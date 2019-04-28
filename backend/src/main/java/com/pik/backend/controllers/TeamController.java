@@ -3,9 +3,11 @@ package com.pik.backend.controllers;
 import com.pik.backend.services.DefaultTeamService;
 import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Team;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,78 +20,84 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class TeamController {
 
-  private final DefaultTeamService teamService;
+    private final DefaultTeamService teamService;
 
-  public TeamController(DefaultTeamService teamService) {
-    this.teamService = teamService;
-  }
-
-  @PostMapping("/teams/{ownerID}")
-  public ResponseEntity create(@RequestBody Team team, @PathVariable Integer ownerID) {
-    try {
-      Team createdTeam = teamService
-          .create(team, ownerID)
-          .get();
-      return ResponseEntity
-          .ok(createdTeam);
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    public TeamController(DefaultTeamService teamService) {
+        this.teamService = teamService;
     }
-  }
 
-  @PutMapping("/teams")
-  public ResponseEntity update(@RequestBody Team team) {
-    try {
-      Team updatedTeam = teamService.update(team).get();
-      return ResponseEntity
-          .ok(updatedTeam);
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    @PostMapping("/teams/{ownerID}")
+    public ResponseEntity create(@RequestBody Team team, @PathVariable Integer ownerID) {
+        try {
+            Team createdTeam = teamService
+                    .create(team, ownerID)
+                    .get();
+            return ResponseEntity
+                    .ok(createdTeam);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IllegalArgumentException) {
+                return Responses.badRequest(cause.getMessage());
+            }
+            return Responses.internalError();
+        }
     }
-  }
 
-  @GetMapping("/teams/all")
-  public ResponseEntity list() {
-    try {
-      List<Team> list = teamService.list().get();
-      return ResponseEntity
-          .ok(list);
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    @PutMapping("/teams")
+    public ResponseEntity update(@RequestBody Team team) {
+        try {
+            Team updatedTeam = teamService.update(team).get();
+            return ResponseEntity
+                    .ok(updatedTeam);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IllegalArgumentException) {
+                return Responses.badRequest(cause.getMessage());
+            }
+            return Responses.internalError();
+        }
     }
-  }
 
-  @GetMapping("/teams/{name}")
-  public ResponseEntity getByName(@PathVariable String name) {
-    try {
-      Team team = teamService.getByName(name).get();
-      return ResponseEntity
-          .ok(team);
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    @GetMapping("/teams/all")
+    public ResponseEntity list() {
+        try {
+            List<Team> list = teamService.list().get();
+            return ResponseEntity
+                    .ok(list);
+        } catch (ExecutionException | InterruptedException e) {
+            return Responses.internalError();
+        }
     }
-  }
 
-  @DeleteMapping("/teams/{id}")
-  public ResponseEntity delete(@PathVariable Integer id) {
-    try {
-      teamService.delete(id).get();
-      return ResponseEntity
-          .ok()
-          .build();
-    } catch (Exception e) {
-      return ResponseEntity
-          .badRequest()
-          .body(ErrorResponse.error(e));
+    @GetMapping("/teams/{name}")
+    public ResponseEntity getByName(@PathVariable String name) {
+        try {
+            Team team = teamService.getByName(name).get();
+            return ResponseEntity
+                    .ok(team);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
     }
-  }
+
+    @DeleteMapping("/teams/{id}")
+    public ResponseEntity delete(@PathVariable Integer id) {
+        try {
+            teamService.delete(id).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
 
 }
