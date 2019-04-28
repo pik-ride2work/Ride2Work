@@ -10,25 +10,38 @@ import org.springframework.web.bind.annotation.*;
 public class KafkaController {
 
     private final DefaultKafkaService kafkaService;
-    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaController(KafkaTemplate<String, String> kafkaTemplate, DefaultKafkaService kafkaService) {
-        this.kafkaTemplate = kafkaTemplate;
+    public KafkaController(DefaultKafkaService kafkaService) {
         this.kafkaService = kafkaService;
     }
 
-    private static final String TOPIC = "test";
 
     @PostMapping("/publish")
-    public String write(@RequestParam(name = "string", required = true) String string) {
-        kafkaTemplate.send(TOPIC,string);
-        return "Published";
-
+    public ResponseEntity write(@RequestParam(name = "string", required = true) String string) {
+        try {
+            kafkaService.write(string).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(ErrorResponse.error(e));
+        }
     }
 
     @GetMapping("/subscribe")
-    public String read() {
-        return null;
+    public ResponseEntity read() {
+        try {
+            kafkaService.read(null).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(ErrorResponse.error(e));
+        }
     }
 
 }

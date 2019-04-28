@@ -17,14 +17,15 @@ public class DefaultKafkaService implements KafkaService {
     private final DSLContext dsl;
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public DefaultKafkaService(DSLContext dsl) {
+    public DefaultKafkaService(DSLContext dsl, KafkaTemplate<String, String> kafkaTemplate) {
         this.dsl = dsl;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
     public Future<Void> write(String string) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        kafkaTemplate.send("test","Wyslij sie prosze");
+        kafkaTemplate.send("test",string);
         future.complete(null);
         return future;
     }
@@ -34,10 +35,7 @@ public class DefaultKafkaService implements KafkaService {
     public Future<String> read(String string) {
         CompletableFuture<String> future = new CompletableFuture<>();
         System.out.println("Received msg: " + string);
-
-
-
-        future.complete("eh");
+        future.complete(string);
         return future;
     }
 
