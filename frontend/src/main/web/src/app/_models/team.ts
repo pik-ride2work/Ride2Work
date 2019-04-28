@@ -3,8 +3,7 @@ export class Team {
   name: string;
   memberCount: number;
 
-  constructor(name, memberCount) {
+  constructor(name) {
     this.name = name;
-    this.memberCount = memberCount;
   }
 }
