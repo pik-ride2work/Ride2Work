@@ -22,7 +22,7 @@ export class TeamService {
   }
 
   getByName(name: string){
-    return this.http.get<any>(`/api/teams/${name}`);
+    return this.http.get<Team>(`/api/teams/${name}`);
   }
 
   delete(id: number) {

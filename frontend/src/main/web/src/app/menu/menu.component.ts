@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthService, TeamService} from "../_services";
+import {AuthService, MembershipService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {DialogComponent} from "../dialog/dialog.component";
 import {Team} from "../_models/team";
+import {Membership} from "../_models/membership";
 
 @Component({
   selector: 'app-menu',
@@ -20,12 +21,23 @@ export class MenuComponent implements OnInit {
     private authService: AuthService,
     public dialog: MatDialog,
     private teamService: TeamService,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private membershipService: MembershipService
   ) {
   }
 
   ngOnInit() {
     this.currentUser = this.authService.getLogged();
+    let membership : Membership;
+    this.membershipService.getByUserId(this.currentUser.id).subscribe(
+      result => {
+        membership = result;
+        console.log(membership);
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   joinTeam() {
@@ -40,13 +52,20 @@ export class MenuComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result)
+    dialogRef.afterClosed().subscribe(teamName => {
+      if (!teamName)
         return;
-      this.teamService.getByName(result).subscribe(
-        data => {
-          console.log(data);
-          //TODO
+      this.teamService.getByName(teamName).subscribe(
+        team => {
+          this.membershipService.joinTeam(this.currentUser.id, team.id).subscribe(
+            result => {
+              console.log(result);
+              this.snackBar.open("Team joined", "close");
+            },
+            error => {
+              console.log(error);
+            }
+          )
         },
         error => {
           this.snackBar.open("Team not found", "close");

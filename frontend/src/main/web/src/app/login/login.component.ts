@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material'
+import {MatDialog, MatSnackBar} from '@angular/material'
 import {AuthService} from "../_services/auth.service";
 import {first} from "rxjs/internal/operators/first";
 import {AlertService, UserService} from "../_services";
@@ -12,11 +12,14 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./login.component.sass']
 })
 export class LoginComponent implements OnInit {
-  constructor(private router: Router,
-              private authService: AuthService,
-              private alertService: AlertService,
-              private userService: UserService,
-              private formBuilder: FormBuilder) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private alertService: AlertService,
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
+  ) {
   }
 
   options: FormGroup;
@@ -24,8 +27,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.options = this.formBuilder.group({
-      username: [''],
-      password: [''],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
@@ -40,6 +43,9 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    if(this.options.invalid)
+      return;
+
     this.loading = true;
     let username = this.getControl('username');
     let password = this.getControl('password');
@@ -47,7 +53,7 @@ export class LoginComponent implements OnInit {
     this.userService.get(username).subscribe(
       user => {
         if (!user || user.password != password) {
-          this.alertService.error("Invalid credentials");
+          this.snackBar.open("Ivnalid credentials", "close");
           this.loading = false;
           return;
         }
