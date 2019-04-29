@@ -24,9 +24,7 @@ public class KafkaController {
                     .ok()
                     .build();
         } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Responses.internalError());
+            return Responses.internalError();
         }
     }
 
@@ -38,9 +36,7 @@ public class KafkaController {
                     .ok()
                     .build();
         } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Responses.internalError());
+            return Responses.internalError();
         }
     }
 
