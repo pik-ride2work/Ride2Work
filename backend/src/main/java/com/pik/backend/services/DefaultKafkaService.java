@@ -1,14 +1,20 @@
 package com.pik.backend.services;
 
-import org.jooq.DSLContext;
+import com.pik.backend.util.DSLWrapper;
+import com.pik.ride2work.tables.pojos.Point;
+import com.pik.ride2work.tables.records.PointRecord;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import static com.pik.ride2work.Tables.POINT;
 
 
 @Repository
@@ -34,8 +40,17 @@ public class DefaultKafkaService implements KafkaService {
     @KafkaListener(topics = "test", groupId = "group-id")
     public Future<String> read(String string) {
         CompletableFuture<String> future = new CompletableFuture<>();
-        System.out.println("Received msg: " + string);
-        future.complete(string);
+        String[] parts = string.split("/");
+
+        DSLWrapper.transaction(dsl, future, cfg -> {
+                DSL.using(cfg)
+                        .fetch(String.format("INSERT INTO ride2work.point (timestamp, coordinates) " +
+                                        "VALUES ('%s', ST_GeographyFromText('SRID=4326;POINT(%s %s)'))"
+                                ,  parts[1], parts[2], parts[3]));
+            future.complete(string);
+                });
+
+
         return future;
     }
 
