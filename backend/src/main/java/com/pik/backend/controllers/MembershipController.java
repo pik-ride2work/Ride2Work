@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.checkerframework.checker.units.UnitsTools.m;
@@ -66,6 +67,41 @@ public class MembershipController {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @GetMapping("/membership/list/{teamId}")
+    public ResponseEntity getTeamMemberships(@PathVariable Integer teamId) {
+        try {
+            List<Membership> memberships = membershipService.getMembers(teamId).get();
+            return ResponseEntity
+                    .ok(memberships);
+        } catch (InterruptedException | ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @PutMapping("/membership/change")
+    public ResponseEntity changeOwner(@RequestParam(name = "ownerId", required = true) Integer userId,
+                                      @RequestParam(name = "teamId", required = true) Integer teamId) {
+        try {
+            membershipService.changeOwner(userId, teamId).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } catch (InterruptedException | ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            if (cause instanceof IllegalStateException) {
+                return Responses.badRequest(cause.getMessage());
             }
             return Responses.internalError();
         }

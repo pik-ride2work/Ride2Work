@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import com.pik.ride2work.tables.pojos.User;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -92,6 +94,36 @@ public class TeamController {
                     .ok()
                     .build();
         } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @GetMapping("/teams/owner/{teamId}")
+    public ResponseEntity getOwner(@PathVariable Integer teamId) {
+        try {
+            User user = teamService.getTeamOwner(teamId).get();
+            return ResponseEntity
+                    .ok(user);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @GetMapping("/teams/listUsers/{teamId")
+    public ResponseEntity listUsers(@PathVariable Integer teamId) {
+        try {
+            List<User> users = teamService.getUserList(teamId).get();
+            return ResponseEntity
+                    .ok(users);
+        } catch (InterruptedException | ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();

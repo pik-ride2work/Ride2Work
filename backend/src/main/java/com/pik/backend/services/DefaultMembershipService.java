@@ -5,7 +5,9 @@ import static com.pik.ride2work.Tables.TEAM;
 
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.daos.MembershipDao;
+import com.pik.ride2work.tables.daos.UserDao;
 import com.pik.ride2work.tables.pojos.Membership;
+import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.MembershipRecord;
 
 import java.sql.Timestamp;
@@ -16,6 +18,8 @@ import java.util.concurrent.Future;
 
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +30,53 @@ public class DefaultMembershipService implements MembershipService {
 
     public DefaultMembershipService(DSLContext dsl) {
         this.dsl = dsl;
+    }
+
+    @Override
+    public Future<Void> changeOwner(Integer userId, Integer teamId) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            boolean isUserInTheTeam = DSL.using(cfg)
+                    .fetchExists(dsl.selectOne()
+                            .from(MEMBERSHIP)
+                            .where(MEMBERSHIP.ID_USER.eq(userId))
+                            .and(MEMBERSHIP.ID_TEAM.eq(teamId)));
+            if (!isUserInTheTeam) {
+                future.completeExceptionally(new IllegalStateException("User is not the part of the team."));
+                return;
+            }
+            DSL.using(cfg)
+                    .update(MEMBERSHIP)
+                    .set(MEMBERSHIP.ISOWNER, false)
+                    .where(MEMBERSHIP.ISOWNER)
+                    .and(MEMBERSHIP.ISPRESENT);
+            DSL.using(cfg)
+                    .update(MEMBERSHIP)
+                    .set(MEMBERSHIP.ISOWNER, true)
+                    .where(MEMBERSHIP.ID_USER.eq(userId))
+                    .and(MEMBERSHIP.ISPRESENT);
+            future.complete(null);
+        });
+        return future;
+    }
+
+    @Override
+    public Future<List<Membership>> getMembers(Integer teamId) {
+        CompletableFuture<List<Membership>> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            Result<MembershipRecord> records = DSL.using(cfg)
+                    .selectFrom(MEMBERSHIP)
+                    .where(MEMBERSHIP.ISPRESENT)
+                    .and(MEMBERSHIP.ID_TEAM.eq(teamId))
+                    .fetch();
+            if (records == null) {
+                future.completeExceptionally(new NotFoundException("No members found"));
+                return;
+            }
+            List<Membership> members = records.into(Membership.class);
+            future.complete(members);
+        });
+        return future;
     }
 
     @Override
@@ -41,8 +92,8 @@ public class DefaultMembershipService implements MembershipService {
                     .set(TEAM.MEMBER_COUNT, DSL.field(TEAM.MEMBER_COUNT).add(1))
                     .where(TEAM.ID.eq(teamId));
             MembershipRecord createdRecord = DSL.using(cfg)
-                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER)
-                    .values(Timestamp.from(Instant.now()), teamId, userId)
+                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
+                    .values(Timestamp.from(Instant.now()), teamId, userId, false)
                     .returning(MEMBERSHIP.fields())
                     .fetchOne();
             future.complete(createdRecord.into(Membership.class));
@@ -65,7 +116,7 @@ public class DefaultMembershipService implements MembershipService {
                     .where(MEMBERSHIP.ID_USER.eq(userId))
                     .returning(MEMBERSHIP.ID_TEAM)
                     .fetchOne().getId();
-            if(idTeam == null){
+            if (idTeam == null) {
                 future.completeExceptionally(new NotFoundException("User not found"));
                 return;
             }
@@ -79,12 +130,12 @@ public class DefaultMembershipService implements MembershipService {
     }
 
     @Override
-    public Future<Membership> getByUserId(Integer userId){
+    public Future<Membership> getByUserId(Integer userId) {
         CompletableFuture<Membership> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
             MembershipDao membershipDao = new MembershipDao(cfg);
             Membership membership = membershipDao.fetchOne(MEMBERSHIP.ID_USER, userId);
-            if(membership == null){
+            if (membership == null) {
                 future.completeExceptionally(new NotFoundException("Membership or user not found."));
                 return;
             }
