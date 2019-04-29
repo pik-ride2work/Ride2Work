@@ -26,7 +26,7 @@ public class KafkaController {
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
-                    .body(ErrorResponse.error(e));
+                    .body(Responses.internalError());
         }
     }
 
@@ -40,7 +40,7 @@ public class KafkaController {
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
-                    .body(ErrorResponse.error(e));
+                    .body(Responses.internalError());
         }
     }
 
