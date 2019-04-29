@@ -1,13 +1,11 @@
 package com.pik.backend.services;
 
-import static com.pik.ride2work.Tables.MEMBERSHIP;
-import static com.pik.ride2work.Tables.TEAM;
-
 import com.pik.backend.util.DSLWrapper;
 import com.pik.backend.util.TeamInputValidator;
 import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.pojos.Team;
 
+import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.TeamRecord;
 
 import java.sql.Timestamp;
@@ -16,9 +14,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import com.pik.ride2work.tables.records.UserRecord;
 import org.jooq.DSLContext;
+import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
+
+import static com.pik.ride2work.Tables.*;
 
 @Repository
 public class DefaultTeamService implements TeamService {
@@ -28,6 +30,28 @@ public class DefaultTeamService implements TeamService {
 
     public DefaultTeamService(DSLContext dsl) {
         this.dsl = dsl;
+    }
+
+    @Override
+    public Future<User> getTeamOwner(Integer teamId) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            UserRecord record = DSL.using(cfg)
+                    .selectFrom(USER)
+                    .where(USER.ID.eq(DSL.using(cfg)
+                            .select(MEMBERSHIP.ID_USER)
+                            .from(MEMBERSHIP)
+                            .where(MEMBERSHIP.ID_TEAM.eq(teamId)
+                                    .and(MEMBERSHIP.ISOWNER)
+                                    .and(MEMBERSHIP.ISPRESENT))))
+                    .fetchOne();
+            if (record == null) {
+                future.completeExceptionally(new NotFoundException("No owner/team found."));
+                return;
+            }
+            future.complete(record.into(User.class));
+        });
+        return future;
     }
 
     @Override
@@ -72,8 +96,8 @@ public class DefaultTeamService implements TeamService {
                     .returning(TEAM.fields())
                     .fetchOne();
             DSL.using(cfg)
-                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER)
-                    .values(Timestamp.from(Instant.now()), team.getId(), ownerId);
+                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
+                    .values(Timestamp.from(Instant.now()), team.getId(), ownerId, Boolean.TRUE);
             future.complete(teamRecord.into(Team.class));
         });
         return future;
@@ -124,6 +148,27 @@ public class DefaultTeamService implements TeamService {
                 return;
             }
             future.complete(teamRecord.into(Team.class));
+        });
+        return future;
+    }
+
+    @Override
+    public Future<List<User>> getUserList(Integer teamId) {
+        CompletableFuture<List<User>> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            Result<UserRecord> records = DSL.using(cfg)
+                    .selectFrom(USER)
+                    .where(USER.ID.eq(DSL.using(cfg)
+                            .select(MEMBERSHIP.ID_USER)
+                            .from(MEMBERSHIP)
+                            .where(MEMBERSHIP.ISPRESENT)
+                            .and(MEMBERSHIP.ID_TEAM.eq(teamId))))
+                    .fetch();
+            if (records == null) {
+                future.completeExceptionally(new NotFoundException("Team/users not found."));
+                return;
+            }
+            future.complete(records.into(User.class));
         });
         return future;
     }

@@ -1,13 +1,19 @@
 package com.pik.backend.services;
 
 import com.pik.ride2work.tables.pojos.Membership;
+
+import java.util.List;
 import java.util.concurrent.Future;
 
 public interface MembershipService {
 
-  Future<Membership> joinTeam(Integer userId, Integer teamId);
+    Future<Void> changeOwner(Integer userId, Integer teamId);
 
-  Future<Void> leaveTeam(Integer userId);
+    Future<List<Membership>> getMembers(Integer teamId);
+
+    Future<Membership> joinTeam(Integer userId, Integer teamId);
+
+    Future<Void> leaveTeam(Integer userId);
 
     Future<Membership> getByUserId(Integer userId);
 }
