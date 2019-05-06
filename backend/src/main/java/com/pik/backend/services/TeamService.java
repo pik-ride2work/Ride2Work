@@ -22,5 +22,7 @@ public interface TeamService {
 
     public Future<Team> getByName(String name);
 
+    Future<Team> getById(Integer id);
+
     Future<List<User>> getUserList(Integer teamId);
 }

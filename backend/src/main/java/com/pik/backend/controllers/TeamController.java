@@ -71,10 +71,25 @@ public class TeamController {
         }
     }
 
-    @GetMapping("/teams/{name}")
+    @GetMapping("/teams/byName/{name}")
     public ResponseEntity getByName(@PathVariable String name) {
         try {
             Team team = teamService.getByName(name).get();
+            return ResponseEntity
+                    .ok(team);
+        } catch (ExecutionException | InterruptedException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NotFoundException) {
+                return Responses.notFound();
+            }
+            return Responses.internalError();
+        }
+    }
+
+    @GetMapping("/teams/{id}")
+    public ResponseEntity getById(@PathVariable Integer id) {
+        try {
+            Team team = teamService.getById(id).get();
             return ResponseEntity
                     .ok(team);
         } catch (ExecutionException | InterruptedException e) {
