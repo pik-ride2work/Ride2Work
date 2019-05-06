@@ -3,6 +3,7 @@ package com.pik.backend.services;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.backend.util.TeamInputValidator;
 import com.pik.backend.util.Validated;
+import com.pik.ride2work.tables.daos.TeamDao;
 import com.pik.ride2work.tables.pojos.Team;
 
 import com.pik.ride2work.tables.pojos.User;
@@ -148,6 +149,21 @@ public class DefaultTeamService implements TeamService {
                 return;
             }
             future.complete(teamRecord.into(Team.class));
+        });
+        return future;
+    }
+
+    @Override
+    public Future<Team> getById(Integer id) {
+        CompletableFuture<Team> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            TeamDao teamDao = new TeamDao(cfg);
+            Team team = teamDao.fetchOneById(id);
+            if (team == null) {
+                future.completeExceptionally(new NotFoundException("Team Not Found"));
+                return;
+            }
+            future.complete(team);
         });
         return future;
     }
