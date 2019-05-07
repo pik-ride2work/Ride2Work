@@ -5,6 +5,7 @@ import {AuthService} from "../_services/auth.service";
 import {first} from "rxjs/internal/operators/first";
 import {AlertService, UserService} from "../_services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {User} from "../_models/user";
 
 @Component({
   selector: 'app-login',
@@ -57,7 +58,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           return;
         }
-        this.authService.login(user);
+        this.authService.setUser(user);
         this.router.navigate([""]);
       },
       error => {

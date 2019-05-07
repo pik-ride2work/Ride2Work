@@ -25,7 +25,7 @@ export class EditUserComponent implements OnInit {
 
   ngOnInit() {
     let user: User;
-    user = this.authService.getLogged();
+    user = this.authService.getUser();
     this.currentUser = user;
     this.options = this.formBuilder.group({
       username: [this.currentUser.username, Validators.minLength(8)],
@@ -54,7 +54,7 @@ export class EditUserComponent implements OnInit {
 
     this.userService.update(user).subscribe(
       data => {
-        this.authService.login(data);
+        this.authService.setUser(data);
         location.reload();
       },
       error => {

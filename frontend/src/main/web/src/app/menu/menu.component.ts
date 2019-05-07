@@ -14,7 +14,8 @@ import {Membership} from "../_models/membership";
 })
 export class MenuComponent implements OnInit {
   private currentUser: User;
-  private teamName = "";
+  private userTeam: Team;
+  private userMembership: Membership;
 
   constructor(
     private router: Router,
@@ -27,17 +28,38 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUser = this.authService.getLogged();
-    let membership : Membership;
-    this.membershipService.getByUserId(this.currentUser.id).subscribe(
-      result => {
-        membership = result;
-        console.log(membership);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+    this.currentUser = this.authService.getUser();
+    this.loadTeam();
+  }
+
+  loadTeam() {
+    if(this.authService.getMembership())
+      this.userMembership = this.authService.getMembership();
+    else {
+      this.membershipService.getByUserId(this.currentUser.id).subscribe(
+        membership => {
+          this.authService.setMembership(membership);
+          this.loadTeam();
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+
+    if(this.authService.getTeam())
+      this.userTeam = this.authService.getTeam();
+    else if (!!this.userMembership) {
+      this.teamService.getById(this.userMembership.idTeam).subscribe(
+        team => {
+          this.userTeam = team;
+          this.authService.setTeam(team);
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
   }
 
   joinTeam() {
@@ -59,8 +81,10 @@ export class MenuComponent implements OnInit {
         team => {
           this.membershipService.joinTeam(this.currentUser.id, team.id).subscribe(
             result => {
-              console.log(result);
               this.snackBar.open("Team joined", "close");
+              this.authService.setMembership(result);
+              this.authService.setTeam(team);
+              this.loadTeam();
             },
             error => {
               console.log(error);
@@ -109,6 +133,6 @@ export class MenuComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["login"]);
+    this.router.navigate(["setUser"]);
   }
 }

@@ -9,9 +9,9 @@ import {EditUserComponent} from "./edit-user/edit-user.component";
 const routes: Routes = [
   {path: '', component: RidesHistoryComponent, canActivate: [AuthGuard]},
   {path: 'edit-user', component: EditUserComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent},
+  {path: 'setUser', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: '**', redirectTo: 'login'}
+  {path: '**', redirectTo: 'setUser'}
 ];
 
 @NgModule({

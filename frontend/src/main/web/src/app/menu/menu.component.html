@@ -14,11 +14,11 @@
         <mat-form-field>
           <input matInput placeholder="Surname" readonly value="{{currentUser.lastName}}">
         </mat-form-field>
-        <mat-form-field *ngIf="teamName.length > 0">
-          <input matInput placeholder="Team" readonly value="{{teamName}}">
+        <mat-form-field *ngIf="!!userTeam">
+          <input matInput placeholder="Team" readonly value="{{userTeam.name}}">
         </mat-form-field>
-        <a mat-list-item *ngIf="teamName.length == 0" (click)="joinTeam()">Join team</a>
-        <a mat-list-item *ngIf="teamName.length == 0" (click)="createTeam()">Create team</a>
+        <a mat-list-item *ngIf="!userTeam" (click)="joinTeam()">Join team</a>
+        <a mat-list-item *ngIf="!userTeam" (click)="createTeam()">Create team</a>
         <a mat-list-item *ngIf="router.url != '/'" (click)="router.navigate([''])">View rides history</a>
         <a mat-list-item *ngIf="router.url == '/'">Upload ride</a>
         <a mat-list-item *ngIf="router.url != '/edit-user'" (click)="router.navigate(['edit-user'])">Settings</a>
