@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Controller
+@RequestMapping("memberships")
 public class MembershipController {
 
     private final MembershipService membershipService;
@@ -19,7 +20,7 @@ public class MembershipController {
         this.membershipService = membershipService;
     }
 
-    @PostMapping("/membership")
+    @PostMapping
     public ResponseEntity joinTeam(@RequestParam(name = "userId", required = true) Integer userId,
                                    @RequestParam(name = "teamId", required = true) Integer teamId) {
         try {
@@ -39,7 +40,7 @@ public class MembershipController {
         }
     }
 
-    @DeleteMapping("/membership")
+    @DeleteMapping
     public ResponseEntity leaveTeam(@RequestParam(name = "userId", required = true) Integer userId) {
         try {
             membershipService.leaveTeam(userId).get();
@@ -61,7 +62,7 @@ public class MembershipController {
         }
     }
 
-    @GetMapping("/membership/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity getByUserId(@PathVariable Integer userId) {
         try {
             Membership membership = membershipService.getByUserId(userId).get();
@@ -79,7 +80,7 @@ public class MembershipController {
         }
     }
 
-    @GetMapping("/membership/list/{teamId}")
+    @GetMapping("/list/{teamId}")
     public ResponseEntity getTeamMemberships(@PathVariable Integer teamId) {
         try {
             List<Membership> memberships = membershipService.getMembers(teamId).get();
@@ -97,7 +98,7 @@ public class MembershipController {
         }
     }
 
-    @PutMapping("/membership/change")
+    @PutMapping("/changeOwner")
     public ResponseEntity changeOwner(@RequestParam(name = "ownerId", required = true) Integer userId,
                                       @RequestParam(name = "teamId", required = true) Integer teamId) {
         try {
