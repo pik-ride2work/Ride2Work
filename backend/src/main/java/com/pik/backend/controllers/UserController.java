@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 
 @Controller
+@RequestMapping("users")
 public class UserController {
 
     private final DefaultUserService userService;
@@ -19,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/{username}")
     public ResponseEntity getUserByUsername(@PathVariable String username) {
         try {
             User user = userService.getByUsername(username).get();
@@ -41,7 +42,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/users", consumes = "application/json")
+    @PostMapping(consumes = "application/json")
     public ResponseEntity createUser(@RequestBody User user) {
         try {
             User newUser = userService.create(user).get();
@@ -60,7 +61,7 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "/users", consumes = "application/json")
+    @PutMapping(consumes = "application/json")
     public ResponseEntity updateUser(@RequestBody User user) {
         try {
             User updatedUser = userService.update(user).get();
