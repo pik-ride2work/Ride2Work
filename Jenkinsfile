@@ -15,9 +15,6 @@ echo \'hello\''''
         withSonarQubeEnv('Sonar_server') {
           sh "${scannerHome}/bin/sonar-scanner"
         }
-        timeout(time: 10, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-        }
       }
     }
     stage('Build Docker Image') {
@@ -40,9 +37,6 @@ echo \'hello\''''
       }
     }
     stage('Remove Unused Docker Image') {
-      when {
-        branch 'master'
-      }
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
       }
