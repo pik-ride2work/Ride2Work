@@ -3,13 +3,11 @@ package com.pik.backend.controllers;
 import com.pik.backend.services.DefaultUserService;
 import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.User;
-
-import java.util.concurrent.ExecutionException;
-
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
 
 
 @Controller
@@ -28,7 +26,10 @@ public class UserController {
             return ResponseEntity
                     .ok()
                     .body(user);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());
@@ -47,7 +48,10 @@ public class UserController {
             return ResponseEntity
                     .ok()
                     .body(newUser);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());
@@ -63,7 +67,10 @@ public class UserController {
             return ResponseEntity
                     .ok()
                     .body(updatedUser);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());

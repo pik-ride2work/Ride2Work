@@ -10,11 +10,11 @@ public class RoutePoint {
     private final Timestamp timestamp;
     private final Double longitude;
     private final Double latitude;
-    static private final Integer NUMBER_OF_PARTS = 4;
-    static private final Double MAX_LON = 180.0;
-    static private final Double MIN_LON = -180.0;
-    static private final Double MAX_LAT = 90.0;
-    static private final Double MIN_LAT = -90.0;
+    private static final Integer NUMBER_OF_PARTS = 4;
+    private static final Double MAX_LON = 180.0;
+    private static final Double MIN_LON = -180.0;
+    private static final Double MAX_LAT = 90.0;
+    private static final Double MIN_LAT = -90.0;
 
     private RoutePoint(Long id, Timestamp timestamp, Double longitude, Double latitude) {
         this.id = id;

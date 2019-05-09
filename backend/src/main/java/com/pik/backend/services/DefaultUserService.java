@@ -5,15 +5,14 @@ import com.pik.backend.util.UserInputValidator;
 import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.UserRecord;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import static com.pik.ride2work.Tables.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
+import static com.pik.ride2work.Tables.USER;
 
 @Repository
 public class DefaultUserService implements UserService {
@@ -29,9 +28,9 @@ public class DefaultUserService implements UserService {
     @Override
     public Future<User> create(User user) {
         CompletableFuture<User> future = new CompletableFuture<>();
-        Validated validator = this.validator.validateCreateInput(user);
-        if (!validator.isValid()) {
-            future.completeExceptionally(validator.getCause());
+        Validated validation = this.validator.validateCreateInput(user);
+        if (!validation.isValid()) {
+            future.completeExceptionally(validation.getCause());
             return future;
         }
         DSLWrapper.transaction(dsl, future, cfg -> {
@@ -48,9 +47,9 @@ public class DefaultUserService implements UserService {
     @Override
     public Future<User> update(User user) {
         CompletableFuture<User> future = new CompletableFuture<>();
-        Validated validator = this.validator.validateUpdateInput(user);
-        if (!validator.isValid()) {
-            future.completeExceptionally(validator.getCause());
+        Validated validation = this.validator.validateUpdateInput(user);
+        if (!validation.isValid()) {
+            future.completeExceptionally(validation.getCause());
             return future;
         }
         DSLWrapper.transaction(dsl, future, cfg -> {
