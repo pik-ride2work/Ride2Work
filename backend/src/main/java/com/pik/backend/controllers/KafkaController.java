@@ -2,7 +2,6 @@ package com.pik.backend.controllers;
 
 import com.pik.backend.services.DefaultKafkaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,9 +16,9 @@ public class KafkaController {
 
 
     @PostMapping("/publish")
-    public ResponseEntity write(@RequestParam(name = "string", required = true) String string) {
+    public ResponseEntity write(@RequestBody(required = true) String point) {
         try {
-            kafkaService.write(string).get();
+            kafkaService.write(point).get();
             return ResponseEntity
                     .ok()
                     .build();
