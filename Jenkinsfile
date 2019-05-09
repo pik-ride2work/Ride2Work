@@ -7,6 +7,19 @@ pipeline {
 echo \'hello\''''
       }
     }
+     stage('Static code analysis') {
+      environment {
+        scannerHome = tool 'sonar_scanner'
+      }
+      steps {
+        withSonarQubeEnv('Sonar_server') {
+          sh "${scannerHome}/bin/sonar-scanner"
+        }
+        timeout(time: 10, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
     stage('Build Docker Image') {
       steps {
         script {
