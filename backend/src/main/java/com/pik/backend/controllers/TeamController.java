@@ -146,7 +146,7 @@ public class TeamController {
         }
     }
 
-    @GetMapping("/teams/listUsers/{teamId")
+    @GetMapping("/teams/listUsers/{teamId}")
     public ResponseEntity listUsers(@PathVariable Integer teamId) {
         try {
             List<User> users = teamService.getUserList(teamId).get();
