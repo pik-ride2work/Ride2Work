@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static org.checkerframework.checker.units.UnitsTools.m;
-
 @Controller
 public class MembershipController {
 
@@ -29,7 +27,10 @@ public class MembershipController {
             return ResponseEntity
                     .ok()
                     .body(createdMembership);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalStateException) {
                 return Responses.badRequest(cause.getMessage());
@@ -45,7 +46,10 @@ public class MembershipController {
             return ResponseEntity
                     .ok()
                     .build();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalStateException) {
                 return Responses.badRequest(cause.getMessage());
@@ -63,7 +67,10 @@ public class MembershipController {
             Membership membership = membershipService.getByUserId(userId).get();
             return ResponseEntity
                     .ok(membership);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -78,7 +85,10 @@ public class MembershipController {
             List<Membership> memberships = membershipService.getMembers(teamId).get();
             return ResponseEntity
                     .ok(memberships);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -95,7 +105,10 @@ public class MembershipController {
             return ResponseEntity
                     .ok()
                     .build();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();

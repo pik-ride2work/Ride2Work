@@ -4,10 +4,10 @@ import com.pik.ride2work.tables.pojos.Team;
 
 public class TeamInputValidator implements RestInputValidator<Team> {
 
-  private static StringValidator stringValidator = StringValidator.getInstance();
-  private static String NAME_FORMAT_TEMPLATE = "Invalid team name format (Should be %s-%s characters long, no special chars)";
-  private static int NAME_MIN_LEN = 6;
-  private static int NAME_MAX_LEN = 32;
+  private static final StringValidator stringValidator = StringValidator.getInstance();
+  private static final String NAME_FORMAT_TEMPLATE = "Invalid team name format (Should be %s-%s characters long, no special chars)";
+  private static final int NAME_MIN_LEN = 6;
+  private static final int NAME_MAX_LEN = 32;
 
   @Override
   public Validated validateCreateInput(Team input) {

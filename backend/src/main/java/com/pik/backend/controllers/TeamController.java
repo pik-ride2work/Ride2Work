@@ -3,20 +3,13 @@ package com.pik.backend.controllers;
 import com.pik.backend.services.DefaultTeamService;
 import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Team;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import com.pik.ride2work.tables.pojos.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class TeamController {
@@ -35,7 +28,11 @@ public class TeamController {
                     .get();
             return ResponseEntity
                     .ok(createdTeam);
-        } catch (ExecutionException | InterruptedException e) {
+
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());
@@ -50,7 +47,10 @@ public class TeamController {
             Team updatedTeam = teamService.update(team).get();
             return ResponseEntity
                     .ok(updatedTeam);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());
@@ -65,7 +65,10 @@ public class TeamController {
             List<Team> list = teamService.list().get();
             return ResponseEntity
                     .ok(list);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             return Responses.internalError();
         }
     }
@@ -76,7 +79,10 @@ public class TeamController {
             Team team = teamService.getByName(name).get();
             return ResponseEntity
                     .ok(team);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -91,7 +97,10 @@ public class TeamController {
             Team team = teamService.getById(id).get();
             return ResponseEntity
                     .ok(team);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -107,7 +116,10 @@ public class TeamController {
             return ResponseEntity
                     .ok()
                     .build();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -122,7 +134,10 @@ public class TeamController {
             User user = teamService.getTeamOwner(teamId).get();
             return ResponseEntity
                     .ok(user);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();
@@ -137,7 +152,10 @@ public class TeamController {
             List<User> users = teamService.getUserList(teamId).get();
             return ResponseEntity
                     .ok(users);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof NotFoundException) {
                 return Responses.notFound();

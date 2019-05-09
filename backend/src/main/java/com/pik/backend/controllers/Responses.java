@@ -21,4 +21,11 @@ public class Responses {
                 .build();
     }
 
+    public static ResponseEntity serviceUnavailable() {
+        return ResponseEntity
+                .status(503)
+                .body("Service unavailable.");
+
+    }
+
 }
