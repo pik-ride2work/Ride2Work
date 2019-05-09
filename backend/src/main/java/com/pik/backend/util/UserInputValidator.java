@@ -4,19 +4,19 @@ import com.google.common.base.Strings;
 import com.pik.ride2work.tables.pojos.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 public class UserInputValidator implements RestInputValidator<User> {
 
-    private static EmailValidator emailValidator = EmailValidator.getInstance();
-    private static StringValidator stringValidator = StringValidator.getInstance();
-    private static String USERNAME_FORMAT_TEMPLATE = "Invalid username format (Should be %s-%s characters long, no special chars)";
-    private static String PASSWORD_FORMAT_TEMPLATE = "Invalid password format (Should be %s-%s characters long)";
-    private static String NAME_FORMAT_TEMPLATE = "Invalid %s format (Should be %s-%s characters long, English letters only)";
-    private static int CRED_MIN_LEN = 6;
-    private static int CRED_MAX_LEN = 32;
-    private static int NAME_MIN_LEN = 2;
-    private static int NAME_MAX_LEN = 32;
+    private static final EmailValidator emailValidator = EmailValidator.getInstance();
+    private static final StringValidator stringValidator = StringValidator.getInstance();
+    private static final String USERNAME_FORMAT_TEMPLATE = "Invalid username format (Should be %s-%s characters long, no special chars)";
+    private static final String PASSWORD_FORMAT_TEMPLATE = "Invalid password format (Should be %s-%s characters long)";
+    private static final String NAME_FORMAT_TEMPLATE = "Invalid %s format (Should be %s-%s characters long, English letters only)";
+    private static final int CRED_MIN_LEN = 6;
+    private static final int CRED_MAX_LEN = 32;
+    private static final int NAME_MIN_LEN = 2;
+    private static final int NAME_MAX_LEN = 32;
 
     @Override
     public Validated validateCreateInput(User input) {
