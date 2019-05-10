@@ -9,18 +9,23 @@
     <mat-sidenav #drawer class="p-3" mode="side">
       <mat-nav-list class="d-flex flex-column">
         <mat-form-field>
-          <input matInput placeholder="Name" readonly value="{{userName}}">
+          <input matInput placeholder="Name" readonly value="{{currentUser.firstName}}">
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Surname" readonly value="{{userSurname}}">
+          <input matInput placeholder="Surname" readonly value="{{currentUser.lastName}}">
         </mat-form-field>
-        <a mat-list-item>Upload ride</a>
-        <a mat-list-item (click)="rideHistory()">View rides history</a>
-        <a mat-list-item (click)="editUser()">Edit profile</a>
+        <mat-form-field *ngIf="!!userTeam">
+          <input matInput placeholder="Team" readonly value="{{userTeam.name}}">
+        </mat-form-field>
+        <a mat-list-item *ngIf="!userTeam" (click)="joinTeam()">Join team</a>
+        <a mat-list-item *ngIf="!userTeam" (click)="createTeam()">Create team</a>
+        <a mat-list-item *ngIf="router.url != '/'" (click)="router.navigate([''])">View rides history</a>
+        <a mat-list-item *ngIf="router.url == '/'">Upload ride</a>
+        <a mat-list-item *ngIf="router.url != '/edit-user'" (click)="router.navigate(['edit-user'])">Settings</a>
         <a mat-list-item (click)="logout()">Log out</a>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav-content class="w-100 h-100 mw-100 mh-100 align-items-center justify-content-center overflow-auto p-2">
+    <mat-sidenav-content class="col overflow-auto p-0">
       <ng-content></ng-content>
     </mat-sidenav-content>
   </mat-sidenav-container>

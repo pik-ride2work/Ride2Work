@@ -17,7 +17,9 @@ import {
   MatToolbarModule,
   MatSortModule,
   MatCardModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatDialogModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -32,7 +34,8 @@ import {ErrorInterceptor} from "./_interceptors/error.interceptor";
 import {RegisterComponent} from './register/register.component';
 import {MenuComponent} from './menu/menu.component';
 import {EditUserComponent} from './edit-user/edit-user.component';
-import { SpinnerButtonComponent } from './spinner-button/spinner-button.component';
+import {SpinnerButtonComponent} from './spinner-button/spinner-button.component';
+import {DialogComponent} from './dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,8 @@ import { SpinnerButtonComponent } from './spinner-button/spinner-button.componen
     RegisterComponent,
     MenuComponent,
     EditUserComponent,
-    SpinnerButtonComponent
+    SpinnerButtonComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -65,14 +69,19 @@ import { SpinnerButtonComponent } from './spinner-button/spinner-button.componen
     MatToolbarModule,
     MatSortModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [
     AuthGuard,
     AuthService,
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    DialogComponent
+  ]
 })
 export class AppModule {
 }

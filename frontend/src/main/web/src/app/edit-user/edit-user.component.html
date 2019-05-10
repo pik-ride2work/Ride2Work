@@ -1,13 +1,13 @@
 <app-menu>
   <div class="container-fluid">
     <div class="col align-items-center">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center p-2">
         <div class="bg-white form-card mat-elevation-z8">
           <div class="p-5">
             <h2 class="text-center mb-5">Edit profile</h2>
             <form [formGroup]="options" (ngSubmit)="save()">
               <mat-form-field class="w-100">
-                <input matInput placeholder="Login" formControlName="username">
+                <input matInput placeholder="Login" formControlName="username" readonly>
                 <mat-error *ngIf="options.get('username')?.invalid">Min length: 8 characters</mat-error>
               </mat-form-field>
 

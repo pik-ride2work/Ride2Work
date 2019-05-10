@@ -9,10 +9,10 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   get(username: String) {
-    return this.http.get<User>(`/api/users/` + username);
+    return this.http.get<User>(`/api/users/${username}`);
   }
 
-  register(user: User) {
+  create(user: User) {
     return this.http.post<User>(`/api/users/`, user);
   }
 

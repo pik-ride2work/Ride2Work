@@ -24,11 +24,11 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.options = this.formBuilder.group({
-      username: ['', Validators.minLength(8)],
-      password: ['', Validators.minLength(8)],
-      firstName: [''],
-      lastName: [''],
-      email: ['', Validators.email]
+      username: ['', Validators.required, Validators.minLength(8)],
+      password: ['', Validators.required, Validators.minLength(8)],
+      firstName: ['', Validators.required,],
+      lastName: ['', Validators.required,],
+      email: ['', Validators.required, Validators.email]
     });
   }
 
@@ -39,6 +39,9 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+    if(this.options.invalid)
+      return;
+
     this.loading = true;
     let user = new User(
       this.getControl('username'),
@@ -48,7 +51,7 @@ export class RegisterComponent implements OnInit {
       this.getControl('email')
     );
 
-    this.userService.register(user).subscribe(
+    this.userService.create(user).subscribe(
       user => {
         this.router.navigate([""]);
       },
