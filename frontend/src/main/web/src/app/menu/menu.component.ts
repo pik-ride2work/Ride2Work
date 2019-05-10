@@ -6,6 +6,8 @@ import {MatDialog, MatSnackBar} from "@angular/material";
 import {DialogComponent} from "../dialog/dialog.component";
 import {Team} from "../_models/team";
 import {Membership} from "../_models/membership";
+import * as JSZip from 'jszip';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-menu',
@@ -23,7 +25,8 @@ export class MenuComponent implements OnInit {
     public dialog: MatDialog,
     private teamService: TeamService,
     public snackBar: MatSnackBar,
-    private membershipService: MembershipService
+    private membershipService: MembershipService,
+    private http: HttpClient
   ) {
   }
 
@@ -33,7 +36,7 @@ export class MenuComponent implements OnInit {
   }
 
   loadTeam() {
-    if(this.authService.getMembership())
+    if (this.authService.getMembership())
       this.userMembership = this.authService.getMembership();
     else {
       this.membershipService.getByUserId(this.currentUser.id).subscribe(
@@ -47,7 +50,7 @@ export class MenuComponent implements OnInit {
       )
     }
 
-    if(this.authService.getTeam())
+    if (this.authService.getTeam())
       this.userTeam = this.authService.getTeam();
     else if (!!this.userMembership) {
       this.teamService.getById(this.userMembership.idTeam).subscribe(
@@ -113,7 +116,7 @@ export class MenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result)
         return;
-      if(result.length < 6){
+      if (result.length < 6) {
         this.snackBar.open("Teams name should be 6-32 characters long", "close");
         return;
       }
@@ -134,5 +137,39 @@ export class MenuComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(["setUser"]);
+  }
+
+  uploadRide(file) {
+    const inputNode: any = document.querySelector('#upload-file');
+
+    if (typeof (FileReader) !== 'undefined') {
+      let gpxFile: String;
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        gpxFile = e.target.result;
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type':  'application/binary'
+          })
+        }
+        let request = this.http.post<any>(
+          `https://rme.api.here.com/2/matchroute.json?routemode=pedestrian&app_id=0kj8xcjkXGoLHMxl9VdZ&app_code=MOzLzlDt9X_RnAOAk8NjuA`,
+          gpxFile,
+          httpOptions
+          );
+        request.subscribe(
+          data => {
+            data.userId = 213931;
+            console.log(data);
+          },
+          error => {
+            console.log(error);
+          }
+        )
+      };
+
+      reader.readAsBinaryString(inputNode.files[0]);
+    }
   }
 }

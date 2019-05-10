@@ -8,10 +8,8 @@ declare var H: any;
   styleUrls: ['./here-map.component.sass']
 })
 export class HereMapComponent implements OnInit {
-
   private platform: any;
   private map: any;
-  private marker: any;
   private coords = {
     lat: 52.2319,
     lng: 21.0067
@@ -33,7 +31,7 @@ export class HereMapComponent implements OnInit {
     });
   }
 
-  public ngOnInit() { }
+  public ngOnInit() {}
 
   public ngAfterViewInit() {
     let defaultLayers = this.platform.createDefaultLayers();
@@ -49,16 +47,57 @@ export class HereMapComponent implements OnInit {
     let ui = H.ui.UI.createDefault(this.map, defaultLayers);
   }
 
-  public showPoint(lat, lng){
-    if(this.marker)
-      this.map.removeObject(this.marker);
-    this.coords = {
+  private clearMap() {
+    this.map.removeObjects(this.map.getObjects());
+  }
+
+  private addMarker(lat, lng) {
+    let marker = new H.map.Marker({
       lat: lat,
       lng: lng
-    };
-    this.marker = new H.map.Marker(this.coords);
-    this.map.addObject(this.marker);
-    this.map.setCenter(this.coords);
+    });
+    this.map.addObject(marker);
+  }
+
+  private addLine(points) {
+    let lineString = new H.geo.LineString();
+
+    for(let point of points){
+      lineString.pushPoint({
+        lat: point.latMatched,
+        lng: point.lonMatched
+      });
+    }
+
+    this.map.addObject(new H.map.Polyline(
+      lineString, { style: { lineWidth: 4 }}
+    ));
+  }
+
+  private setCenter(lat, lng) {
+    this.map.setCenter({
+      lat: lat,
+      lng: lng
+    });
     this.map.setZoom(13);
+  }
+
+  public showPoint(lat, lng){
+    this.clearMap();
+    this.addMarker(lat, lng);
+    this.setCenter(lat, lng);
+  }
+
+  public showLine(file: string) {
+    this.clearMap();
+
+    let json = JSON.parse(file);
+    let points = json.TracePoints;
+
+    this.addLine(points);
+
+    this.addMarker(points[0].latMatched, points[0].lonMatched);
+    this.setCenter(points[0].latMatched, points[0].lonMatched);
+    this.addMarker(points[points.length - 1].latMatched, points[points.length - 1].lonMatched);
   }
 }
