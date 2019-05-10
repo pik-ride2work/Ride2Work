@@ -34,11 +34,38 @@ public class DefaultKafkaService implements KafkaService {
 
     @Override
     @KafkaListener(topics = "test", groupId = "group-id")
-    public Future<Void> read(String point) {
+    public Future<Void> readPoint(String point) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         RoutePoint routePoint = null;
         try {
             routePoint = RoutePoint.of(point);
+        } catch (IllegalArgumentException e) {
+            future.completeExceptionally(e);
+            return future;
+        }
+        RoutePoint finalRoutePoint = routePoint;
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            try {
+                DSL.using(cfg)
+                        .execute(String.format(INSERT_POINT_QUERY_TEMPLATE,
+                                finalRoutePoint.getTimestamp().toString(),
+                                finalRoutePoint.getLongitude(),
+                                finalRoutePoint.getLatitude()));
+                future.complete(null);
+            } catch (Exception e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
+    @Override
+    @KafkaListener(topics = "json", groupId = "group-id")
+    public Future<Void> readJson(String json) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        RoutePoint routePoint = null;
+        try {
+            routePoint = RoutePoint.of(json);
         } catch (IllegalArgumentException e) {
             future.completeExceptionally(e);
             return future;

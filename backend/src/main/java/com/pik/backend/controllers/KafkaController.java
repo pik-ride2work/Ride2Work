@@ -30,7 +30,7 @@ public class KafkaController {
     @GetMapping("/subscribe")
     public ResponseEntity read() {
         try {
-            kafkaService.read(null).get();
+            kafkaService.readPoint(null).get();
             return ResponseEntity
                     .ok()
                     .build();
