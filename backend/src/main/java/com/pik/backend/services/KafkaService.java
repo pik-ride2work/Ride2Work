@@ -6,6 +6,7 @@ public interface KafkaService {
 
     Future<Void> write(String string);
 
-    Future<Void> read(String string);
+    Future<Void> readPoint(String string);
 
+    Future<Void> readJson(String json);
 }
