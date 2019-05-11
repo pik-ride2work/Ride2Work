@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthService, MembershipService, TeamService} from "../_services";
+import {AuthService, MembershipService, RideService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {DialogComponent} from "../dialog/dialog.component";
@@ -26,7 +26,8 @@ export class MenuComponent implements OnInit {
     private teamService: TeamService,
     public snackBar: MatSnackBar,
     private membershipService: MembershipService,
-    private http: HttpClient
+    private http: HttpClient,
+    private rideService: RideService
   ) {
   }
 
@@ -148,25 +149,22 @@ export class MenuComponent implements OnInit {
 
       reader.onload = (e: any) => {
         gpxFile = e.target.result;
-        const httpOptions = {
-          headers: new HttpHeaders({
-            'Content-Type':  'application/binary'
-          })
-        }
-        let request = this.http.post<any>(
-          `https://rme.api.here.com/2/matchroute.json?routemode=pedestrian&app_id=0kj8xcjkXGoLHMxl9VdZ&app_code=MOzLzlDt9X_RnAOAk8NjuA`,
-          gpxFile,
-          httpOptions
-          );
-        request.subscribe(
-          data => {
-            data.userId = 213931;
-            console.log(data);
+        this.rideService.getRouteFromGpx(gpxFile).subscribe(
+          route => {
+            route.userId = 213931;
+            this.rideService.sendRouteToKafka(route).subscribe(
+              data => {
+                console.log(data);
+              },
+              error => {
+                console.log(error);
+              }
+            )
           },
           error => {
             console.log(error);
           }
-        )
+        );
       };
 
       reader.readAsBinaryString(inputNode.files[0]);
