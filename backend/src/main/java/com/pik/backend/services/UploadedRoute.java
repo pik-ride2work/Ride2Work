@@ -1,25 +1,27 @@
 package com.pik.backend.services;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.pik.backend.util.Distance;
+
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@JsonDeserialize(using = UploadedRouteDeserializer.class)
 public class UploadedRoute {
     private final List<RoutePoint> points;
-    private final Long userId;
-    private final Integer lengthInMeters;
-    private final Integer timeInSeconds;
+    private final Integer userId;
     private Double maxLatitude;
     private Double minLatitude;
     private Double maxLongitude;
     private Double minLongitude;
 
-    public UploadedRoute(List<RoutePoint> points, Long userId, Integer lengthInMeters, Integer timeInSeconds) {
+    public UploadedRoute(List<RoutePoint> points, Integer userId) {
         this.points = points;
         this.userId = userId;
-        this.lengthInMeters = lengthInMeters;
-        this.timeInSeconds = timeInSeconds;
         setBorders(points);
+        setLengthsAndTime(points);
     }
 
     private void setBorders(List<RoutePoint> points) {
@@ -41,20 +43,27 @@ public class UploadedRoute {
         this.minLongitude = minLon.orElse(null);
     }
 
+    private void setLengthsAndTime(List<RoutePoint> points) {
+        for (int i = 1; i < points.size(); i++) {
+            RoutePoint prev = points.get(i - 1);
+            RoutePoint curr = points.get(i);
+            double dist = Distance.between(prev, curr);
+            double travelTimeSeconds = timeDiffSeconds(prev.getTimestamp(), curr.getTimestamp());
+            curr.setLength(dist);
+            curr.setTravelTimeSeconds(travelTimeSeconds);
+        }
+    }
+
+    private static double timeDiffSeconds(Timestamp prev, Timestamp curr) {
+        return (curr.getTime() - prev.getTime()) / 1_000;
+    }
+
     public List<RoutePoint> getPoints() {
         return points;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
-    }
-
-    public Integer getLengthInMeters() {
-        return lengthInMeters;
-    }
-
-    public Integer getTimeInSeconds() {
-        return timeInSeconds;
     }
 
     public Double getMaxLatitude() {
