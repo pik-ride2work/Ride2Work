@@ -3,7 +3,7 @@ package com.pik.backend.services;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.daos.RouteDao;
 import com.pik.ride2work.tables.pojos.Route;
-import com.pik.ride2work.tables.records.RouteRecord;
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
@@ -31,12 +31,8 @@ public class DefaultRouteService implements RouteService {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
             try {
-                RouteRecord routeRecord = DSL.using(cfg)
-                        .insertInto(ROUTE, ROUTE.ID_USER, ROUTE.IS_FINISHED, ROUTE.IS_VALID)
-                        .values(userId, false, false)
-                        .returning(ROUTE.ID)
-                        .fetchOne();
-                future.complete(routeRecord.getId());
+                int newRouteId = startRoute(cfg, userId);
+                future.complete(newRouteId);
             } catch (DataAccessException e) {
                 future.completeExceptionally(new IllegalStateException("Failed to create a new route for the user."));
             }
@@ -65,11 +61,12 @@ public class DefaultRouteService implements RouteService {
     public Future<Void> writeUploadedRoute(UploadedRoute uploadedRoute) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-            Integer routeId = startRoute(uploadedRoute.getUserId()).get();
+            Integer routeId = startRoute(cfg, uploadedRoute.getUserId());
             String insertQuery = INSERT_POINT_TEMPLATE + uploadedRoute.getPoints().stream()
                     .map(point -> singlePointRecord(point, routeId))
                     .collect(Collectors.joining(",")) + ";";
             DSL.using(cfg).execute(insertQuery);
+            future.complete(null);
         });
         return future;
     }
@@ -80,5 +77,14 @@ public class DefaultRouteService implements RouteService {
                 point.getLatitude(),
                 point.getLongitude(),
                 routeId);
+    }
+
+    private int startRoute(Configuration cfg, Integer userId){
+        return DSL.using(cfg)
+                .insertInto(ROUTE, ROUTE.ID_USER, ROUTE.IS_FINISHED, ROUTE.IS_VALID)
+                .values(userId, false, false)
+                .returning(ROUTE.ID)
+                .fetchOne()
+                .getId();
     }
 }

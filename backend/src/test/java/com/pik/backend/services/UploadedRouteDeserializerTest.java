@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -13,6 +15,14 @@ import static org.junit.Assert.assertEquals;
 public class UploadedRouteDeserializerTest {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    public void shouldReturnDouble(){
+        Timestamp start = Timestamp.from(Instant.ofEpochMilli(0));
+        Timestamp end = Timestamp.from(Instant.ofEpochMilli(2500));
+        double result = UploadedRoute.timeDiffSeconds(start, end);
+        assertEquals(2.5d, result, 0.001);
+    }
 
     @Test
     public void shouldDeserializeCorrectlyWhenInputIsValid() throws IOException {

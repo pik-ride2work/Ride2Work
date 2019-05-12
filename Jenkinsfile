@@ -36,6 +36,11 @@ echo \'hello\''''
 
       }
     }
+    stage('Clean up Workspace'){
+        steps {
+            cleanWs()
+        }
+    }
     stage('Remove Unused Docker Image') {
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"

@@ -54,8 +54,8 @@ public class UploadedRoute {
         }
     }
 
-    private static double timeDiffSeconds(Timestamp prev, Timestamp curr) {
-        return (curr.getTime() - prev.getTime()) / 1_000;
+    protected static double timeDiffSeconds(Timestamp prev, Timestamp curr) {
+        return (double)(curr.getTime() - prev.getTime()) / 1_000;
     }
 
     public List<RoutePoint> getPoints() {

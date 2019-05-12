@@ -3,6 +3,9 @@ package com.pik.backend.controllers;
 import org.springframework.http.ResponseEntity;
 
 public class Responses {
+    private Responses() {
+    }
+
     public static ResponseEntity internalError() {
         return ResponseEntity
                 .status(500)

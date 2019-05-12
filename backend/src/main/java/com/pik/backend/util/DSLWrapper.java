@@ -7,6 +7,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class DSLWrapper {
 
+    private DSLWrapper() {
+    }
+
     public static void transaction(DSLContext dsl, CompletableFuture future,
                                    TransactionalRunnable runnable) {
         try {
