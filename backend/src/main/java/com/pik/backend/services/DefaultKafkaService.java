@@ -39,7 +39,7 @@ public class DefaultKafkaService implements KafkaService {
     }
 
     @Override
-    @KafkaListener(topics = "json", groupId = "group-id")
+    @KafkaListener(topics = "point", groupId = "group-id")
     public Future<Void> readPoint(String point) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         RoutePoint routePoint = null;
@@ -66,7 +66,7 @@ public class DefaultKafkaService implements KafkaService {
     }
 
     @Override
-    @KafkaListener(topics = "test", groupId = "java")
+    @KafkaListener(topics = "json", groupId = "group-id")
     public Future<Void> readJson(String json) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         UploadedRoute uploadedRoute = null;
