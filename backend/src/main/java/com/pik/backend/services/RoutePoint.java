@@ -47,21 +47,22 @@ public class RoutePoint {
         if (parts.length != NUMBER_OF_PARTS) {
             throw new IllegalArgumentException("Point format is invalid.");
         }
-        double longitude = Double.valueOf(parts[2]);
+        double longitude = Double.parseDouble(parts[2]);
         if (longitude < MIN_LON || longitude > MAX_LON) {
             throw new IllegalArgumentException(String.format("Longitude value should be within <%s, %s> range", MIN_LON, MAX_LON));
         }
-        double latitude = Double.valueOf(parts[3]);
+        double latitude = Double.parseDouble(parts[3]);
         if (latitude < MIN_LAT || latitude > MAX_LAT) {
             throw new IllegalArgumentException(String.format("Latitude value should be within <%s, %s> range", MIN_LAT, MAX_LAT));
         }
+        double elevation = Double.parseDouble(parts[4]);
         try {
             return new RoutePoint(
                     Integer.valueOf(parts[0]),
                     Timestamp.from(Instant.ofEpochMilli(Long.valueOf(parts[1]))),
                     longitude,
                     latitude,
-                    Double.valueOf(parts[4])
+                    elevation
             );
         } catch (Exception e) {
             throw new IllegalArgumentException("Point format is invalid.");

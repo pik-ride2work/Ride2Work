@@ -1,12 +1,10 @@
 package com.pik.backend.services;
 
 import com.pik.ride2work.tables.pojos.Team;
-
-import java.util.concurrent.Future;
-
 import com.pik.ride2work.tables.pojos.User;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface TeamService {
 

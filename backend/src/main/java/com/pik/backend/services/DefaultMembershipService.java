@@ -1,14 +1,14 @@
 package com.pik.backend.services;
 
-import static com.pik.ride2work.Tables.MEMBERSHIP;
-import static com.pik.ride2work.Tables.TEAM;
-
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.daos.MembershipDao;
-import com.pik.ride2work.tables.daos.UserDao;
 import com.pik.ride2work.tables.pojos.Membership;
-import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.MembershipRecord;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.jooq.impl.DSL;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,12 +16,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.jooq.exception.DataAccessException;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
+import static com.pik.ride2work.Tables.MEMBERSHIP;
+import static com.pik.ride2work.Tables.TEAM;
 
 @Repository
 public class DefaultMembershipService implements MembershipService {

@@ -6,6 +6,9 @@ import com.pik.backend.services.RoutePoint;
  * All results are represented in meters.
  */
 public class Distance {
+    private Distance() {
+    }
+
     private static final int R = 6371; // Radius of the earth
 
     public static double between(RoutePoint one, RoutePoint two) {

@@ -5,21 +5,19 @@ import com.pik.backend.util.TeamInputValidator;
 import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.daos.TeamDao;
 import com.pik.ride2work.tables.pojos.Team;
-
 import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.TeamRecord;
+import com.pik.ride2work.tables.records.UserRecord;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.jooq.impl.DSL;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-
-import com.pik.ride2work.tables.records.UserRecord;
-import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
 
 import static com.pik.ride2work.Tables.*;
 

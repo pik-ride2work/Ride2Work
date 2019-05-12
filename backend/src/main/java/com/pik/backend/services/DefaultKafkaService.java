@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
@@ -40,7 +39,7 @@ public class DefaultKafkaService implements KafkaService {
     }
 
     @Override
-    @KafkaListener(topics = "test", groupId = "group-id")
+    @KafkaListener(topics = "point", groupId = "group-id")
     public Future<Void> readPoint(String point) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         RoutePoint routePoint = null;
@@ -71,13 +70,11 @@ public class DefaultKafkaService implements KafkaService {
     public Future<Void> readJson(String json) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         UploadedRoute uploadedRoute = null;
-        try{
+        try {
             uploadedRoute = objectMapper.readValue(json, UploadedRoute.class);
             routeService.writeUploadedRoute(uploadedRoute).get();
-        } catch (IOException e) {
+        } catch (Exception e) {
             future.completeExceptionally(new IOException("Failed to upload the route."));
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
         }
         return future;
     }
