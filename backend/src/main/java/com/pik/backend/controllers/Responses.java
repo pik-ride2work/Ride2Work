@@ -31,4 +31,10 @@ public class Responses {
 
     }
 
+    public static ResponseEntity conflict(String msg) {
+        return ResponseEntity
+                .status(409)
+                .body(String.format("Operation is not available: %s", msg));
+    }
+
 }

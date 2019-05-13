@@ -38,6 +38,9 @@ public class TeamController {
             if (cause instanceof IllegalArgumentException) {
                 return Responses.badRequest(cause.getMessage());
             }
+            if (cause instanceof IllegalStateException) {
+                return Responses.conflict(cause.getMessage());
+            }
             return Responses.internalError();
         }
     }

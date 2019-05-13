@@ -1,5 +1,6 @@
 package com.pik.backend.util;
 
+import com.pik.backend.custom_daos.Coordinates;
 import com.pik.backend.services.RoutePoint;
 
 /**
@@ -9,15 +10,21 @@ public class Distance {
     private Distance() {
     }
 
+    public static final double MAX_LON = 180.0;
+    public static final double MIN_LON = -180.0;
+    public static final double MAX_LAT = 90.0;
+    public static final double MIN_LAT = -90.0;
     private static final int R = 6371; // Radius of the earth
 
     public static double between(RoutePoint one, RoutePoint two) {
-        double lat1 = one.getLatitude();
-        double lon1 = one.getLongitude();
-        double el1 = one.getLatitude();
-        double lat2 = two.getLatitude();
-        double lon2 = two.getLongitude();
-        double el2 = two.getLatitude();
+        Coordinates coordOne = one.getCoordinates();
+        Coordinates coordTwo = two.getCoordinates();
+        double lat1 = coordOne.getLatitude();
+        double lon1 = coordOne.getLongitude();
+        double el1 = coordOne.getLatitude();
+        double lat2 = coordTwo.getLatitude();
+        double lon2 = coordTwo.getLongitude();
+        double el2 = coordTwo.getLatitude();
 
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);

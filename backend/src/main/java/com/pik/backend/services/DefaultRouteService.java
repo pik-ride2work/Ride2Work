@@ -1,5 +1,7 @@
 package com.pik.backend.services;
 
+import com.pik.backend.custom_daos.Coordinates;
+import com.pik.backend.custom_daos.CustomRouteDao;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.daos.RouteDao;
 import com.pik.ride2work.tables.pojos.Route;
@@ -9,6 +11,7 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -24,6 +27,31 @@ public class DefaultRouteService implements RouteService {
 
     public DefaultRouteService(DSLContext dsl) {
         this.dsl = dsl;
+    }
+
+    public Future<List<Route>> getRoutesByUserId(Integer userId) {
+        CompletableFuture<List<Route>> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            CustomRouteDao routeDao = new CustomRouteDao(cfg);
+            List<Route> routes = routeDao.getRoutesByUserId(userId);
+            future.complete(routes);
+        });
+        return future;
+    }
+
+    @Override
+    public Future<List<RoutePoint>> getPointsByRouteId(Integer routeId) {
+        CompletableFuture<List<RoutePoint>> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            try {
+                CustomRouteDao routeDao = new CustomRouteDao(cfg);
+                List<RoutePoint> points = routeDao.getPointsByRouteId(routeId);
+                future.complete(points);
+            } catch (DataAccessException e) {
+                future.completeExceptionally(new NotFoundException("Route doesn't exist."));
+            }
+        });
+        return future;
     }
 
     @Override
@@ -58,11 +86,11 @@ public class DefaultRouteService implements RouteService {
     }
 
     @Override
-    public Future<Void> writeUploadedRoute(UploadedRoute uploadedRoute) {
+    public Future<Void> writeUploadedRoute(UploadRoute uploadRoute) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-            Integer routeId = startRoute(cfg, uploadedRoute.getUserId());
-            String insertQuery = INSERT_POINT_TEMPLATE + uploadedRoute.getPoints().stream()
+            Integer routeId = startRoute(cfg, uploadRoute.getUserId());
+            String insertQuery = INSERT_POINT_TEMPLATE + uploadRoute.getPoints().stream()
                     .map(point -> singlePointRecord(point, routeId))
                     .collect(Collectors.joining(",")) + ";";
             DSL.using(cfg).execute(insertQuery);
@@ -72,14 +100,15 @@ public class DefaultRouteService implements RouteService {
     }
 
     private static String singlePointRecord(RoutePoint point, Integer routeId) {
+        Coordinates coordinates = point.getCoordinates();
         return String.format(POINT_RECORD_TEMPLATE,
                 point.getTimestamp().toString(),
-                point.getLatitude(),
-                point.getLongitude(),
+                coordinates.getLatitude(),
+                coordinates.getLongitude(),
                 routeId);
     }
 
-    private int startRoute(Configuration cfg, Integer userId){
+    private int startRoute(Configuration cfg, Integer userId) {
         return DSL.using(cfg)
                 .insertInto(ROUTE, ROUTE.ID_USER, ROUTE.IS_FINISHED, ROUTE.IS_VALID)
                 .values(userId, false, false)

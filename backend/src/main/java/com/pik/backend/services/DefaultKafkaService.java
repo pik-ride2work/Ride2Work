@@ -1,6 +1,8 @@
 package com.pik.backend.services;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pik.backend.custom_daos.Coordinates;
 import com.pik.backend.util.DSLWrapper;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -24,7 +26,7 @@ public class DefaultKafkaService implements KafkaService {
             "VALUES ('%s', ST_GeographyFromText('SRID=4326;POINT(%s %s)'))";
 
     public DefaultKafkaService(ObjectMapper objectMapper, DefaultRouteService routeService, DSLContext dsl, KafkaTemplate<String, String> kafkaTemplate) {
-        this.objectMapper = objectMapper;
+        this.objectMapper = objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         this.routeService = routeService;
         this.dsl = dsl;
         this.kafkaTemplate = kafkaTemplate;
@@ -52,11 +54,12 @@ public class DefaultKafkaService implements KafkaService {
         RoutePoint finalRoutePoint = routePoint;
         DSLWrapper.transaction(dsl, future, cfg -> {
             try {
+                Coordinates coordinates = finalRoutePoint.getCoordinates();
                 DSL.using(cfg)
                         .execute(String.format(INSERT_POINT_QUERY_TEMPLATE,
                                 finalRoutePoint.getTimestamp().toString(),
-                                finalRoutePoint.getLongitude(),
-                                finalRoutePoint.getLatitude()));
+                                coordinates.getLongitude(),
+                                coordinates.getLatitude()));
                 future.complete(null);
             } catch (Exception e) {
                 future.completeExceptionally(e);
@@ -69,10 +72,10 @@ public class DefaultKafkaService implements KafkaService {
     @KafkaListener(topics = "json", groupId = "group-id")
     public Future<Void> readJson(String json) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        UploadedRoute uploadedRoute = null;
+        UploadRoute uploadRoute = null;
         try {
-            uploadedRoute = objectMapper.readValue(json, UploadedRoute.class);
-            routeService.writeUploadedRoute(uploadedRoute).get();
+            uploadRoute = objectMapper.readValue(json, UploadRoute.class);
+            routeService.writeUploadedRoute(uploadRoute).get();
         } catch (Exception e) {
             future.completeExceptionally(new IOException("Failed to upload the route."));
         }

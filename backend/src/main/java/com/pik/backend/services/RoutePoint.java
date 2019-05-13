@@ -1,34 +1,29 @@
 package com.pik.backend.services;
 
 import com.google.common.base.Strings;
+import com.pik.backend.custom_daos.Coordinates;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
+import static com.pik.backend.util.Distance.*;
+
 public class RoutePoint {
     private final Integer routeId;
+    private final Coordinates coordinates;
     private final Timestamp timestamp;
-    private final double longitude;
-    private final double latitude;
-    private final double elevation;
     private double length;
     private double travelTimeSeconds;
     private static final int NUMBER_OF_PARTS = 5;
-    private static final double MAX_LON = 180.0;
-    private static final double MIN_LON = -180.0;
-    private static final double MAX_LAT = 90.0;
-    private static final double MIN_LAT = -90.0;
 
-    public RoutePoint(Integer routeId, Timestamp timestamp, double longitude, double latitude, double elevation) {
+    public RoutePoint(Integer routeId, Timestamp timestamp, Coordinates coordinates) {
         this.routeId = routeId;
         this.timestamp = timestamp;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.elevation = elevation;
+        this.coordinates = coordinates;
     }
 
-    public RoutePoint(Timestamp timestamp, double longitude, double latitude, double elevation) {
-        this(null, timestamp, longitude, latitude, elevation);
+    public RoutePoint(Timestamp timestamp, Coordinates coordinates) {
+        this(null, timestamp, coordinates);
     }
 
     /**
@@ -60,9 +55,7 @@ public class RoutePoint {
             return new RoutePoint(
                     Integer.valueOf(parts[0]),
                     Timestamp.from(Instant.ofEpochMilli(Long.valueOf(parts[1]))),
-                    longitude,
-                    latitude,
-                    elevation
+                    new Coordinates(latitude, longitude, elevation)
             );
         } catch (Exception e) {
             throw new IllegalArgumentException("Point format is invalid.");
@@ -74,13 +67,6 @@ public class RoutePoint {
         return timestamp;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
 
     public double getLength() {
         return length;
@@ -102,10 +88,6 @@ public class RoutePoint {
         return routeId;
     }
 
-    public Double getElevation() {
-        return elevation;
-    }
-
     public void setTravelTimeSeconds(Integer travelTimeSeconds) {
         this.travelTimeSeconds = travelTimeSeconds;
     }
@@ -116,6 +98,10 @@ public class RoutePoint {
 
     public void setTravelTimeSeconds(int travelTimeSeconds) {
         this.travelTimeSeconds = travelTimeSeconds;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
 }
