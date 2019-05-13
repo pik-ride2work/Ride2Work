@@ -78,7 +78,7 @@ public class DefaultTeamService implements TeamService {
     @Override
     public Future<Team> create(Team team, Integer ownerId) {
         CompletableFuture<Team> future = new CompletableFuture<>();
-        Validated validation = validator.validateCreateInput(team);
+        Validated validation = validator.validateRegistrationInput(team);
         if (!validation.isValid()) {
             future.completeExceptionally(validation.getCause());
             return future;
