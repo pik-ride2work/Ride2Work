@@ -6,6 +6,7 @@ import com.pik.backend.util.Validated;
 import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.UserRecord;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -71,17 +72,29 @@ public class DefaultUserService implements UserService {
     public Future<User> getByUsername(String username) {
         CompletableFuture<User> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-            UserRecord userRecord = dsl.selectFrom(USER)
+            UserRecord userRecord = DSL.using(cfg)
+                    .selectFrom(USER)
                     .where(USER.USERNAME.eq(username))
                     .fetchOne();
             if (userRecord == null) {
                 future.completeExceptionally(new NotFoundException("User not Found"));
                 return;
             }
-            future.complete(userRecord.into(User.class));
+            User user = userRecord.into(User.class);
+            future.complete(NoCredUserView.apply(user));
         });
         return future;
     }
+
+    @Override
+    public Future<User> login(User user) {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+
+        });
+        return future;
+    }
+
 
 }
 
