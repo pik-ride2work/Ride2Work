@@ -1,11 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {RoutePoint} from "../_models/route-point";
+import {Ride} from "../_models/ride";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RideService {
   constructor(private http: HttpClient) {
+  }
+
+  getPointsByRouteId(routeId) {
+    return this.http.get<RoutePoint[]>(`api/routes/points/${routeId}`);
+  }
+
+  getRoutesByUserId(userId) {
+    return this.http.get<Ride[]>(`api/routes/${userId}`);
   }
 
   getRouteFromGpx(gpxFile) {
@@ -29,11 +39,11 @@ export class RideService {
       })
     }
 
-    let data = JSON.stringify({
+    let data = {
       "records": [{
-        "value": JSON.stringify(route)
+        "value": route
       }]
-    });
+    };
 
     console.log(data);
 

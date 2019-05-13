@@ -1,4 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import {Ride} from "../_models/ride";
+import {RideService} from "../_services";
+import {RoutePoint} from "../_models/route-point";
+import {Coordinates} from "../_models/coordinates";
 
 declare var H: any;
 
@@ -24,7 +28,9 @@ export class HereMapComponent implements OnInit {
   @Input()
   public height: any;
 
-  public constructor() {
+  public constructor(
+    private rideService: RideService
+  ) {
     this.platform = new H.service.Platform({
       "app_id": "0kj8xcjkXGoLHMxl9VdZ",
       "app_code": "MOzLzlDt9X_RnAOAk8NjuA"
@@ -59,13 +65,13 @@ export class HereMapComponent implements OnInit {
     this.map.addObject(marker);
   }
 
-  private addLine(points) {
+  private addLine(points: Coordinates[]) {
     let lineString = new H.geo.LineString();
 
     for(let point of points){
       lineString.pushPoint({
-        lat: point.latMatched,
-        lng: point.lonMatched
+        lat: point.latitude,
+        lng: point.longitude
       });
     }
 
@@ -88,16 +94,29 @@ export class HereMapComponent implements OnInit {
     this.setCenter(lat, lng);
   }
 
-  public showLine(file: string) {
+  public showLine(route: RoutePoint[]) {
     this.clearMap();
 
-    let json = JSON.parse(file);
-    let points = json.TracePoints;
+    let coordinates: Coordinates[] = [];
+    for(let routePoint of route){
+      coordinates.push(routePoint.coordinates);
+    }
 
-    this.addLine(points);
+    this.addLine(coordinates);
 
-    this.addMarker(points[0].latMatched, points[0].lonMatched);
-    this.setCenter(points[0].latMatched, points[0].lonMatched);
-    this.addMarker(points[points.length - 1].latMatched, points[points.length - 1].lonMatched);
+    this.addMarker(coordinates[0].latitude, coordinates[0].longitude);
+    this.setCenter(coordinates[0].latitude, coordinates[0].longitude);
+    this.addMarker(coordinates[coordinates.length - 1].latitude, coordinates[coordinates.length - 1].longitude);
+  }
+
+  public showRoute(ride: Ride) {
+    this.rideService.getPointsByRouteId(ride.id).subscribe(
+      route => {
+        this.showLine(route);
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }

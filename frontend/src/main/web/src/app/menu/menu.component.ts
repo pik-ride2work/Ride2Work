@@ -151,7 +151,7 @@ export class MenuComponent implements OnInit {
         gpxFile = e.target.result;
         this.rideService.getRouteFromGpx(gpxFile).subscribe(
           route => {
-            route.userId = 213931;
+            route.userId = this.currentUser.id;
             this.rideService.sendRouteToKafka(route).subscribe(
               data => {
                 console.log(data);
