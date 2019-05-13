@@ -33,14 +33,6 @@ public class DefaultKafkaService implements KafkaService {
     }
 
     @Override
-    public Future<Void> write(String point) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        kafkaTemplate.send("test", point);
-        future.complete(null);
-        return future;
-    }
-
-    @Override
     @KafkaListener(topics = "point", groupId = "group-id")
     public Future<Void> readPoint(String point) {
         CompletableFuture<Void> future = new CompletableFuture<>();
