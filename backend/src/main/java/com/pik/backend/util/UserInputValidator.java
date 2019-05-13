@@ -18,7 +18,7 @@ public class UserInputValidator implements RestInputValidator<User> {
     private static final int NAME_MAX_LEN = 32;
 
     @Override
-    public Validated validateCreateInput(User input) {
+    public Validated validateRegistrationInput(User input) {
         if (input.getId() != null) {
             return Validated.invalid("Created user should not have ID!");
         }
@@ -53,6 +53,22 @@ public class UserInputValidator implements RestInputValidator<User> {
         }
         if (!Strings.isNullOrEmpty(input.getLastName()) && !stringValidator.lettersOnly(NAME_MIN_LEN, NAME_MAX_LEN, input.getLastName())) {
             return Validated.invalid(format(NAME_FORMAT_TEMPLATE, "last name", NAME_MIN_LEN, NAME_MAX_LEN));
+        }
+        return Validated.valid();
+    }
+
+    public Validated validatedLoginInput(User input){
+        if (input.getId() != null){
+            return Validated.invalid("Login must not contain ID!");
+        }
+        if(input.getUsername() == null && input.getEmail() == null){
+            return Validated.invalid("Login must contain email or username.");
+        }
+        if(input.getPassword() == null){
+            return Validated.invalid("Login must contain password");
+        }
+        if(input.getFirstName() != null || input.getLastName() != null){
+            return Validated.invalid("Login must not have first or last name.");
         }
         return Validated.valid();
     }

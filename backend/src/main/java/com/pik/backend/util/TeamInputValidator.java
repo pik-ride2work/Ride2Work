@@ -10,7 +10,7 @@ public class TeamInputValidator implements RestInputValidator<Team> {
   private static final int NAME_MAX_LEN = 32;
 
   @Override
-  public Validated validateCreateInput(Team input) {
+  public Validated validateRegistrationInput(Team input) {
     if (input.getId() != null) {
       return Validated.invalid("Created team should not have ID!");
     }
