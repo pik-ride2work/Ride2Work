@@ -7,6 +7,13 @@ pipeline {
 echo \'hello\''''
       }
     }
+
+     stage('Code Coverage') {
+       steps {
+          jacoco(changeBuildStatus: true, execPattern: 'backend/target/jacoco.exec', classPattern: 'backend/target/classes', sourcePattern: 'backend/src/main/java', exclusionPattern: 'backend/test*', deltaLineCoverage: '0', deltaMethodCoverage: '0', maximumLineCoverage: '50')
+          }
+        }
+
      stage('Static code analysis') {
       environment {
         scannerHome = tool 'sonar_scanner'
