@@ -37,7 +37,7 @@ public class DefaultUserService implements UserService {
     }
     DSLWrapper.transaction(dsl, future, cfg -> {
       User created = dsl.insertInto(USER)
-          .set(USER.PASSWORD, new Crypt(user.getPassword(), DSL.inline(Crypt.GEN_SALT)))
+          .set(USER.PASSWORD, new Crypt(user.getPassword(), DSL.field(Crypt.GEN_SALT, String.class)))
           .set(USER.FIRST_NAME, user.getFirstName())
           .set(USER.LAST_NAME, user.getLastName())
           .set(USER.USERNAME, user.getUsername())
