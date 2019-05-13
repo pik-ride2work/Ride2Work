@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 import {User} from "../_models/user";
-import {Team} from "../_models/team";
 import {Membership} from "../_models/membership";
+import {Team} from "../_models/team";
 
 @Injectable({
   providedIn: 'root'

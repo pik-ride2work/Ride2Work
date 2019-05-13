@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Membership} from "../_models/membership";
 
@@ -10,14 +10,14 @@ export class MembershipService {
   }
 
   joinTeam(userId: number, teamId: number) {
-    return this.http.post<any>(`/api/membership?userId=${userId}&teamId=${teamId}`, null);
+    return this.http.post<any>(`/api/memberships?userId=${userId}&teamId=${teamId}`, null);
   }
 
   leaveTeam(userId: number) {
-    return this.http.delete<any>(`/api/membership?userId=${userId}`, null);
+    return this.http.delete<any>(`/api/memberships?userId=${userId}`, null);
   }
 
   getByUserId(userId: number) {
-    return this.http.get<Membership>(`/api/membership/${userId}`);
+    return this.http.get<Membership>(`/api/memberships/${userId}`);
   }
 }

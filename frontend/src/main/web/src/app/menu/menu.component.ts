@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthService, MembershipService, TeamService} from "../_services";
+import {AuthService, MembershipService, RideService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatDialog, MatSnackBar} from "@angular/material";
 import {DialogComponent} from "../dialog/dialog.component";
 import {Team} from "../_models/team";
 import {Membership} from "../_models/membership";
+import * as JSZip from 'jszip';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-menu',
@@ -23,7 +25,9 @@ export class MenuComponent implements OnInit {
     public dialog: MatDialog,
     private teamService: TeamService,
     public snackBar: MatSnackBar,
-    private membershipService: MembershipService
+    private membershipService: MembershipService,
+    private http: HttpClient,
+    private rideService: RideService
   ) {
   }
 
@@ -33,7 +37,7 @@ export class MenuComponent implements OnInit {
   }
 
   loadTeam() {
-    if(this.authService.getMembership())
+    if (this.authService.getMembership())
       this.userMembership = this.authService.getMembership();
     else {
       this.membershipService.getByUserId(this.currentUser.id).subscribe(
@@ -47,7 +51,7 @@ export class MenuComponent implements OnInit {
       )
     }
 
-    if(this.authService.getTeam())
+    if (this.authService.getTeam())
       this.userTeam = this.authService.getTeam();
     else if (!!this.userMembership) {
       this.teamService.getById(this.userMembership.idTeam).subscribe(
@@ -113,7 +117,7 @@ export class MenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result)
         return;
-      if(result.length < 6){
+      if (result.length < 6) {
         this.snackBar.open("Teams name should be 6-32 characters long", "close");
         return;
       }
@@ -134,5 +138,36 @@ export class MenuComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(["setUser"]);
+  }
+
+  uploadRide(file) {
+    const inputNode: any = document.querySelector('#upload-file');
+
+    if (typeof (FileReader) !== 'undefined') {
+      let gpxFile: String;
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        gpxFile = e.target.result;
+        this.rideService.getRouteFromGpx(gpxFile).subscribe(
+          route => {
+            route.userId = this.currentUser.id;
+            this.rideService.sendRouteToKafka(route).subscribe(
+              data => {
+                console.log(data);
+              },
+              error => {
+                console.log(error);
+              }
+            )
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      };
+
+      reader.readAsBinaryString(inputNode.files[0]);
+    }
   }
 }

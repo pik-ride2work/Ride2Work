@@ -7,5 +7,14 @@
     },
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/kafka": {
+    "target": "http://35.204.26.36:31046",
+    "secure": false,
+    "pathRewrite": {
+      "^/kafka": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
