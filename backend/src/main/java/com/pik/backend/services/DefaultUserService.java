@@ -36,15 +36,17 @@ public class DefaultUserService implements UserService {
       return future;
     }
     DSLWrapper.transaction(dsl, future, cfg -> {
-      User created = dsl
-          .insertInto(USER, USER.FIRST_NAME, USER.LAST_NAME, USER.USERNAME, USER.EMAIL,
-              DSL.field("password"))
-          .values(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(),
-              getDBPasswordField(user.getPassword()))
+      User created = dsl.insertInto(USER)
+          .set(USER.PASSWORD, new Crypt(user.getPassword(), DSL.inline(Crypt.GEN_SALT)))
+          .set(USER.FIRST_NAME, user.getFirstName())
+          .set(USER.LAST_NAME, user.getLastName())
+          .set(USER.USERNAME, user.getUsername())
+          .set(USER.EMAIL, user.getEmail())
           .returning(USER.fields())
           .fetchOne()
           .into(User.class);
-      future.complete(created);
+      future.complete(NoCredUserView.apply(created));
+
     });
     return future;
   }
@@ -67,7 +69,7 @@ public class DefaultUserService implements UserService {
         future.completeExceptionally(new NotFoundException("User not Found"));
         return;
       }
-      future.complete(updatedRecord.into(User.class));
+      future.complete(NoCredUserView.apply(updatedRecord.into(User.class)));
     });
     return future;
   }
@@ -100,24 +102,21 @@ public class DefaultUserService implements UserService {
     }
     DSLWrapper.transaction(dsl, future, cfg -> {
       Condition loginCondition =
-          (user.getUsername() != null) ? USER.USERNAME.eq(user.getUsername()) : USER.EMAIL.eq(user.getEmail());
+          (user.getUsername() != null) ? USER.USERNAME.eq(user.getUsername())
+              : USER.EMAIL.eq(user.getEmail());
       UserRecord userRecord = DSL.using(cfg)
           .selectFrom(USER)
           .where(loginCondition)
-          .and(getDBPasswordField(user.getPassword()))
+          .and(new Crypt(user.getPassword(), USER.PASSWORD).eq(USER.PASSWORD))
           .fetchOne();
       if (userRecord == null) {
         future.completeExceptionally(
             new NotFoundException("Username and password combination is incorrect"));
         return;
       }
-      future.complete(userRecord.into(User.class));
+      future.complete(NoCredUserView.apply(userRecord.into(User.class)));
     });
     return future;
-  }
-
-  private static String getDBPasswordField(String password) {
-    return String.format("crypt('%s', gen_salt('bf'))", password);
   }
 
 }
