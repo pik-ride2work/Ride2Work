@@ -1,14 +1,14 @@
-##JOOQ
+## JOOQ
 
 
-###Informacje wstępne
+### Informacje wstępne
 **jOOQ** (jOOQ Object Oriented Querying) jest to biblioteka wspierająca programiste w pisaniu złożonych zapytań SQL w wygodny sposób poprzez dodatkową warstwe abstrakcji ponad klasyczne i często uciążliwe JDBC.
 * Wsparcie dla różnych dialektów SQL
 * Bezpieczne typowanie
 * Sprawdzanie składni SQL w czasie kompilacji 
 * Darmowa dla baz danych open source 
 
-###Integracja
+### Integracja
 Przed użyciem jOOQ, przede wszystkim konieczne jest dodanie zależności do projektu:
 
 ```xml
@@ -28,7 +28,7 @@ Przed użyciem jOOQ, przede wszystkim konieczne jest dodanie zależności do pro
   <version>${version.jooq}</version>
 </dependency>
 ```
-###Generacja kodu
+### Generacja kodu
 Biblioteka pozwala na podstawie stworzonej bazy danych wygenerować klasy javowe za pomocą których w łatwy sposób możemy zarządzać danymi. Poniżej przykład konfiguracji odpowiedniej wtyczki do mavena:
 
 ```xml
@@ -79,7 +79,7 @@ Biblioteka pozwala na podstawie stworzonej bazy danych wygenerować klasy javowe
 
 Po uruchomieniu budowania, w _target/generated-sources/jooq_ znajdziemy klasy odpowiadajace odpowiednim strukturom w bazie danych (tabelom, kluczom, indeksom, itp.).
 
-###Przykład użycia
+### Przykład użycia
 
 Dla podanej tabeli Person,
 ```sql
