@@ -4,17 +4,21 @@ Google Kubernetes Engine is a Google Cloud Platform service that serves as a Kub
 In this tutorial, I'd like to show how to create your own Kubernetes cluster using GKE and deploy your Docker image on it.
 
 ## Prerequisites:
-- Your personal Google Cloud Platform account
+- Your personal Google Cloud Platform account.
 - (Optional) Docker image with your web application. 
 Don't worry if you don't have one, you're free to use the example provided below.  
 
 ## Create a cluster!
-Let's begin with creating your first Kubernetes cluster.
-![Cluster-tab](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png)  
+Let's begin with creating a Kubernetes cluster.
+![Cluster-tab](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png)
+<dl>
+   <img src="https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png" height="400" class="center" display=block margin-left=auto margin-right=auto/>
+</dl>
+
 From the available Google Cloud Platform services choose Kubernetes Engine and open the Clusters tab. It's the main panel for managing your Kubernetes clusters. Choose the Create a Cluster option and follow the steps:
 - Choose the Standard cluster template.
-- Choose your preferred cluster location. [Here](https://cloud.google.com/about/locations/) you can find out more about CGP zones and where the zones are located. 
-- Let's continue with the default values for Node pools (Machine type and Number of nodes) and continue with Create.
+- Choose your preferred cluster location. [Here](https://cloud.google.com/about/locations/) you can find out more about GCP zones and where the zones are located. 
+- Continue with the default values for Node pools (Machine type and Number of nodes) and confirm with Create button.
 
 It might take up to a couple of minutes for GCP to spin up and prepare the cluster. Enter the "Cluster" tab and wait until for the green tick appears next to the cluster name meaning the cluster is ready to use:
 ![ready-cluster](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.53.35.png)
@@ -81,7 +85,7 @@ Afterward, every 3 seconds (**periodSeconds**) another HTTP request will be sent
 In this tutorial, we assume that our application is stateless. If you need your containers to have a persistent memory available check out [this](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/) page.
 
 
-##Deploy!
+## Deploy!
 So it looks like we're finally ready to deploy our application.
 In the Cloud Shell enter:
 
@@ -89,7 +93,7 @@ In the Cloud Shell enter:
 kubectl apply -f deployment.yaml
 ```
 
-Now, you can also monitor the state of your pods by executing the following commands:
+Now, you can also monitor the state of your deployments and pods by executing the following commands:
 ```console
 kubectl get deployments
 ```
@@ -112,9 +116,9 @@ After some time the new service should become available with a public static IP 
 You can now enter your application via browser: 
 ![app-foto](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.48.44.png)
 
-You can enter your virtual machine through the Cloud Shell via bash. Do that by executing the following command:
+You can enter your pod through the Cloud Shell via bash. Do that by executing the following command:
 ```console
-kubectl exec <your_app_id> -it -- /bin/bash
+kubectl exec <POD_ID> -it -- /bin/bash
 ```
 
 
