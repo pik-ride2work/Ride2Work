@@ -9,10 +9,9 @@ In this tutorial, I'd like to show how to create your own Kubernetes cluster usi
 Don't worry if you don't have one, you're free to use the example provided below.  
 
 ## Create a cluster!
-Let's begin with creating a Kubernetes cluster.
-![Cluster-tab](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png)
+Let's begin with creating a Kubernetes cluster.  
 <dl>
-   <img src="https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png" height="400" class="center" display=block margin-left=auto margin-right=auto/>
+   <img src="https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-14+at+12.51.22.png" height="400"/>
 </dl>
 
 From the available Google Cloud Platform services choose Kubernetes Engine and open the Clusters tab. It's the main panel for managing your Kubernetes clusters. Choose the Create a Cluster option and follow the steps:
