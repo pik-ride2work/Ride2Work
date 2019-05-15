@@ -50,19 +50,15 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     let username = this.getControl('username');
     let password = this.getControl('password');
+    let user: User = new User(username, password, undefined, undefined, undefined);
 
-    this.userService.get(username).subscribe(
+    this.userService.login(user).subscribe(
       user => {
-        if (!user || user.password != password) {
-          this.snackBar.open("Ivnalid credentials", "close");
-          this.loading = false;
-          return;
-        }
         this.authService.setUser(user);
         this.router.navigate([""]);
       },
       error => {
-        this.alertService.serverSideError();
+        this.snackBar.open("Invalid credentials", "close");
         this.loading = false;
       },
     )

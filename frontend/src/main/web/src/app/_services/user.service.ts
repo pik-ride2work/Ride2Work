@@ -16,6 +16,10 @@ export class UserService {
     return this.http.post<User>(`/api/users/`, user);
   }
 
+  login(user: User) {
+    return this.http.post<User>(`/api/users/login`, user);
+  }
+
   update(user: User) {
     return this.http.put<User>(`/api/users/`, user);
   }
