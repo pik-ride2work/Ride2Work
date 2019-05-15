@@ -85,8 +85,9 @@ public class DefaultMembershipService implements MembershipService {
             }
             DSL.using(cfg)
                     .update(TEAM)
-                    .set(TEAM.MEMBER_COUNT, DSL.field(TEAM.MEMBER_COUNT).add(1))
-                    .where(TEAM.ID.eq(teamId));
+                    .set(TEAM.MEMBER_COUNT, TEAM.MEMBER_COUNT.add(1))
+                    .where(TEAM.ID.eq(teamId))
+                    .execute();
             MembershipRecord createdRecord = DSL.using(cfg)
                     .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
                     .values(Timestamp.from(Instant.now()), teamId, userId, false)
@@ -110,15 +111,17 @@ public class DefaultMembershipService implements MembershipService {
                     .set(MEMBERSHIP.ISPRESENT, false)
                     .set(MEMBERSHIP.END, Timestamp.from(Instant.now()))
                     .where(MEMBERSHIP.ID_USER.eq(userId))
+                    .and(MEMBERSHIP.ISPRESENT.eq(true))
                     .returning(MEMBERSHIP.ID_TEAM)
-                    .fetchOne().getId();
+                    .fetchOne()
+                    .getValue(MEMBERSHIP.ID_TEAM);
             if (idTeam == null) {
                 future.completeExceptionally(new NotFoundException("User not found"));
                 return;
             }
             DSL.using(cfg)
                     .update(TEAM)
-                    .set(TEAM.MEMBER_COUNT, DSL.field(TEAM.MEMBER_COUNT).add(-1))
+                    .set(TEAM.MEMBER_COUNT, TEAM.MEMBER_COUNT.add(-1))
                     .where(TEAM.ID.eq(idTeam));
             future.complete(null);
         });
