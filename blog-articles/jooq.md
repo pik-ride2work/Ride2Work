@@ -77,9 +77,33 @@ Biblioteka pozwala na podstawie stworzonej bazy danych wygenerować klasy javowe
 </plugin>
 ```
 
-Po uruchomieniu budowania, w _target/generated-sources/jooq_ znajdziemy klasy odpowiadajace odpowiednim strukturom w bazie danych (tabelom, kluczom, indeksom, itp.).
+Po uruchomieniu budowania z odpowiednią konfiguracją, w _target/generated-sources/jooq_ znajdziemy klasy z wygenerowanymi **POJO** (Plain Old Java Object) oraz **DAO** (Data Access Object). Utworzone DAO implenentują org.jooq.DAO, przez co mamy udostępnione poniższe metody:
+* insert
+* update 
+* delete, deleteById
+* exists, existsById
+* count
+* findAll, findById
+* fetch, fetchOne
 
-### Przykład użycia
+, które zapewniają nam prosty dostęp do danych. Przykład:
+
+```java
+Configuration configuration = new DefaultConfiguration().set(connection).set(SQLDialect.POSTGRES_9_4);
+
+PersonDao personDao = new PersonDao(configuration);
+
+Person person = personDao.findById(5);
+
+person.setName("John");
+person.setCity("Warsaw");
+personDao.update(book);
+
+personDao.delete(book);
+```
+
+
+### Zapytanie
 
 Dla podanej tabeli Person,
 ```sql
@@ -103,5 +127,18 @@ for (Record r : result) {
     };
 ```
 
+### Niestandardowe zapytania 
 
+Jeśli zapytanie jest zbyt skomplikowane aby wyrazić je podstawowym jOOQ, biblioteka daje nam możliwość użycia niestandarodwej składni z pomocą **CustomField**:
+
+```java
+final Field<Integer> IDx2 = new CustomField<Integer>(PERSON.ID.getName(), PERSON.ID.getDataType()) {
+    @Override
+    public void accept(Context<?> context) {
+        context.visit(PERSON.ID).sql(" * ").visit(DSL.val(2));
+    }
+};
+
+create.select(IDx2).from(BOOK);
+```
 
