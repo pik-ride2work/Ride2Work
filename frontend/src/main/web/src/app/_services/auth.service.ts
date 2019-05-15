@@ -15,33 +15,46 @@ export class AuthService {
   private membershipItem = 'userMembership';
   private teamItem = 'userTeam';
 
-  setUser(user: User) {
-    localStorage.setItem(this.userItem, JSON.stringify(user));
-  }
-
   getUser() {
     return JSON.parse(localStorage.getItem(this.userItem));
   }
 
-  setMembership(membership: Membership) {
-    localStorage.setItem(this.membershipItem, JSON.stringify(membership));
+  setUser(user: User) {
+    localStorage.setItem(this.userItem, JSON.stringify(user));
+  }
+
+  resetUser() {
+    localStorage.removeItem(this.userItem);
   }
 
   getMembership() {
     return JSON.parse(localStorage.getItem(this.membershipItem));
   }
 
-  setTeam(team: Team) {
-    localStorage.setItem(this.teamItem, JSON.stringify(team));
+  setMembership(membership: Membership) {
+    console.log(membership);
+    localStorage.setItem(this.membershipItem, JSON.stringify(membership));
+  }
+
+  resetMembership() {
+    localStorage.removeItem(this.membershipItem);
   }
 
   getTeam() {
     return JSON.parse(localStorage.getItem(this.teamItem));
   }
 
-  logout() {
-    localStorage.removeItem(this.userItem);
-    localStorage.removeItem(this.membershipItem);
+  setTeam(team: Team) {
+    localStorage.setItem(this.teamItem, JSON.stringify(team));
+  }
+
+  resetTeam() {
     localStorage.removeItem(this.teamItem);
+  }
+
+  logout() {
+    this.resetUser();
+    this.resetMembership();
+    this.resetTeam();
   }
 }

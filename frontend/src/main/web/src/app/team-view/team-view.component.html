@@ -1,0 +1,75 @@
+<app-menu>
+  <app-throbber [visible]="loading"></app-throbber>
+  <div class="container-fluid">
+    <div class="col align-items-center">
+      <div class="row justify-content-center p-2" *ngIf="!currentTeam && teams.length">
+        <div class="bg-white form-card mat-elevation-z8">
+          <div class="p-5">
+            <h2 class="text-center mb-5">Join team</h2>
+            <form [formGroup]="options" (ngSubmit)="joinTeam()">
+              <mat-form-field class="w-100">
+                <mat-label>Team name</mat-label>
+                <mat-select formControlName="teamSelect">
+                  <mat-option *ngFor="let team of teams" [value]="team">
+                    {{team.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <app-spinner-button text="JOIN"></app-spinner-button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center p-2" *ngIf="!currentTeam">
+        <div class="bg-white form-card mat-elevation-z8">
+          <div class="p-5">
+            <h2 class="text-center mb-5">Create team</h2>
+            <form [formGroup]="options" (ngSubmit)="createTeam()">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Team name" formControlName="teamName">
+                <mat-error *ngIf="options.get('teamName')?.invalid">Min length: 6 characters</mat-error>
+              </mat-form-field>
+
+              <app-spinner-button text="CREATE"></app-spinner-button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center p-2" *ngIf="currentTeam">
+        <div class="col m-0 p-0 mat-elevation-z8 position-relative">
+          <app-throbber [visible]="dataLoading"></app-throbber>
+          <div class="mw-100 overflow-auto">
+            <table mat-table class="w-100" [dataSource]="dataSource" matSort>
+
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Id</th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> First name</th>
+                <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last name</th>
+                <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> E-mail</th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row class="table-row" *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+      <button mat-button color="warn" *ngIf="currentTeam" (click)="leaveTeam()">Leave team</button>
+    </div>
+  </div>
+</app-menu>

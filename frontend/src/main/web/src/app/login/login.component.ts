@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {MatDialog, MatSnackBar} from '@angular/material'
 import {AuthService} from "../_services/auth.service";
 import {first} from "rxjs/internal/operators/first";
-import {AlertService, UserService} from "../_services";
+import {AlertService, MembershipService, TeamService, UserService} from "../_services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../_models/user";
 
@@ -19,7 +19,9 @@ export class LoginComponent implements OnInit {
     private alertService: AlertService,
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private membershipService: MembershipService,
+    private teamService: TeamService
   ) {
   }
 
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    if(this.options.invalid)
+    if (this.options.invalid)
       return;
 
     this.loading = true;
@@ -55,12 +57,34 @@ export class LoginComponent implements OnInit {
     this.userService.login(user).subscribe(
       user => {
         this.authService.setUser(user);
-        this.router.navigate([""]);
+        this.loadTeam(user.id);
       },
       error => {
         this.snackBar.open("Invalid credentials", "close");
         this.loading = false;
       },
+    )
+  }
+
+  loadTeam(userId: number) {
+    this.membershipService.getByUserId(userId).subscribe(
+      membership => {
+        if (!membership || !membership.ispresent) {
+          this.router.navigate([""]);
+          return;
+        }
+        this.authService.setMembership(membership);
+        this.teamService.getById(membership.idTeam).subscribe(
+          team => {
+            this.authService.setTeam(team);
+            this.router.navigate([""]);
+          }
+        )
+      },
+      error => {
+        //TODO
+        this.router.navigate([""]);
+      }
     )
   }
 }

@@ -19,7 +19,7 @@ import {
   MatCardModule,
   MatProgressSpinnerModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule, MatSelectModule
 } from '@angular/material';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -36,6 +36,8 @@ import {MenuComponent} from './menu/menu.component';
 import {EditUserComponent} from './edit-user/edit-user.component';
 import {SpinnerButtonComponent} from './spinner-button/spinner-button.component';
 import {DialogComponent} from './dialog/dialog.component';
+import { ThrobberComponent } from './throbber/throbber.component';
+import { TeamViewComponent } from './team-view/team-view.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import {DialogComponent} from './dialog/dialog.component';
     MenuComponent,
     EditUserComponent,
     SpinnerButtonComponent,
-    DialogComponent
+    DialogComponent,
+    ThrobberComponent,
+    TeamViewComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +75,8 @@ import {DialogComponent} from './dialog/dialog.component';
     MatCardModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule
   ],
   providers: [
     AuthGuard,
