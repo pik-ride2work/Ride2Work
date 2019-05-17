@@ -3,11 +3,13 @@ package com.pik.backend.util;
 import com.pik.backend.custom_daos.Coordinates;
 import com.pik.backend.services.RoutePoint;
 
+import java.sql.Timestamp;
+
 /**
  * All results are represented in meters.
  */
-public class Distance {
-    private Distance() {
+public class Points {
+    private Points() {
     }
 
     public static final double MAX_LON = 180.0;
@@ -16,6 +18,9 @@ public class Distance {
     public static final double MIN_LAT = -90.0;
     private static final int R = 6371; // Radius of the earth
 
+    /**
+     * @return distance between 2 points in meters
+     */
     public static double between(RoutePoint one, RoutePoint two) {
         Coordinates coordOne = one.getCoordinates();
         Coordinates coordTwo = two.getCoordinates();
@@ -39,6 +44,15 @@ public class Distance {
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
 
         return Math.sqrt(distance);
+    }
+
+    /**
+     * @return time difference between two points in seconds
+     */
+    public static double timeDiff(RoutePoint one, RoutePoint two) {
+        Timestamp tsOne = one.getTimestamp();
+        Timestamp tsTwo = two.getTimestamp();
+        return (double) (tsTwo.getTime() - tsOne.getTime()) / 1_000;
     }
 
 }

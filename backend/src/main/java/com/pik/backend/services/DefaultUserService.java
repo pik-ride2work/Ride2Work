@@ -1,5 +1,6 @@
 package com.pik.backend.services;
 
+import com.pik.backend.services.jooq_fields.CryptField;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.backend.util.UserInputValidator;
 import com.pik.backend.util.Validated;
@@ -37,7 +38,7 @@ public class DefaultUserService implements UserService {
     }
     DSLWrapper.transaction(dsl, future, cfg -> {
       User created = dsl.insertInto(USER)
-          .set(USER.PASSWORD, new Crypt(user.getPassword(), DSL.field(Crypt.GEN_SALT, String.class)))
+          .set(USER.PASSWORD, new CryptField(user.getPassword()))
           .set(USER.FIRST_NAME, user.getFirstName())
           .set(USER.LAST_NAME, user.getLastName())
           .set(USER.USERNAME, user.getUsername())
@@ -107,7 +108,7 @@ public class DefaultUserService implements UserService {
       UserRecord userRecord = DSL.using(cfg)
           .selectFrom(USER)
           .where(loginCondition)
-          .and(new Crypt(user.getPassword(), USER.PASSWORD).eq(USER.PASSWORD))
+          .and(new CryptField(user.getPassword()).eq(USER.PASSWORD))
           .fetchOne();
       if (userRecord == null) {
         future.completeExceptionally(
