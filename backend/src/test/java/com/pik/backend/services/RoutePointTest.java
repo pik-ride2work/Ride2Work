@@ -36,13 +36,13 @@ public class RoutePointTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenLatitudeIsOutOfRange(){
-        String point = "7687213 1557415405000 23.78327283 224.123127389";
+        String point = "7687213 1557415405000 23.78327283 224.123127389 0.0";
         RoutePoint.of(point);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenLongitudeIsOutOfRange(){
-        String point = "7687213 1557415405000 -123.78327283 124.123127389";
+        String point = "7687213 1557415405000 -123.78327283 124.123127389 0.0";
         RoutePoint.of(point);
     }
 }

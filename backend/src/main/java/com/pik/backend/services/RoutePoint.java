@@ -6,7 +6,7 @@ import com.pik.backend.custom_daos.Coordinates;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-import static com.pik.backend.util.Distance.*;
+import static com.pik.backend.util.Points.*;
 
 public class RoutePoint {
     private final Integer routeId;
@@ -72,7 +72,7 @@ public class RoutePoint {
         return length;
     }
 
-    public void setLength(Integer length) {
+    public void setLength(Double length) {
         this.length = length;
     }
 
@@ -86,18 +86,6 @@ public class RoutePoint {
 
     public Integer getRouteId() {
         return routeId;
-    }
-
-    public void setTravelTimeSeconds(Integer travelTimeSeconds) {
-        this.travelTimeSeconds = travelTimeSeconds;
-    }
-
-    public void setLength(double length) {
-        this.length = length;
-    }
-
-    public void setTravelTimeSeconds(int travelTimeSeconds) {
-        this.travelTimeSeconds = travelTimeSeconds;
     }
 
     public Coordinates getCoordinates() {

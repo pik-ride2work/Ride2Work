@@ -11,4 +11,6 @@ public interface RouteService {
     Future<Void> endRoute(Integer routeId);
 
     Future<Void> writeUploadedRoute(UploadRoute uploadRoute);
+
+    Future<Void> writeSinglePoint(RoutePoint point);
 }

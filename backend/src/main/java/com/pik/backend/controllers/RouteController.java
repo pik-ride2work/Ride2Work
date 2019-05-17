@@ -1,5 +1,6 @@
 package com.pik.backend.controllers;
 
+import com.pik.backend.services.DefaultKafkaService;
 import com.pik.backend.services.DefaultRouteService;
 import com.pik.backend.services.RoutePoint;
 import com.pik.ride2work.tables.pojos.Route;
@@ -14,9 +15,11 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("routes")
 public class RouteController {
     private final DefaultRouteService routeService;
+    private final DefaultKafkaService kafkaService;
 
-    public RouteController(DefaultRouteService routeService) {
+    public RouteController(DefaultRouteService routeService, DefaultKafkaService kafkaService) {
         this.routeService = routeService;
+        this.kafkaService = kafkaService;
     }
 
     @PostMapping("/create/{userId}")
@@ -53,6 +56,21 @@ public class RouteController {
             List<Route> routes = routeService.getRoutesByUserId(userId).get();
             return ResponseEntity
                     .ok(routes);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Responses.serviceUnavailable();
+        } catch (ExecutionException e) {
+            return Responses.internalError();
+        }
+    }
+
+    @PostMapping("/write")
+    public ResponseEntity writePoint(@RequestBody String point) {
+        try {
+            kafkaService.write(point).get();
+            return ResponseEntity
+                    .ok()
+                    .build();
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             return Responses.serviceUnavailable();

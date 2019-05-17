@@ -2,15 +2,19 @@ package com.pik.backend.services;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pik.backend.custom_daos.Coordinates;
-import com.pik.backend.util.Distance;
+import com.pik.backend.util.Points;
 
-import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @JsonDeserialize(using = UploadRouteDeserializer.class)
 public class UploadRoute {
     private final Integer userId;
     private final List<RoutePoint> points;
+    private double time = 0.0;
+    private double length = 0.0;
+    private double maxSpeed = 0.0;
+    private double averageSpeed = 0.0;
     private Coordinates topRightBorder;
     private Coordinates bottomLeftBorder;
 
@@ -19,8 +23,11 @@ public class UploadRoute {
         this.userId = userId;
     }
 
-    public UploadRoute calcBorders() {
-        Double minLat = null, minLon = null, maxLat = null, maxLon = null;
+    public UploadRoute setBorders() {
+        Double minLat = null;
+        Double minLon = null;
+        Double maxLat = null;
+        Double maxLon = null;
         for (RoutePoint point : points) {
             Coordinates coordinates = point.getCoordinates();
             minLat = (minLat == null) ? coordinates.getLatitude() : Math.min(minLat, coordinates.getLatitude());
@@ -33,20 +40,21 @@ public class UploadRoute {
         return this;
     }
 
-    public UploadRoute calcLengthsAndTime() {
-        for (int i = 1; i < points.size(); i++) {
-            RoutePoint prev = points.get(i - 1);
-            RoutePoint curr = points.get(i);
-            double dist = Distance.between(prev, curr);
-            double travelTimeSeconds = timeDiffSeconds(prev.getTimestamp(), curr.getTimestamp());
-            curr.setLength(dist);
-            curr.setTravelTimeSeconds(travelTimeSeconds);
-        }
+    public UploadRoute setLengthsAndTime() {
+        IntStream.range(1, points.size())
+                .forEach(i -> {
+                    RoutePoint curr = points.get(i);
+                    RoutePoint prev = points.get(i - 1);
+                    double t = Points.timeDiff(prev, curr);
+                    double s = Points.between(prev, curr);
+                    curr.setTravelTimeSeconds(t);
+                    curr.setLength(s);
+                    this.time += t;
+                    this.length += s;
+                    this.maxSpeed = (length > 0) ? Math.max(length / time, maxSpeed) : maxSpeed;
+                });
+        this.averageSpeed = (length > 0) ? this.length / this.time : 0;
         return this;
-    }
-
-    protected static double timeDiffSeconds(Timestamp prev, Timestamp curr) {
-        return (double) (curr.getTime() - prev.getTime()) / 1_000;
     }
 
     public List<RoutePoint> getPoints() {
@@ -63,6 +71,22 @@ public class UploadRoute {
 
     public Coordinates getBottomLeftBorder() {
         return bottomLeftBorder;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public double getAverageSpeed() {
+        return averageSpeed;
     }
 
 }

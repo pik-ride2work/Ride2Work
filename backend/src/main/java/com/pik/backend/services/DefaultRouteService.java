@@ -1,28 +1,31 @@
 package com.pik.backend.services;
 
-import com.pik.backend.custom_daos.Coordinates;
 import com.pik.backend.custom_daos.CustomRouteDao;
+import com.pik.backend.services.jooq_fields.PointField;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.daos.RouteDao;
 import com.pik.ride2work.tables.pojos.Route;
+import com.pik.ride2work.tables.records.PointRecord;
+import com.pik.ride2work.tables.records.RouteRecord;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.InsertSetMoreStep;
+import org.jooq.InsertSetStep;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
+import static com.pik.ride2work.Tables.POINT;
 import static com.pik.ride2work.Tables.ROUTE;
 
 @Repository
 public class DefaultRouteService implements RouteService {
 
-    private static final String INSERT_POINT_TEMPLATE = "INSERT INTO ride2work.point (timestamp, coordinates, id_route) VALUES\n";
-    private static final String POINT_RECORD_TEMPLATE = "('%s', ST_GeographyFromText('SRID=4326;POINT(%s %s)'), %s)";
     private final DSLContext dsl;
 
     public DefaultRouteService(DSLContext dsl) {
@@ -59,8 +62,8 @@ public class DefaultRouteService implements RouteService {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
             try {
-                int newRouteId = startRoute(cfg, userId);
-                future.complete(newRouteId);
+                Route newRoute = startEmptyRoute(cfg, userId);
+                future.complete(newRoute.getId());
             } catch (DataAccessException e) {
                 future.completeExceptionally(new IllegalStateException("Failed to create a new route for the user."));
             }
@@ -89,31 +92,61 @@ public class DefaultRouteService implements RouteService {
     public Future<Void> writeUploadedRoute(UploadRoute uploadRoute) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-            Integer routeId = startRoute(cfg, uploadRoute.getUserId());
-            String insertQuery = INSERT_POINT_TEMPLATE + uploadRoute.getPoints().stream()
-                    .map(point -> singlePointRecord(point, routeId))
-                    .collect(Collectors.joining(",")) + ";";
-            DSL.using(cfg).execute(insertQuery);
+            RouteRecord route = DSL.using(cfg)
+                    .insertInto(ROUTE)
+                    .set(ROUTE.ID_USER, uploadRoute.getUserId())
+                    .set(ROUTE.IS_FINISHED, true)
+                    .set(ROUTE.IS_VALID, true)
+                    .set(ROUTE.TIME_IN_SECONDS, BigDecimal.valueOf(uploadRoute.getTime()))
+                    .set(ROUTE.DISTANCE, BigDecimal.valueOf(uploadRoute.getLength()))
+                    .set(ROUTE.TOP_RIGHT_BORDER, new PointField(uploadRoute.getTopRightBorder()))
+                    .set(ROUTE.BOTTOM_LEFT_BORDER, new PointField(uploadRoute.getBottomLeftBorder()))
+                    .returning(ROUTE.fields())
+                    .fetchOne();
+            InsertSetStep<PointRecord> setStep = DSL.using(cfg)
+                    .insertInto(POINT);
+            List<RoutePoint> points = uploadRoute.getPoints();
+            for (int i = 0; i < points.size(); i++) {
+                RoutePoint point = points.get(i);
+                InsertSetMoreStep<PointRecord> moreStep = setStep
+                        .set(POINT.TIMESTAMP, point.getTimestamp())
+                        .set(POINT.ID_ROUTE, route.getValue(ROUTE.ID))
+                        .set(POINT.LENGTH, BigDecimal.valueOf(point.getLength()))
+                        .set(POINT.TIME, BigDecimal.valueOf(point.getTravelTimeSeconds()))
+                        .set(POINT.COORDINATES, new PointField(point.getCoordinates()));
+                if (i == points.size() - 1) {
+                    moreStep.execute();
+                } else {
+                    moreStep.newRecord();
+                }
+            }
             future.complete(null);
         });
         return future;
     }
 
-    private static String singlePointRecord(RoutePoint point, Integer routeId) {
-        Coordinates coordinates = point.getCoordinates();
-        return String.format(POINT_RECORD_TEMPLATE,
-                point.getTimestamp().toString(),
-                coordinates.getLatitude(),
-                coordinates.getLongitude(),
-                routeId);
+
+    @Override
+    public Future<Void> writeSinglePoint(RoutePoint point) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+            DSL.using(cfg).
+                    insertInto(POINT)
+                    .set(POINT.COORDINATES, new PointField(point.getCoordinates()))
+                    .set(POINT.ID_ROUTE, point.getRouteId())
+                    .set(POINT.TIMESTAMP, point.getTimestamp())
+                    .execute();
+            future.complete(null);
+        });
+        return future;
     }
 
-    private int startRoute(Configuration cfg, Integer userId) {
-        return DSL.using(cfg)
+    private Route startEmptyRoute(Configuration cfg, Integer userId) {
+        RouteRecord fetch = DSL.using(cfg)
                 .insertInto(ROUTE, ROUTE.ID_USER, ROUTE.IS_FINISHED, ROUTE.IS_VALID)
                 .values(userId, false, false)
                 .returning(ROUTE.ID)
-                .fetchOne()
-                .getId();
+                .fetchOne();
+        return fetch.into(Route.class);
     }
 }
