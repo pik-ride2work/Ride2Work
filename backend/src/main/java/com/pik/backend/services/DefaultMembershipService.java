@@ -1,7 +1,6 @@
 package com.pik.backend.services;
 
 import com.pik.backend.util.DSLWrapper;
-import com.pik.ride2work.tables.daos.MembershipDao;
 import com.pik.ride2work.tables.pojos.Membership;
 import com.pik.ride2work.tables.records.MembershipRecord;
 import org.jooq.Configuration;
@@ -132,13 +131,15 @@ public class DefaultMembershipService implements MembershipService {
     public Future<Membership> getByUserId(Integer userId) {
         CompletableFuture<Membership> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-            MembershipDao membershipDao = new MembershipDao(cfg);
-            Membership membership = membershipDao.fetchOne(MEMBERSHIP.ID_USER, userId);
-            if (membership == null) {
+            MembershipRecord membershipRecord = DSL.using(cfg)
+                    .selectFrom(MEMBERSHIP)
+                    .where(MEMBERSHIP.ISPRESENT)
+                    .and(MEMBERSHIP.ID_USER.eq(userId)).fetchOne();
+            if (membershipRecord == null) {
                 future.completeExceptionally(new NotFoundException("Membership or user not found."));
                 return;
             }
-            future.complete(membership);
+            future.complete(membershipRecord.into(Membership.class));
         });
         return future;
     }

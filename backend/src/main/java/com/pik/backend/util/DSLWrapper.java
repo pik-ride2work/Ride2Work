@@ -15,7 +15,7 @@ public class DSLWrapper {
         try {
             dsl.transaction(runnable);
         } catch (Exception e) {
-            future.completeExceptionally(e.getCause());
+            future.completeExceptionally(e);
         }
     }
 }
