@@ -108,7 +108,7 @@ public class DefaultUserService implements UserService {
       UserRecord userRecord = DSL.using(cfg)
           .selectFrom(USER)
           .where(loginCondition)
-          .and(new CryptField(user.getPassword()).eq(USER.PASSWORD))
+          .and(new CryptField(user.getPassword(), USER.PASSWORD).eq(USER.PASSWORD))
           .fetchOne();
       if (userRecord == null) {
         future.completeExceptionally(
