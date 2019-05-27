@@ -2,6 +2,7 @@ package com.pik.backend.services.jooq_fields;
 
 import org.jooq.Configuration;
 import org.jooq.Context;
+import org.jooq.Field;
 import org.jooq.QueryPart;
 import org.jooq.impl.CustomField;
 import org.jooq.impl.DSL;
@@ -10,15 +11,27 @@ import org.jooq.impl.SQLDataType;
 public class CryptField extends CustomField<String> {
 
     static final String GEN_SALT = "gen_salt('bf')";
-    private final String arg0;
+    private static final String CRYPT_FIELD_TEMPLATE = "crypt('%s', %s)";
+    private final String pwd;
+    private Field<String> pwdField;
 
-    public CryptField(String arg0) {
+    public CryptField(String pwd) {
         super("password", SQLDataType.VARCHAR);
-        this.arg0 = arg0;
+        this.pwd = pwd;
+    }
+
+    public CryptField(String pwd, Field<String> field){
+        this(pwd);
+        this.pwdField = field;
     }
 
     private QueryPart delegate(Configuration configuration) {
-        return DSL.field(String.format("crypt('%s', %s)", arg0, GEN_SALT));
+        if(pwdField != null){
+            //login
+            return DSL.field(String.format(CRYPT_FIELD_TEMPLATE, pwd, pwdField));
+        }
+        //registration
+        return DSL.field(String.format(CRYPT_FIELD_TEMPLATE, pwd, GEN_SALT));
     }
 
     @Override
