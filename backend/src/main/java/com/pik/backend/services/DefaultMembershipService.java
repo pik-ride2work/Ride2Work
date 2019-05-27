@@ -44,12 +44,14 @@ public class DefaultMembershipService implements MembershipService {
                     .update(MEMBERSHIP)
                     .set(MEMBERSHIP.ISOWNER, false)
                     .where(MEMBERSHIP.ISOWNER)
-                    .and(MEMBERSHIP.ISPRESENT);
+                    .and(MEMBERSHIP.ISPRESENT)
+                    .execute();
             DSL.using(cfg)
                     .update(MEMBERSHIP)
                     .set(MEMBERSHIP.ISOWNER, true)
                     .where(MEMBERSHIP.ID_USER.eq(userId))
-                    .and(MEMBERSHIP.ISPRESENT);
+                    .and(MEMBERSHIP.ISPRESENT)
+                    .execute();
             future.complete(null);
         });
         return future;
@@ -120,7 +122,7 @@ public class DefaultMembershipService implements MembershipService {
             }
             DSL.using(cfg)
                     .update(TEAM)
-                    .set(TEAM.MEMBER_COUNT, TEAM.MEMBER_COUNT.add(-1))
+                    .set(TEAM.MEMBER_COUNT, TEAM.MEMBER_COUNT.subtract(1))
                     .where(TEAM.ID.eq(idTeam));
             future.complete(null);
         });
