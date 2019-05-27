@@ -14,7 +14,7 @@ export class MembershipService {
   }
 
   leaveTeam(userId: number) {
-    return this.http.delete<any>(`/api/memberships?userId=${userId}`, null);
+    return this.http.delete<any>(`/api/memberships?userId=${userId}`);
   }
 
   getByUserId(userId: number) {

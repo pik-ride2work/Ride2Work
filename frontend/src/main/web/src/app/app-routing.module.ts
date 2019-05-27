@@ -5,13 +5,15 @@ import {AuthGuard} from "./_guards";
 import {RegisterComponent} from "./register/register.component";
 import {RidesHistoryComponent} from "./rides-history/rides-history.component";
 import {EditUserComponent} from "./edit-user/edit-user.component";
+import {TeamViewComponent} from "./team-view/team-view.component";
 
 const routes: Routes = [
   {path: '', component: RidesHistoryComponent, canActivate: [AuthGuard]},
   {path: 'edit-user', component: EditUserComponent, canActivate: [AuthGuard]},
-  {path: 'setUser', component: LoginComponent},
+  {path: 'team-view', component: TeamViewComponent, canActivate: [AuthGuard]},
+  {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: '**', redirectTo: 'setUser'}
+  {path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({

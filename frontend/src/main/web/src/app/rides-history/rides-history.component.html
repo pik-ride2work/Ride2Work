@@ -5,7 +5,12 @@
     </div>
   </div>
   <div class="row m-0 p-2">
-    <div class="col m-0 p-0 mat-elevation-z8">
+    <app-spinner-button text="Upload ride" [loading]="buttonLoading" (click)="fileUpload.click()"></app-spinner-button>
+    <input #fileUpload type="file" id="upload-file" (change)="uploadRide($event.target.files)" hidden>
+  </div>
+  <div class="row m-0 p-2">
+    <div class="col m-0 p-0 mat-elevation-z8 position-relative">
+      <app-throbber [visible]="dataLoading"></app-throbber>
       <div class="mw-100 overflow-auto">
         <table mat-table class="w-100" [dataSource]="dataSource" matSort>
 

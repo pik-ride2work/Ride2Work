@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Team} from "../_models/team";
+import {User} from "../_models/user";
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,13 @@ export class TeamService {
 
   delete(id: number) {
     return this.http.delete(`/api/teams/${id}`);
+  }
+
+  getOwner(id: number) {
+    return this.http.get<User>(`/api/teams/owner/${id}`);
+  }
+
+  listUsers(id: number) {
+    return this.http.get<User[]>(`/api/teams/listUsers/${id}`);
   }
 }

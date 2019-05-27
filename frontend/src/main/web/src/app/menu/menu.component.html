@@ -17,11 +17,8 @@
         <mat-form-field *ngIf="!!userTeam">
           <input matInput placeholder="Team" readonly value="{{userTeam.name}}">
         </mat-form-field>
-        <a mat-list-item *ngIf="!userTeam" (click)="joinTeam()">Join team</a>
-        <a mat-list-item *ngIf="!userTeam" (click)="createTeam()">Create team</a>
+        <a mat-list-item *ngIf="router.url != '/team-view'" (click)="router.navigate(['team-view'])">My team</a>
         <a mat-list-item *ngIf="router.url != '/'" (click)="router.navigate([''])">View rides history</a>
-        <a mat-list-item *ngIf="router.url == '/'" (click)="fileUpload.click()">Upload ride</a>
-        <input #fileUpload type="file" id="upload-file" (change)="uploadRide($event.target.files)" hidden>
         <a mat-list-item *ngIf="router.url != '/edit-user'" (click)="router.navigate(['edit-user'])">Settings</a>
         <a mat-list-item (click)="logout()">Log out</a>
       </mat-nav-list>
