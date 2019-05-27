@@ -123,7 +123,8 @@ public class DefaultMembershipService implements MembershipService {
             DSL.using(cfg)
                     .update(TEAM)
                     .set(TEAM.MEMBER_COUNT, TEAM.MEMBER_COUNT.subtract(1))
-                    .where(TEAM.ID.eq(idTeam));
+                    .where(TEAM.ID.eq(idTeam))
+                    .execute();
             future.complete(null);
         });
         return future;
@@ -136,7 +137,8 @@ public class DefaultMembershipService implements MembershipService {
             MembershipRecord membershipRecord = DSL.using(cfg)
                     .selectFrom(MEMBERSHIP)
                     .where(MEMBERSHIP.ISPRESENT)
-                    .and(MEMBERSHIP.ID_USER.eq(userId)).fetchOne();
+                    .and(MEMBERSHIP.ID_USER.eq(userId))
+                    .fetchOne();
             if (membershipRecord == null) {
                 future.completeExceptionally(new NotFoundException("Membership or user not found."));
                 return;
