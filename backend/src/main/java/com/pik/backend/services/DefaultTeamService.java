@@ -69,7 +69,8 @@ public class DefaultTeamService implements TeamService {
                     .update(MEMBERSHIP)
                     .set(MEMBERSHIP.END, Timestamp.from(Instant.now()))
                     .set(MEMBERSHIP.ISPRESENT, false)
-                    .where(MEMBERSHIP.ID_TEAM.eq(teamId));
+                    .where(MEMBERSHIP.ID_TEAM.eq(teamId))
+                    .execute();
             future.complete(null);
         });
         return future;
@@ -96,7 +97,8 @@ public class DefaultTeamService implements TeamService {
                     .fetchOne();
             DSL.using(cfg)
                     .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
-                    .values(Timestamp.from(Instant.now()), team.getId(), ownerId, Boolean.TRUE);
+                    .values(Timestamp.from(Instant.now()), team.getId(), ownerId, Boolean.TRUE)
+                    .execute();
             future.complete(teamRecord.into(Team.class));
         });
         return future;
@@ -172,7 +174,7 @@ public class DefaultTeamService implements TeamService {
         DSLWrapper.transaction(dsl, future, cfg -> {
             Result<UserRecord> records = DSL.using(cfg)
                     .selectFrom(USER)
-                    .where(USER.ID.eq(DSL.using(cfg)
+                    .where(USER.ID.in(DSL.using(cfg)
                             .select(MEMBERSHIP.ID_USER)
                             .from(MEMBERSHIP)
                             .where(MEMBERSHIP.ISPRESENT)
