@@ -1,12 +1,17 @@
 package com.pik.backend.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pik.backend.services.DefaultKafkaService;
 import com.pik.backend.services.DefaultRouteService;
 import com.pik.backend.services.RoutePoint;
+import com.pik.backend.services.TeamScore;
 import com.pik.ride2work.tables.pojos.Route;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.json.JSONObject;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("routes")
 public class RouteController {
 
+  private static final ObjectMapper objectMapper = new ObjectMapper();
   private final DefaultRouteService routeService;
   private final DefaultKafkaService kafkaService;
 
@@ -96,10 +102,27 @@ public class RouteController {
     } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
       return Responses.serviceUnavailable();
-    } catch (ExecutionException e){
+    } catch (ExecutionException e) {
       return Responses.internalError();
     }
   }
 
+  @GetMapping("/score/{teamId}/{fromDate}/{toDate}/")
+  public ResponseEntity getTeamScore(
+      @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
+      @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
+      @PathVariable Integer teamId) {
+    try {
+      TeamScore teamScore = routeService.getTeamScore(teamId, fromDate, toDate).get();
+      return ResponseEntity
+          .ok()
+          .body(objectMapper.writeValueAsString(teamScore));
+    } catch (InterruptedException ie) {
+      Thread.currentThread().interrupt();
+      return Responses.serviceUnavailable();
+    } catch (ExecutionException | JsonProcessingException e) {
+      return Responses.internalError();
+    }
+  }
 
 }

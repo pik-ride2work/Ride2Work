@@ -51,6 +51,7 @@ echo \'hello\''''
     stage('Remove Unused Docker Image') {
       steps {
         sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $registry:latest"
       }
     }
     stage('Approve deployment') {

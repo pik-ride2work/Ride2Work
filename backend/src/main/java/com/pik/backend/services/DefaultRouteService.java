@@ -10,6 +10,7 @@ import com.pik.ride2work.tables.pojos.Route;
 import com.pik.ride2work.tables.records.PointRecord;
 import com.pik.ride2work.tables.records.RouteRecord;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -139,6 +140,17 @@ public class DefaultRouteService implements RouteService {
                     .execute();
             future.complete(null);
         });
+        return future;
+    }
+
+    @Override
+    public Future<TeamScore> getTeamScore(Integer teamId, Date fromDate, Date toDate) {
+        CompletableFuture<TeamScore> future = new CompletableFuture<>();
+        DSLWrapper.transaction(dsl, future, cfg -> {
+      //      DSL.using(cfg)
+       //         .select(ROUTE, )
+        });
+
         return future;
     }
 

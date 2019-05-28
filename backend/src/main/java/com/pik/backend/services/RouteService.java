@@ -1,5 +1,6 @@
 package com.pik.backend.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -13,4 +14,6 @@ public interface RouteService {
     Future<Void> writeUploadedRoute(UploadRoute uploadRoute);
 
     Future<Void> writeSinglePoint(RoutePoint point);
+
+    Future<TeamScore> getTeamScore(Integer teamId, Date fromDate, Date toDate);
 }

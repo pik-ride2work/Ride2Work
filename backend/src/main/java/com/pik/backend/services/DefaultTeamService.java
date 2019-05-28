@@ -99,7 +99,7 @@ public class DefaultTeamService implements TeamService {
                     .fetchOne();
             DSL.using(cfg)
                     .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
-                    .values(Timestamp.from(Instant.now()), team.getId(), ownerId, Boolean.TRUE)
+                    .values(Timestamp.from(Instant.now()), teamRecord.getId(), ownerId, Boolean.TRUE)
                     .execute();
             future.complete(teamRecord.into(Team.class));
         });
