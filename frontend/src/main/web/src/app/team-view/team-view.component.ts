@@ -4,7 +4,7 @@ import {Team} from "../_models/team";
 import {AuthService, MembershipService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatSnackBar, MatTableDataSource} from "@angular/material";
-import {Ride} from "../_models/ride";
+import {Chart} from "chart.js"
 
 @Component({
   selector: 'app-team-view',
@@ -30,6 +30,8 @@ export class TeamViewComponent implements OnInit {
   currentUser: User;
   currentTeam: Team;
 
+  barChart = [];
+
   teamName: string;
 
   displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email'];
@@ -52,8 +54,36 @@ export class TeamViewComponent implements OnInit {
     if (this.currentTeam)
       this.loadUsers();
 
-    let loadInBackground = this.currentTeam ? true : false;
+    let loadInBackground = !!this.currentTeam;
     this.loadTeams(loadInBackground);
+  }
+
+  createChart() {
+    let labels = [];
+    let data = [];
+    for(var user of this.users){
+      labels.push(`${user.firstName} ${user.lastName}`);
+      data.push(user.id);
+    }
+
+    this.barChart = new Chart('barChart', {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'User points',
+          data: data,
+          borderWidth: 1,
+          backgroundColor: 'rgb(63, 81, 181)'
+        }]
+      },
+      options: {
+        title: {
+          text: "Ranking",
+          display: true
+        }
+      }
+    });
   }
 
   loadUsers() {
@@ -64,6 +94,7 @@ export class TeamViewComponent implements OnInit {
         this.users = users;
         this.dataSource.data = users;
         this.dataLoading = false;
+        this.createChart();
       },
       error => {
         this.dataLoading = false;
@@ -72,7 +103,7 @@ export class TeamViewComponent implements OnInit {
   }
 
   loadTeams(background = false) {
-    if(!background)
+    if (!background)
       this.loading = true;
     this.teamService.list().subscribe(
       teams => {
