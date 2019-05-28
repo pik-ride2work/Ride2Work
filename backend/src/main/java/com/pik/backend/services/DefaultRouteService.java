@@ -1,12 +1,18 @@
 package com.pik.backend.services;
 
+import static com.pik.ride2work.Tables.POINT;
+import static com.pik.ride2work.Tables.ROUTE;
+
 import com.pik.backend.custom_daos.CustomRouteDao;
 import com.pik.backend.services.jooq_fields.PointField;
 import com.pik.backend.util.DSLWrapper;
-import com.pik.ride2work.tables.daos.RouteDao;
 import com.pik.ride2work.tables.pojos.Route;
 import com.pik.ride2work.tables.records.PointRecord;
 import com.pik.ride2work.tables.records.RouteRecord;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.InsertSetMoreStep;
@@ -14,14 +20,6 @@ import org.jooq.InsertSetStep;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-
-import static com.pik.ride2work.Tables.POINT;
-import static com.pik.ride2work.Tables.ROUTE;
 
 @Repository
 public class DefaultRouteService implements RouteService {
@@ -76,14 +74,14 @@ public class DefaultRouteService implements RouteService {
         CompletableFuture<Void> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
             try {
-                RouteDao routeDao = new RouteDao(cfg);
-                Route toEnd = routeDao.findById(routeId);
-                toEnd.setIsFinished(true);
-                toEnd.setIsValid(true);
-                routeDao.update(toEnd);
+                DSL.using(cfg).update(ROUTE)
+                    .set(ROUTE.IS_VALID, true)
+                    .set(ROUTE.IS_FINISHED, true)
+                    .where(ROUTE.ID.eq(routeId))
+                    .execute();
                 future.complete(null);
             } catch (DataAccessException e) {
-                future.completeExceptionally(new IllegalStateException("Failed to create a new route for the user."));
+                future.completeExceptionally(new IllegalStateException("Failed to end the route."));
             }
         });
         return future;

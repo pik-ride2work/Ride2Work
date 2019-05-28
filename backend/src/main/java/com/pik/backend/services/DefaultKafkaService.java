@@ -2,14 +2,13 @@ package com.pik.backend.services;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import org.jooq.DSLContext;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 
 @Repository
@@ -31,14 +30,7 @@ public class DefaultKafkaService implements KafkaService {
     @KafkaListener(topics = "point", groupId = "group-id")
     public Future<Void> readPoint(String input) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        RoutePoint routePoint = null;
         RoutePoint point = RoutePoint.of(input);
-        try {
-            routePoint = point;
-        } catch (IllegalArgumentException e) {
-            future.completeExceptionally(e);
-            return future;
-        }
         try{
             routeService.writeSinglePoint(point).get();
             future.complete(null);
@@ -51,7 +43,7 @@ public class DefaultKafkaService implements KafkaService {
     @Override
     public Future<Void> write(String point) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        kafkaTemplate.send("test", point);
+        kafkaTemplate.send("point", point);
         future.complete(null);
         return future;
     }

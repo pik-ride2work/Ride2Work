@@ -1,5 +1,9 @@
 package com.pik.backend.services;
 
+import static com.pik.ride2work.Tables.MEMBERSHIP;
+import static com.pik.ride2work.Tables.TEAM;
+import static com.pik.ride2work.Tables.USER;
+
 import com.pik.backend.util.DSLWrapper;
 import com.pik.backend.util.TeamInputValidator;
 import com.pik.backend.util.Validated;
@@ -8,18 +12,15 @@ import com.pik.ride2work.tables.pojos.Team;
 import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.TeamRecord;
 import com.pik.ride2work.tables.records.UserRecord;
-import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
-
-import static com.pik.ride2work.Tables.*;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.jooq.impl.DSL;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class DefaultTeamService implements TeamService {
@@ -48,7 +49,8 @@ public class DefaultTeamService implements TeamService {
                 future.completeExceptionally(new NotFoundException("No owner/team found."));
                 return;
             }
-            future.complete(record.into(User.class));
+          User teamOwner = record.into(User.class);
+          future.complete(NoCredUserView.apply(teamOwner));
         });
         return future;
     }
@@ -184,7 +186,8 @@ public class DefaultTeamService implements TeamService {
                 future.completeExceptionally(new NotFoundException("Team/users not found."));
                 return;
             }
-            future.complete(records.into(User.class));
+            List<User> users = records.into(User.class);
+            future.complete(NoCredUserView.apply(users));
         });
         return future;
     }
