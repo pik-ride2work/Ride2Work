@@ -52,36 +52,35 @@ export class TeamViewComponent implements OnInit {
     if (this.currentTeam)
       this.loadUsers();
 
-    this.loadTeams();
+    let loadInBackground = this.currentTeam ? true : false;
+    this.loadTeams(loadInBackground);
   }
 
   loadUsers() {
     this.dataLoading = true;
     this.teamService.listUsers(this.currentTeam.id).subscribe(
       users => {
+        console.log(users);
         this.users = users;
         this.dataSource.data = users;
-      },
-      error => {
         this.dataLoading = false;
       },
-      () => {
+      error => {
         this.dataLoading = false;
       }
     )
   }
 
-  loadTeams() {
-    this.loading = true;
+  loadTeams(background = false) {
+    if(!background)
+      this.loading = true;
     this.teamService.list().subscribe(
       teams => {
         this.teams = teams;
+        this.loading = false;
       },
       error => {
         this.dataLoading = false;
-      },
-      () => {
-        this.loading = false;
       }
     )
   }
