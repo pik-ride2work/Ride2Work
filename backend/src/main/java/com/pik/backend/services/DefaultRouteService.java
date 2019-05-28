@@ -79,6 +79,7 @@ public class DefaultRouteService implements RouteService {
                 RouteDao routeDao = new RouteDao(cfg);
                 Route toEnd = routeDao.findById(routeId);
                 toEnd.setIsFinished(true);
+                toEnd.setIsValid(true);
                 routeDao.update(toEnd);
                 future.complete(null);
             } catch (DataAccessException e) {
@@ -99,6 +100,8 @@ public class DefaultRouteService implements RouteService {
                     .set(ROUTE.IS_VALID, true)
                     .set(ROUTE.TIME_IN_SECONDS, BigDecimal.valueOf(uploadRoute.getTime()))
                     .set(ROUTE.DISTANCE, BigDecimal.valueOf(uploadRoute.getLength()))
+                    .set(ROUTE.AVERAGE_SPEED, BigDecimal.valueOf(uploadRoute.getAverageSpeed()))
+                    .set(ROUTE.MAX_SPEED, BigDecimal.valueOf(uploadRoute.getMaxSpeed()))
                     .set(ROUTE.TOP_RIGHT_BORDER, new PointField(uploadRoute.getTopRightBorder()))
                     .set(ROUTE.BOTTOM_LEFT_BORDER, new PointField(uploadRoute.getBottomLeftBorder()))
                     .returning(ROUTE.fields())

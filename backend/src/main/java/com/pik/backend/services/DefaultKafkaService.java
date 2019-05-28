@@ -57,7 +57,7 @@ public class DefaultKafkaService implements KafkaService {
     }
 
     @Override
-    @KafkaListener(topics = "test", groupId = "group-id")
+    @KafkaListener(topics = "json", groupId = "group-id")
     public Future<Void> readJson(String json) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         UploadRoute uploadRoute = null;

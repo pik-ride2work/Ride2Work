@@ -27,7 +27,8 @@ public class RouteController {
         try {
             Integer routeId = routeService.startRoute(userId).get();
             return ResponseEntity
-                    .ok(new JSONObject().put("routeId", routeId));
+                    .ok()
+                    .body(new JSONObject().put("routeId", routeId).toString());
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             return Responses.serviceUnavailable();
