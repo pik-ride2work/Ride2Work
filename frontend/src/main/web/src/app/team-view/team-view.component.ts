@@ -59,9 +59,15 @@ export class TeamViewComponent implements OnInit {
   }
 
   createChart() {
+    let top_users = this.users;
+    top_users.sort((a: User, b:User)=>{
+      return b.id - a.id;
+    });
+
     let labels = [];
     let data = [];
-    for(var user of this.users){
+    for(let i=0; i<5 && i<top_users.length; ++i){
+      let user = top_users[i];
       labels.push(`${user.firstName} ${user.lastName}`);
       data.push(user.id);
     }
@@ -71,7 +77,7 @@ export class TeamViewComponent implements OnInit {
       data: {
         labels: labels,
         datasets: [{
-          label: 'User points',
+          label: 'Points',
           data: data,
           borderWidth: 1,
           backgroundColor: 'rgb(63, 81, 181)'
@@ -79,7 +85,7 @@ export class TeamViewComponent implements OnInit {
       },
       options: {
         title: {
-          text: "Ranking",
+          text: "Top users",
           display: true
         }
       }
