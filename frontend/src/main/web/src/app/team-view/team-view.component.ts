@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Team} from "../_models/team";
-import {AuthService, MembershipService, TeamService} from "../_services";
+import {AuthService, MembershipService, RideService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatSnackBar, MatTableDataSource} from "@angular/material";
 import {Chart} from "chart.js"
+import {UserScore} from "../_models/user-score";
 
 @Component({
   selector: 'app-team-view',
@@ -15,6 +16,7 @@ export class TeamViewComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private teamService: TeamService,
+    private rideService: RideService,
     private membershipService: MembershipService,
     private authService: AuthService,
     private snackBar: MatSnackBar
@@ -24,6 +26,7 @@ export class TeamViewComponent implements OnInit {
   options: FormGroup;
   teams: Team[] = [];
   users: User[] = [];
+  userScores: UserScore[] = [];
   loading = false;
   dataLoading = false;
   dataSource = new MatTableDataSource<User>(this.users);
@@ -51,25 +54,27 @@ export class TeamViewComponent implements OnInit {
     this.currentUser = this.authService.getUser();
     this.currentTeam = this.authService.getTeam();
 
-    if (this.currentTeam)
+    if (this.currentTeam) {
       this.loadUsers();
+      this.loadScores();
+    }
 
     let loadInBackground = !!this.currentTeam;
     this.loadTeams(loadInBackground);
   }
 
   createChart() {
-    let top_users = this.users;
-    top_users.sort((a: User, b:User)=>{
-      return b.id - a.id;
+    let topScores = this.userScores;
+    topScores.sort((a: UserScore, b: UserScore) => {
+      return b.score - a.score;
     });
 
     let labels = [];
     let data = [];
-    for(let i=0; i<5 && i<top_users.length; ++i){
-      let user = top_users[i];
+    for (let i = 0; i < 5 && i < this.userScores.length; ++i) {
+      let user = this.userScores[i].user;
       labels.push(`${user.firstName} ${user.lastName}`);
-      data.push(user.id);
+      data.push(this.userScores[i].score);
     }
 
     this.barChart = new Chart('barChart', {
@@ -100,13 +105,29 @@ export class TeamViewComponent implements OnInit {
         this.users = users;
         this.dataSource.data = users;
         this.dataLoading = false;
-        this.createChart();
       },
       error => {
         this.dataLoading = false;
       }
     )
   }
+
+  loadScores() {
+    this.dataLoading = true;
+    let fromDate = new Date(1990, 1,1), toDate = new Date(2020,1,1);
+    this.rideService.getTeamScore(this.currentTeam.id, fromDate, toDate).subscribe(
+      teamScore => {
+        console.log(teamScore);
+        this.userScores = teamScore.users;
+        this.createChart();
+        this.dataLoading = false;
+      },
+      error => {
+        this.dataLoading = false;
+      }
+    )
+  }
+
 
   loadTeams(background = false) {
     if (!background)

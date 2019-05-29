@@ -72,9 +72,11 @@ export class LoginComponent implements OnInit {
           this.router.navigate([""]);
           return;
         }
+        console.log(membership);
         this.authService.setMembership(membership);
         this.teamService.getById(membership.idTeam).subscribe(
           team => {
+            console.log(team);
             this.authService.setTeam(team);
             this.router.navigate([""]);
           }
