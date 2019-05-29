@@ -33,3 +33,38 @@ iii. możliwość wyświetlenia własnych tras na mapie
 
 4. Statystyki:  
 i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zdobytych punktów w wybranym przedziale czasowym przez każdego członka drużyny
+
+## Zakres obowiązków
+
+# Jan Feręc
+1. Pokrycie kodu:
+2. Zrealizowane funkcjonalności:
+3. Github
+i. Commity: 142
+ii. Linie kodu: 13929
+
+# Tomasz Macutkiewicz
+1. Pokrycie kodu:
+2. Zrealizowane funkcjonalności:
+3. Github
+i. Commity: 44
+ii. Linie kodu: 347
+
+# Mateusz Palmowski
+1. Pokrycie kodu: 30.79%
+2. Zrealizowane funkcjonalności:
+i. Front-end
+*	konfiguracja i instalacja Angular 7
+*	komplet komponentów (m. in. do logowania, rejestracji, uploadu i wyświetlania tras, obsługi mapy, obsługi zespołów, wyświetlania statystyk)
+*	serwisy do łączenia z RESTem
+*	kompletny interfejs użytkownika
+3. Github
+i. Commity: 30
+ii. Linie kodu: 15649
+
+# Michał Wiśniewski
+1. Pokrycie kodu:
+2. Zrealizowane funkcjonalności:
+3. Github
+i. Commity: 30
+ii. Linie kodu: 864
