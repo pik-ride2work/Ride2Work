@@ -6,9 +6,9 @@ import java.util.List;
 
 public class UserScoreSummary {
 
-  private final User user;
-  private final double score;
-  private final List<Route> routes;
+  public final User user;
+  public final double score;
+  public final List<Route> routes;
 
   public UserScoreSummary(User user, double score, List<Route> routes) {
     this.user = user;
