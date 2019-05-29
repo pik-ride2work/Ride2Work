@@ -40,7 +40,6 @@ export class RidesHistoryComponent implements OnInit {
     this.dataLoading = true;
     this.rideService.getRoutesByUserId(this.currentUser.id).subscribe(
       routes => {
-        console.log(routes);
         this.userRides = routes;
         this.dataSource.data = this.userRides;
         this.dataLoading = false;

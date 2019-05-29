@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Team} from "../_models/team";
-import {AuthService, MembershipService, TeamService} from "../_services";
+import {AuthService, MembershipService, RideService, TeamService} from "../_services";
 import {User} from "../_models/user";
 import {MatSnackBar, MatTableDataSource} from "@angular/material";
-import {Ride} from "../_models/ride";
+import {Chart} from "chart.js"
+import {UserScore} from "../_models/user-score";
 
 @Component({
   selector: 'app-team-view',
@@ -15,6 +16,7 @@ export class TeamViewComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private teamService: TeamService,
+    private rideService: RideService,
     private membershipService: MembershipService,
     private authService: AuthService,
     private snackBar: MatSnackBar
@@ -24,11 +26,14 @@ export class TeamViewComponent implements OnInit {
   options: FormGroup;
   teams: Team[] = [];
   users: User[] = [];
+  userScores: UserScore[] = [];
   loading = false;
   dataLoading = false;
   dataSource = new MatTableDataSource<User>(this.users);
   currentUser: User;
   currentTeam: Team;
+
+  barChart = [];
 
   teamName: string;
 
@@ -49,39 +54,91 @@ export class TeamViewComponent implements OnInit {
     this.currentUser = this.authService.getUser();
     this.currentTeam = this.authService.getTeam();
 
-    if (this.currentTeam)
+    if (this.currentTeam) {
       this.loadUsers();
+      this.loadScores();
+    }
 
-    this.loadTeams();
+    let loadInBackground = !!this.currentTeam;
+    this.loadTeams(loadInBackground);
+  }
+
+  createChart() {
+    let topScores = this.userScores;
+    topScores.sort((a: UserScore, b: UserScore) => {
+      return b.score - a.score;
+    });
+
+    let labels = [];
+    let data = [];
+    for (let i = 0; i < 5 && i < this.userScores.length; ++i) {
+      let user = this.userScores[i].user;
+      labels.push(`${user.firstName} ${user.lastName}`);
+      data.push(this.userScores[i].score);
+    }
+
+    this.barChart = new Chart('barChart', {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Points',
+          data: data,
+          borderWidth: 1,
+          backgroundColor: 'rgb(63, 81, 181)'
+        }]
+      },
+      options: {
+        title: {
+          text: "Top users",
+          display: true
+        }
+      }
+    });
   }
 
   loadUsers() {
     this.dataLoading = true;
     this.teamService.listUsers(this.currentTeam.id).subscribe(
       users => {
+        console.log(users);
         this.users = users;
         this.dataSource.data = users;
-      },
-      error => {
         this.dataLoading = false;
       },
-      () => {
+      error => {
         this.dataLoading = false;
       }
     )
   }
 
-  loadTeams() {
-    this.loading = true;
-    this.teamService.list().subscribe(
-      teams => {
-        this.teams = teams;
+  loadScores() {
+    this.dataLoading = true;
+    let fromDate = new Date(1990, 1,1), toDate = new Date(2020,1,1);
+    this.rideService.getTeamScore(this.currentTeam.id, fromDate, toDate).subscribe(
+      teamScore => {
+        console.log(teamScore);
+        this.userScores = teamScore.users;
+        this.createChart();
+        this.dataLoading = false;
       },
       error => {
         this.dataLoading = false;
-      },
-      () => {
+      }
+    )
+  }
+
+
+  loadTeams(background = false) {
+    if (!background)
+      this.loading = true;
+    this.teamService.list().subscribe(
+      teams => {
+        this.teams = teams;
         this.loading = false;
+      },
+      error => {
+        this.dataLoading = false;
       }
     )
   }

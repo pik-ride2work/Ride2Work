@@ -20,23 +20,23 @@
           </ng-container>
 
           <ng-container matColumnDef="averageSpeed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance</th>
-            <td mat-cell *matCellDef="let element"> {{element.averageSpeed}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="maxSpeed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Time</th>
-            <td mat-cell *matCellDef="let element"> {{element.maxSpeed}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="distance">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Max speed</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Distance [m]</th>
             <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="timeInSeconds">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Average speed</th>
+          <ng-container matColumnDef="maxSpeed">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Time [s]</th>
             <td mat-cell *matCellDef="let element"> {{element.timeInSeconds}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="distance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Max speed [m/s]</th>
+            <td mat-cell *matCellDef="let element"> {{element.maxSpeed}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="timeInSeconds">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Average speed [m/s]</th>
+            <td mat-cell *matCellDef="let element"> {{element.averageSpeed}} </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

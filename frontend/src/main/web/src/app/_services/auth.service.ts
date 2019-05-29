@@ -32,7 +32,6 @@ export class AuthService {
   }
 
   setMembership(membership: Membership) {
-    console.log(membership);
     localStorage.setItem(this.membershipItem, JSON.stringify(membership));
   }
 
