@@ -39,7 +39,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 # Jan Feręc
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
-3. Github
+3. Github  
     i. Commity: 142  
     ii. Linie kodu: 13929
 
