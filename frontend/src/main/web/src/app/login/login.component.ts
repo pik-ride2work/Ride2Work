@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatDialog, MatSnackBar} from '@angular/material'
+import {MatSnackBar} from '@angular/material'
 import {AuthService} from "../_services/auth.service";
-import {first} from "rxjs/internal/operators/first";
 import {AlertService, MembershipService, TeamService, UserService} from "../_services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../_models/user";
@@ -69,7 +68,7 @@ export class LoginComponent implements OnInit {
   loadTeam(userId: number) {
     this.membershipService.getByUserId(userId).subscribe(
       membership => {
-        if (!membership || !membership.ispresent) {
+        if (!membership || !membership.isPresent) {
           this.router.navigate([""]);
           return;
         }

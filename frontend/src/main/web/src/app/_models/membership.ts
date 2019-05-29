@@ -4,14 +4,14 @@ export class Membership {
   id: number;
   start: Time;
   end: Time;
-  ispresent: boolean;
+  isPresent: boolean;
   idUser: number;
   idTeam: number;
 
-  constructor(start, end, ispresent, idUser, idTeam) {
+  constructor(start, end, isPresent, idUser, idTeam) {
     this.start = start;
     this.end = end;
-    this.ispresent = ispresent;
+    this.isPresent = isPresent;
     this.idUser = idUser;
     this.idTeam = idTeam;
   }

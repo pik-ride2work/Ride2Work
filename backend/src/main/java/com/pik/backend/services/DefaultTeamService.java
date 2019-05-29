@@ -91,14 +91,21 @@ public class DefaultTeamService implements TeamService {
                 future.completeExceptionally(new IllegalStateException("User is a member of a team already"));
                 return;
             }
-            TeamDao teamDao = new TeamDao(cfg);
-            teamDao.insert(team);
-            Integer id = team.getId();
+            TeamRecord teamRecord = DSL.using(cfg)
+                .insertInto(TEAM, TEAM.NAME, TEAM.MEMBER_COUNT)
+                .values(team.getName(), 1)
+                .returning(TEAM.fields())
+                .fetchOne();
+            if(teamRecord == null){
+                future.completeExceptionally(new NotFoundException("Team record not found."));
+                return;
+            }
+            Team newTeam = teamRecord.into(Team.class);
             DSL.using(cfg)
                     .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.IS_OWNER)
-                    .values(Timestamp.from(Instant.now()), id, ownerId, Boolean.TRUE)
+                    .values(Timestamp.from(Instant.now()), newTeam.getId(), ownerId, Boolean.TRUE)
                     .execute();
-            future.complete(team);
+            future.complete(newTeam);
         });
         return future;
     }
