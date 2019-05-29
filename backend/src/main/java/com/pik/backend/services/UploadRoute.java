@@ -3,7 +3,7 @@ package com.pik.backend.services;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pik.backend.custom_daos.Coordinates;
 import com.pik.backend.util.Points;
-
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -15,6 +15,7 @@ public class UploadRoute {
     private double length = 0.0;
     private double maxSpeed = 0.0;
     private double averageSpeed = 0.0;
+    private Timestamp timestamp;
     private Coordinates topRightBorder;
     private Coordinates bottomLeftBorder;
 
@@ -23,7 +24,7 @@ public class UploadRoute {
         this.userId = userId;
     }
 
-    public UploadRoute setBorders() {
+  public UploadRoute setBorders() {
         Double minLat = null;
         Double minLon = null;
         Double maxLat = null;
@@ -51,9 +52,14 @@ public class UploadRoute {
                     curr.setLength(s);
                     this.time += t;
                     this.length += s;
-                    this.maxSpeed = (length > 0) ? Math.max(length / time, maxSpeed) : maxSpeed;
+                    this.maxSpeed = (s > 0) ? Math.max(s / t, maxSpeed) : maxSpeed;
                 });
         this.averageSpeed = (length > 0) ? this.length / this.time : 0;
+        return this;
+    }
+
+    public UploadRoute setTimestamp(){
+        this.timestamp = points.get(0).getTimestamp();
         return this;
     }
 
@@ -75,6 +81,10 @@ public class UploadRoute {
 
     public double getTime() {
         return time;
+    }
+
+    public Timestamp getTimestamp() {
+      return timestamp;
     }
 
     public double getLength() {

@@ -3,12 +3,17 @@ package com.pik.backend.controllers;
 import com.pik.backend.services.MembershipService;
 import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Membership;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("memberships")
@@ -65,7 +70,7 @@ public class MembershipController {
     @GetMapping("/{userId}")
     public ResponseEntity getByUserId(@PathVariable Integer userId) {
         try {
-            Membership membership = membershipService.getByUserId(userId).get();
+            Membership membership = membershipService.getCurrentMembershipByUserId(userId).get();
             return ResponseEntity
                     .ok(membership);
         } catch (InterruptedException ie) {

@@ -4,12 +4,17 @@ import com.pik.backend.services.DefaultTeamService;
 import com.pik.backend.services.NotFoundException;
 import com.pik.ride2work.tables.pojos.Team;
 import com.pik.ride2work.tables.pojos.User;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("teams")
@@ -29,7 +34,6 @@ public class TeamController {
                     .get();
             return ResponseEntity
                     .ok(createdTeam);
-
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             return Responses.serviceUnavailable();
