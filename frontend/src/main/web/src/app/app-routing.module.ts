@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./_guards";
 import {RegisterComponent} from "./register/register.component";
@@ -13,10 +13,28 @@ const routes: Routes = [
   {path: 'team-view', component: TeamViewComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {
+    path: 'swagger',
+    component: LoginComponent,
+    resolve: {
+      url: 'externalUrlRedirectResolver'
+    },
+    data: {
+      externalUrl: 'http://localhost:8080/swagger-ui.html#/'
+    }
+  },
   {path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({
+  providers: [
+    {
+      provide: 'externalUrlRedirectResolver',
+      useValue: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+        window.location.href = (route.data as any).externalUrl;
+      }
+    }
+  ],
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
