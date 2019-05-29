@@ -107,7 +107,7 @@ public class RouteController {
     }
   }
 
-  @GetMapping("/score/{teamId}/{fromDate}/{toDate}/")
+  @GetMapping("/score/{teamId}/{fromDate}/{toDate}")
   public ResponseEntity getTeamScore(
       @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date fromDate,
       @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date toDate,
