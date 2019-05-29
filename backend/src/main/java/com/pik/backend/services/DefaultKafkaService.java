@@ -56,7 +56,8 @@ public class DefaultKafkaService implements KafkaService {
         try {
             uploadRoute = objectMapper.readValue(json, UploadRoute.class)
                     .setBorders()
-                    .setLengthsAndTime();
+                    .setLengthsAndTime()
+                    .setTimestamp();
             routeService.writeUploadedRoute(uploadRoute).get();
         } catch (Exception e) {
             future.completeExceptionally(new IOException("Failed to upload the route."));

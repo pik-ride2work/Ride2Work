@@ -1,9 +1,8 @@
 package com.pik.backend.util;
 
+import java.util.concurrent.CompletableFuture;
 import org.jooq.DSLContext;
 import org.jooq.TransactionalRunnable;
-
-import java.util.concurrent.CompletableFuture;
 
 public class DSLWrapper {
 

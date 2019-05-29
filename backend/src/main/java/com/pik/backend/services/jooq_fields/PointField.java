@@ -17,7 +17,7 @@ public class PointField extends CustomField<String> {
     }
 
     private QueryPart delegate(Configuration configuration) {
-        return DSL.field(String.format("'SRID=4326;POINT(%s %s)'", coords.getLatitude(), coords.getLongitude()));
+        return DSL.field(String.format("ST_GeographyFromText('SRID=4326;POINT(%s %s)')", coords.getLatitude(), coords.getLongitude()));
     }
 
     @Override

@@ -37,13 +37,14 @@ public class MobileClientSimulation {
         HttpPost startRoute = new HttpPost(new URI("http://127.0.0.1:8080/routes/create/1"));
         CloseableHttpResponse response = client.execute(startRoute);
         HttpEntity entity = response.getEntity();
-        int routeId = new JSONObject(EntityUtils.toString(entity)).getInt("routeId");
         Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+        int routeId = new JSONObject(EntityUtils.toString(entity)).getInt("routeId");
         for (String point : POINT_TEMPLATES) {
+            Thread.sleep(1000);
             HttpPost httpPost = new HttpPost("http://127.0.0.1:8080/routes/write");
             httpPost.setEntity(new StringEntity(String.format(point, routeId)));
             Assert.assertEquals(200, client.execute(httpPost).getStatusLine().getStatusCode());
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         }
         HttpPost endRoute = new HttpPost(
             new URI(String.format("http://127.0.0.1:8080/routes/end/%s", routeId)));

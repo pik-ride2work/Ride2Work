@@ -2,22 +2,30 @@ package com.pik.backend.services;
 
 import static com.pik.ride2work.Tables.POINT;
 import static com.pik.ride2work.Tables.ROUTE;
+import static com.pik.ride2work.Tables.USER;
 
+import com.google.common.collect.Lists;
 import com.pik.backend.custom_daos.CustomRouteDao;
 import com.pik.backend.services.jooq_fields.PointField;
 import com.pik.backend.util.DSLWrapper;
 import com.pik.ride2work.tables.pojos.Route;
+import com.pik.ride2work.tables.pojos.User;
 import com.pik.ride2work.tables.records.PointRecord;
 import com.pik.ride2work.tables.records.RouteRecord;
+import com.pik.ride2work.tables.records.UserRecord;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.InsertSetMoreStep;
 import org.jooq.InsertSetStep;
+import org.jooq.Result;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
@@ -103,6 +111,7 @@ public class DefaultRouteService implements RouteService {
                     .set(ROUTE.MAX_SPEED, BigDecimal.valueOf(uploadRoute.getMaxSpeed()))
                     .set(ROUTE.TOP_RIGHT_BORDER, new PointField(uploadRoute.getTopRightBorder()))
                     .set(ROUTE.BOTTOM_LEFT_BORDER, new PointField(uploadRoute.getBottomLeftBorder()))
+                    .set(ROUTE.TIMESTAMP, uploadRoute.getTimestamp())
                     .returning(ROUTE.fields())
                     .fetchOne();
             InsertSetStep<PointRecord> setStep = DSL.using(cfg)
@@ -147,10 +156,36 @@ public class DefaultRouteService implements RouteService {
     public Future<TeamScore> getTeamScore(Integer teamId, Date fromDate, Date toDate) {
         CompletableFuture<TeamScore> future = new CompletableFuture<>();
         DSLWrapper.transaction(dsl, future, cfg -> {
-      //      DSL.using(cfg)
-       //         .select(ROUTE, )
+            Result<RouteRecord> routeRecords = DSL.using(cfg)
+                .selectFrom(ROUTE)
+                .where(ROUTE.ID_TEAM.eq(teamId))
+                .and(ROUTE.TIMESTAMP.between(new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime())))
+                .fetch();
+            if(routeRecords == null){
+                future.completeExceptionally(new NotFoundException("Couldn't find route records"));
+                return;
+            }
+            List<Route> routes = routeRecords.into(Route.class);
+            Map<Integer, List<Route>> userToRoutes = routes.stream()
+                .collect(Collectors.groupingBy(Route::getIdUser));
+            Result<UserRecord> userRecords = DSL.using(cfg)
+                .selectFrom(USER)
+                .where(USER.ID.in(userToRoutes.keySet()))
+                .fetch();
+            if(userRecords == null){
+                future.completeExceptionally(new NotFoundException("Couldn't find user records"));
+                return;
+            }
+            List<User> users = userRecords.into(User.class);
+            List<UserScoreSummary> userScoreSummaries = Lists.newArrayList();
+            for (User user : users) {
+              List<Route> userRoutes = userToRoutes.get(user.getId());
+              double score = userRoutes.stream()
+                  .mapToDouble(e -> e.getDistance().doubleValue()).sum();
+              userScoreSummaries.add(new UserScoreSummary(user, score, userRoutes));
+            }
+            future.complete(new TeamScore(userScoreSummaries));
         });
-
         return future;
     }
 
