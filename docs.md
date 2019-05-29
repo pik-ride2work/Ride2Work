@@ -40,14 +40,14 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
 3. Github
-    i. Commity: 142
+    i. Commity: 142  
     ii. Linie kodu: 13929
 
 # Tomasz Macutkiewicz
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
 3. Github  
-i. Commity: 44
+i. Commity: 44  
 ii. Linie kodu: 347
 
 # Mateusz Palmowski
@@ -59,12 +59,12 @@ i. Front-end
     * serwisy do łączenia z RESTem
     * kompletny interfejs użytkownika
 3. Github  
-i. Commity: 30
+i. Commity: 30  
 ii. Linie kodu: 15649
 
 # Michał Wiśniewski
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
 3. Github  
-i. Commity: 30
+i. Commity: 30  
 ii. Linie kodu: 864
