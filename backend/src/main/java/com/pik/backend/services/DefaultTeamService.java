@@ -42,8 +42,8 @@ public class DefaultTeamService implements TeamService {
                             .select(MEMBERSHIP.ID_USER)
                             .from(MEMBERSHIP)
                             .where(MEMBERSHIP.ID_TEAM.eq(teamId)
-                                    .and(MEMBERSHIP.ISOWNER)
-                                    .and(MEMBERSHIP.ISPRESENT))))
+                                    .and(MEMBERSHIP.IS_OWNER)
+                                    .and(MEMBERSHIP.IS_PRESENT))))
                     .fetchOne();
             if (record == null) {
                 future.completeExceptionally(new NotFoundException("No owner/team found."));
@@ -70,7 +70,7 @@ public class DefaultTeamService implements TeamService {
             DSL.using(cfg)
                     .update(MEMBERSHIP)
                     .set(MEMBERSHIP.END, Timestamp.from(Instant.now()))
-                    .set(MEMBERSHIP.ISPRESENT, false)
+                    .set(MEMBERSHIP.IS_PRESENT, false)
                     .where(MEMBERSHIP.ID_TEAM.eq(teamId))
                     .execute();
             future.complete(null);
@@ -91,17 +91,14 @@ public class DefaultTeamService implements TeamService {
                 future.completeExceptionally(new IllegalStateException("User is a member of a team already"));
                 return;
             }
-            TeamRecord teamRecord = DSL.using(cfg)
-                    .insertInto(TEAM)
-                    .set(dsl.newRecord(TEAM, team))
-                    .set(TEAM.MEMBER_COUNT, 1)
-                    .returning(TEAM.fields())
-                    .fetchOne();
+            TeamDao teamDao = new TeamDao(cfg);
+            teamDao.insert(team);
+            Integer id = team.getId();
             DSL.using(cfg)
-                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
-                    .values(Timestamp.from(Instant.now()), teamRecord.getId(), ownerId, Boolean.TRUE)
+                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.IS_OWNER)
+                    .values(Timestamp.from(Instant.now()), id, ownerId, Boolean.TRUE)
                     .execute();
-            future.complete(teamRecord.into(Team.class));
+            future.complete(team);
         });
         return future;
     }
@@ -179,7 +176,7 @@ public class DefaultTeamService implements TeamService {
                     .where(USER.ID.in(DSL.using(cfg)
                             .select(MEMBERSHIP.ID_USER)
                             .from(MEMBERSHIP)
-                            .where(MEMBERSHIP.ISPRESENT)
+                            .where(MEMBERSHIP.IS_PRESENT)
                             .and(MEMBERSHIP.ID_TEAM.eq(teamId))))
                     .fetch();
             if (records == null) {

@@ -41,15 +41,15 @@ public class DefaultMembershipService implements MembershipService {
             }
             DSL.using(cfg)
                     .update(MEMBERSHIP)
-                    .set(MEMBERSHIP.ISOWNER, false)
-                    .where(MEMBERSHIP.ISOWNER)
-                    .and(MEMBERSHIP.ISPRESENT)
+                    .set(MEMBERSHIP.IS_OWNER, false)
+                    .where(MEMBERSHIP.IS_OWNER)
+                    .and(MEMBERSHIP.IS_PRESENT)
                     .execute();
             DSL.using(cfg)
                     .update(MEMBERSHIP)
-                    .set(MEMBERSHIP.ISOWNER, true)
+                    .set(MEMBERSHIP.IS_OWNER, true)
                     .where(MEMBERSHIP.ID_USER.eq(userId))
-                    .and(MEMBERSHIP.ISPRESENT)
+                    .and(MEMBERSHIP.IS_PRESENT)
                     .execute();
             future.complete(null);
         });
@@ -62,7 +62,7 @@ public class DefaultMembershipService implements MembershipService {
         DSLWrapper.transaction(dsl, future, cfg -> {
             Result<MembershipRecord> records = DSL.using(cfg)
                     .selectFrom(MEMBERSHIP)
-                    .where(MEMBERSHIP.ISPRESENT)
+                    .where(MEMBERSHIP.IS_PRESENT)
                     .and(MEMBERSHIP.ID_TEAM.eq(teamId))
                     .fetch();
             if (records == null) {
@@ -89,7 +89,7 @@ public class DefaultMembershipService implements MembershipService {
                     .where(TEAM.ID.eq(teamId))
                     .execute();
             MembershipRecord createdRecord = DSL.using(cfg)
-                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.ISOWNER)
+                    .insertInto(MEMBERSHIP, MEMBERSHIP.START, MEMBERSHIP.ID_TEAM, MEMBERSHIP.ID_USER, MEMBERSHIP.IS_OWNER)
                     .values(Timestamp.from(Instant.now()), teamId, userId, false)
                     .returning(MEMBERSHIP.fields())
                     .fetchOne();
@@ -108,10 +108,10 @@ public class DefaultMembershipService implements MembershipService {
             }
             Integer idTeam = DSL.using(cfg)
                     .update(MEMBERSHIP)
-                    .set(MEMBERSHIP.ISPRESENT, false)
+                    .set(MEMBERSHIP.IS_PRESENT, false)
                     .set(MEMBERSHIP.END, Timestamp.from(Instant.now()))
                     .where(MEMBERSHIP.ID_USER.eq(userId))
-                    .and(MEMBERSHIP.ISPRESENT.eq(true))
+                    .and(MEMBERSHIP.IS_PRESENT.eq(true))
                     .returning(MEMBERSHIP.ID_TEAM)
                     .fetchOne()
                     .getValue(MEMBERSHIP.ID_TEAM);
@@ -148,13 +148,13 @@ public class DefaultMembershipService implements MembershipService {
                 .fetchExists(dsl.selectOne()
                         .from(MEMBERSHIP)
                         .where(MEMBERSHIP.ID_USER.eq(userId))
-                        .and(MEMBERSHIP.ISPRESENT));
+                        .and(MEMBERSHIP.IS_PRESENT));
     }
 
     static MembershipRecord getCurrentMembership(Integer userId, Configuration cfg){
         return DSL.using(cfg)
             .selectFrom(MEMBERSHIP)
-            .where(MEMBERSHIP.ISPRESENT)
+            .where(MEMBERSHIP.IS_PRESENT)
             .and(MEMBERSHIP.ID_USER.eq(userId))
             .fetchOne();
     }

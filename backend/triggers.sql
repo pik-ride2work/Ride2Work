@@ -49,8 +49,8 @@ DECLARE
 BEGIN
     SELECT id_team
 		INTO _team_id
-		FROM ride2work.membership
-		WHERE id_user = NEW.id_user AND isPresent = true;
+		FROM ride2work.membership m
+		WHERE id_user = NEW.id_user AND m.isPresent = true;
 
 		IF _team_id IS NOT NULL THEN
 		  NEW.id_team = _team_id;
