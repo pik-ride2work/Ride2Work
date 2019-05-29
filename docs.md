@@ -54,10 +54,10 @@ ii. Linie kodu: 347
 1. Pokrycie kodu: 30.79%
 2. Zrealizowane funkcjonalności:  
 i. Front-end  
-*	konfiguracja i instalacja Angular 7
-*	komplet komponentów (m. in. do logowania, rejestracji, uploadu i wyświetlania tras, obsługi mapy, obsługi zespołów, wyświetlania statystyk)
-*	serwisy do łączenia z RESTem
-*	kompletny interfejs użytkownika
+    * konfiguracja i instalacja Angular 7
+    * komplet komponentów (m. in. do logowania, rejestracji, uploadu i wyświetlania tras, obsługi mapy, obsługi zespołów, wyświetlania statystyk)
+    * serwisy do łączenia z RESTem
+    * kompletny interfejs użytkownika
 3. Github  
 i. Commity: 30
 ii. Linie kodu: 15649
