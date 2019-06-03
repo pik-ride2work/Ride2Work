@@ -20,7 +20,7 @@ Maksymalną integrację ww elementów z narzędziem programistycznym (wtyczki)  
 Skojarzenie zadań i błędów z commitami | :white_check_mark: | Skonfigurowane w Github Issues (Odwoływanie się w komitach do Issue, ich otwieranie oraz zamykanie)
 Automatyzację budowania projektu | :white_check_mark: | Jenkins + Maven + npm
 Kontrolę podziału zadań między uczestników i rejestrację czasu pracy | :large_orange_diamond: | Assignment w Github Issue, Brak kontroli czasu
-Rejestrację błędów | :large_orange_diamond: | Brak automatycznej rejestracji błędów.
+Rejestrację błędów | :white_check_mark: | Done
 
 
 ## Etap #2 - wymagania
