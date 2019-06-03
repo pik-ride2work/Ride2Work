@@ -38,7 +38,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 
 ![contributions](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-29+at+09.48.46.png)
 
-# Jan Feręc
+### Jan Feręc
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
     * konfiguracja Kubernetesa oraz Dockerhuba  
@@ -53,7 +53,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
     i. Commity: 142  
     ii. Linie kodu: 13929
 
-# Tomasz Macutkiewicz
+### Tomasz Macutkiewicz
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
 * Integracja z Kafka (Kafka service)
@@ -67,7 +67,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 i. Commity: 44  
 ii. Linie kodu: 347
 
-# Mateusz Palmowski
+### Mateusz Palmowski
 1. Pokrycie kodu: 30.79%
 2. Zrealizowane funkcjonalności:  
 i. Front-end  
@@ -79,21 +79,38 @@ i. Front-end
 i. Commity: 30  
 ii. Linie kodu: 15649
 
-# Michał Wiśniewski
+### Michał Wiśniewski
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:  
 i. DevOps:  
     * konfiguracja Jenkinsa + blueocean
-    * konfiguracja Sonarqube i Jacoco  
+    * konfiguracja Sonarqube i Jacoco
+    
 ii. Warstwa dostępu do danych:  
     * Generacja DAO oraz POJOs w JOOQ
-iii. Warstwa serwisów:
+    
+iii. Warstwa serwisów:  
     * Implementacja kontrolerów oraz serwisów
     dotyczących przynależności do drużyn (Membership service) oraz samych drużyn (Team Service).
     
 3. Github  
 i. Commity: 30  
 ii. Linie kodu: 864
+
+## Instrukcja uruchomienia projektu
+#### Maven
+Aplikacja może zostać zbudowana za pomocą mavena z odpowiediednim pom.xml, który uruchomi osobne budowanie dla obydwu modułów (backendu oraz frontendu):
+``` bash
+git clone https://github.com/pik-ride2work/Ride2Work.git
+
+cd Ride2Work/
+
+mvn clean install
+```
+Przed wywołaniem komendy należy pamiętać o dostarczeniu odpowiednich plików properities z hasłem do bazy danych oraz konfiguracją kafki.
+
+#### Docker hub:  
+Aplikacja może zostać uruchomiona na Dockerze/Kubernetesie z wykorzystaniem udostępnionego obrazu na stronie: [Link](https://cloud.docker.com/u/ride2work/repository/docker/ride2work/ride2work).
 
 
 # Załączniki
@@ -104,4 +121,6 @@ ii. Linie kodu: 864
 - [repozytorium Nexus](http://35.204.26.36:32608)
 - [repozytorium kodu GH](https://github.com/pik-ride2work/Ride2Work)
 - [repozytorium Docker hub](https://cloud.docker.com/u/ride2work/repository/docker/ride2work/ride2work)
+- [artykuły](https://github.com/pik-ride2work/Ride2Work/tree/master/blog-articles)
+- [materiały naukowe](https://github.com/pik-ride2work/Ride2Work/blob/master/learning_materials.md)
 
