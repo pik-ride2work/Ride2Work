@@ -98,13 +98,20 @@ i. Commity: 30
 ii. Linie kodu: 864
 
 ## Instrukcja uruchomienia projektu
+#### Maven
+Aplikacja może zostać zbudowana za pomocą mavena z odpowiediednim pom.xml, który uruchomi osobne budowanie dla obydwu modułów (backendu oraz frontendu):
+``` bash
+git clone https://github.com/pik-ride2work/Ride2Work.git
+
+cd Ride2Work/
+
+mvn clean install
+```
+Przed wywołaniem komendy należy pamiętać o dostarczeniu odpowiednich plików properities z hasłem do bazy danych oraz konfiguracją kafki.
 
 #### Docker hub:  
 Aplikacja może zostać uruchomiona na Dockerze/Kubernetesie z wykorzystaniem udostępnionego obrazu na stronie: [Link](https://cloud.docker.com/u/ride2work/repository/docker/ride2work/ride2work).
-Można także stworzyć swój własny plik konfiguracyjny w Kubernetesie, lub skorzystać z prostej komendy:
-``
-docker run -d --restart=always -e DOMAIN=cluster --name nginx-app -p 80:80 nginx
-``
+
 
 # Załączniki
 
