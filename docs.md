@@ -38,7 +38,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 
 ![contributions](https://s3.eu-west-3.amazonaws.com/elasticbeanstalk-eu-west-3-430227218185/article/Screenshot+2019-05-29+at+09.48.46.png)
 
-# Jan Feręc
+### Jan Feręc
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
     * konfiguracja Kubernetesa oraz Dockerhuba  
@@ -53,7 +53,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
     i. Commity: 142  
     ii. Linie kodu: 13929
 
-# Tomasz Macutkiewicz
+### Tomasz Macutkiewicz
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:
 * Integracja z Kafka (Kafka service)
@@ -67,7 +67,7 @@ i. możliwość przeglądywania statystyk drużynowych w postaci podsumowania zd
 i. Commity: 44  
 ii. Linie kodu: 347
 
-# Mateusz Palmowski
+### Mateusz Palmowski
 1. Pokrycie kodu: 30.79%
 2. Zrealizowane funkcjonalności:  
 i. Front-end  
@@ -79,7 +79,7 @@ i. Front-end
 i. Commity: 30  
 ii. Linie kodu: 15649
 
-# Michał Wiśniewski
+### Michał Wiśniewski
 1. Pokrycie kodu:
 2. Zrealizowane funkcjonalności:  
 i. DevOps:  
@@ -97,6 +97,14 @@ iii. Warstwa serwisów:
 i. Commity: 30  
 ii. Linie kodu: 864
 
+## Instrukcja uruchomienia projektu
+
+#### Docker hub:  
+Aplikacja może zostać uruchomiona na Dockerze/Kubernetesie z wykorzystaniem udostępnionego obrazu na stronie: [Link](https://cloud.docker.com/u/ride2work/repository/docker/ride2work/ride2work).
+Można także stworzyć swój własny plik konfiguracyjny w Kubernetesie, lub skorzystać z prostej komendy:
+``
+docker run -d --restart=always -e DOMAIN=cluster --name nginx-app -p 80:80 nginx
+``
 
 # Załączniki
 
