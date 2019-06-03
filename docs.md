@@ -84,10 +84,12 @@ ii. Linie kodu: 15649
 2. Zrealizowane funkcjonalności:  
 i. DevOps:  
     * konfiguracja Jenkinsa + blueocean
-    * konfiguracja Sonarqube i Jacoco  
+    * konfiguracja Sonarqube i Jacoco
+    
 ii. Warstwa dostępu do danych:  
     * Generacja DAO oraz POJOs w JOOQ
-iii. Warstwa serwisów:
+    
+iii. Warstwa serwisów:  
     * Implementacja kontrolerów oraz serwisów
     dotyczących przynależności do drużyn (Membership service) oraz samych drużyn (Team Service).
     
@@ -104,4 +106,6 @@ ii. Linie kodu: 864
 - [repozytorium Nexus](http://35.204.26.36:32608)
 - [repozytorium kodu GH](https://github.com/pik-ride2work/Ride2Work)
 - [repozytorium Docker hub](https://cloud.docker.com/u/ride2work/repository/docker/ride2work/ride2work)
+- [artykuły](https://github.com/pik-ride2work/Ride2Work/tree/master/blog-articles)
+- [materiały naukowe](https://github.com/pik-ride2work/Ride2Work/blob/master/learning_materials.md)
 

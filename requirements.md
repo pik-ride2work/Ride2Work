@@ -26,19 +26,27 @@ Rejestrację błędów | :large_orange_diamond: | Brak automatycznej rejestracji
 ## Etap #2 - wymagania
 Requirement | Status | Comment
 --- | --- | ---
-Backlog projektu: opisane i posortowane według priorytetu wymagania/use case'y/user stories | :x: | W trakcie
+Backlog projektu: opisane i posortowane według priorytetu wymagania/use case'y/user stories | :white_check_mark: | Tagi oraz Assignees Github Issue
 Wstępny podział zadań | :white_check_mark: | Uzgodnione
-Opis architektury aplikacji (najlepiej wzbogacony diagramami), w tym podział na warstwy | :x: | W trakcie
-Lista materiałów szkoleniowych (tutoriale, manuale, książki, blogi) na podstawie których zespół będzie uczył się wymienionych technologii. | :x: | Do zrobienia
+Opis architektury aplikacji (najlepiej wzbogacony diagramami), w tym podział na warstwy | :white_check_mark: | [Link](https://github.com/pik-ride2work/Ride2Work/blob/master/learning_materials.md)
+Lista materiałów szkoleniowych (tutoriale, manuale, książki, blogi) na podstawie których zespół będzie uczył się wymienionych technologii. | :white_check_mark: | [Link](https://github.com/pik-ride2work/Ride2Work/blob/master/learning_materials.md)
 Serwer ze zdeployowaną aplikacją (mile widziane usługi w chmurze, np. Heroku, Amazon EC2, OpenShift itp.) | :white_check_mark: | Cała aplikacja oraz środowisko CI/CD zdeployowane w GKE jako dwa oddzielnie clustry K8s
 Co najmniej jeden ekran aplikacji (niekoniecznie docelowy, możebyć ekran typu "Hello World", ale musi uwzględniać wszystkiedocelowe technologie - persystencja, kontener IoC, frontend) | :white_check_mark: | Done
-Instrukcja zbudowania projektu (np. na Wiki) | :x: | Do zrobienia
+Instrukcja zbudowania projektu (np. na Wiki) | :white_check_mark: | W dokumentacji
 Implementacja jednej funkcjonalności w docelowych technologiach, wszystkie warstwy + testy | :white_check_mark: | Znaczna część projektu zaimplementowana end to end (UI <-> Warstwa danych), np. rejestracja, logowanie, tworzenie drużyn
 
 ## Etap #3 (Kontynuacja pracy nad projektem i etapem #2)
 Requirement | Status | Comment
 --- | --- | ---
 Wpisy blogowe | :white_check_mark: | Krótkie wpisy blogowe związane z przydzielonymi zadaniami. [Link](https://github.com/pik-ride2work/Ride2Work/tree/master/blog-articles)
+
+## Etap #4 (Zakonczenie)
+
+Requirement | Status | Comment
+--- | --- | ---
+Prezentacja projektu | :white_check_mark: | Prezentacja projektu odbyła się 29. maja w pełnym składzie
+Demonstracja działania projektu | :white_check_mark: | jw.
+Dokumentacja projektu | :white_check_mark: | [Link](https://github.com/pik-ride2work/Ride2Work/blob/master/docs.md) 
 
 
 
